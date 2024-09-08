@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from apps.accounts.utils import get_user_from_uid, check_token
+from apps.accounts.models import UserRole
 
 User = get_user_model()
 
@@ -11,7 +13,27 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email', 'phone_number', 'password']
         extra_kwargs = {'password': {'write_only': True}}
-    
+
+
+class RoleBasedTokenObtainPairSerializer(TokenObtainPairSerializer):
+    role = serializers.ChoiceField(choices=UserRole.choices, required=True)
+
+    def validate(self, attrs):
+        role = attrs.pop('role', None)
+
+        data = super().validate(attrs)
+
+        user = self.user
+
+        if role and user.role != role:
+            raise serializers.ValidationError('User role does not match.')
+
+        data.update({
+            'role': user.role,
+        })
+
+        return data
+
 
 class BasePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
