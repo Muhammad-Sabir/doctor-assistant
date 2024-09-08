@@ -1,8 +1,34 @@
-# React + Vite
+# Doctor Assistance - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Run Application
 
-Currently, two official plugins are available:
+1. **Navigate to the frontend project directory**:
+    ```bash
+    cd doctor-assistance-fe
+    ```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+2. **Install Dependencies:**
+   Install all the required packages using:
+   ```bash
+   npm install
+   ```
+
+3. **Start the project**:
+    ```bash
+    npm run dev
+    ``` 
+
+
+## Login and Signup Information
+
+For testing purposes, you can use the following credentials:
+
+### To Login as a Doctor:
+- **Email:** doctor@gmail.com
+- **Password:** doctor08
+- **Role:** doctor
+
+### To Login as a Patient:
+- **Email:** patient@gmail.com
+- **Password:** patient08
+- **Role:** patient
