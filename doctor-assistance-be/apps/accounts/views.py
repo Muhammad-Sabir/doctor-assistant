@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 from decouple import config
 
 from apps.accounts.emails import send_password_reset_email, send_verification_email
@@ -13,6 +14,7 @@ from apps.accounts.serializers import (
     VerifyEmailSerializer,
     PasswordResetConfirmSerializer,
     VerifyAccountSerializer,
+    RoleBasedTokenObtainPairSerializer,
 )
 
 User = get_user_model()
@@ -29,6 +31,9 @@ class UserRegistration(generics.CreateAPIView):
         uid, token = create_uid_and_token(user)
         send_verification_email(user, uid, token)
 
+
+class RoleBasedObtainPairView(TokenObtainPairView):
+    serializer_class = RoleBasedTokenObtainPairSerializer
 
 class UserPasswordUpdation(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
