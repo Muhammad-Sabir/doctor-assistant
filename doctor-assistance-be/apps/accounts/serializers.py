@@ -30,6 +30,7 @@ class RoleBasedTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         data.update({
             'role': user.role,
+            'is_profile_completed': user.is_profile_completed
         })
 
         return data
