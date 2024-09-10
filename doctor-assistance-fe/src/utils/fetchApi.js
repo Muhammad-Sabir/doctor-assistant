@@ -1,5 +1,8 @@
 export const fetchApi = async (url, options = {}) => {
-  const response = await fetch(`http://localhost:8000/api/user/${url}`, options);
+
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const response = await fetch(`${baseUrl}/${url}`, options);
   const data = await response.json();
 
   if (!response.ok) {

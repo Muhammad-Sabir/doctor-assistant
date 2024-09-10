@@ -13,7 +13,7 @@ export default function ForgetPassword() {
     const [inputErrors, setInputErrors] = useState({});
 
     const forgotPassword = useCustomMutation({
-        url: 'send-reset-password/',
+        url: 'user/send-reset-password/',
         fetchFunction: fetchApi,
         onSuccessMessage: 'Password reset email sent.',
         onErrorMessage: 'Failed to send reset email',

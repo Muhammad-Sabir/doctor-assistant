@@ -13,7 +13,7 @@ const EmailVerificationMessage = () => {
     const [status, setStatus] = useState('loading');
 
     const { mutate: verifyAccount, isSuccess, isError } = useCustomMutation({
-        url: ({ uid, token }) => `verify-account/${uid}/${token}`,
+        url: ({ uid, token }) => `user/verify-account/${uid}/${token}`,
         fetchFunction: fetchApi,
         onSuccessMessage: 'Your account has been verified successfully.',
         onErrorMessage: 'Verification failed',

@@ -26,7 +26,7 @@ export default function SignUp() {
   const [inputErrors, setInputErrors] = useState({});
 
   const signupMutation = useCustomMutation({
-    url: 'register/',
+    url: 'user/register/',
     fetchFunction: fetchApi,
     onSuccessMessage: 'A verification email has been sent to your email address.',
     onErrorMessage: 'Signup failed',

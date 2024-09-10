@@ -19,7 +19,6 @@ export default function AuthLayout({ children }) {
             navigate(role === 'doctor' ? '/doctor' : '/patient');
         } else {
             console.log('Access Token or Role is missing');
-            navigate('/login');
         }
     }, [navigate]);
 

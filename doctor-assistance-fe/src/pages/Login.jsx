@@ -23,7 +23,7 @@ export default function Login() {
     const [inputErrors, setInputErrors] = useState({});
 
     const {mutate: login, isSuccess, isError, data, error} = useCustomMutation({
-        url: 'login/',
+        url: 'user/login/',
         fetchFunction: fetchApi,
         onSuccessMessage: 'Logged in successfully.',
         onErrorMessage: 'Login failed'

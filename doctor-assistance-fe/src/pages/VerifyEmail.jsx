@@ -12,7 +12,7 @@ export default function VerifyEmail() {
     const [inputErrors, setInputErrors] = useState({});
 
     const sendVerificationEmail = useCustomMutation({
-        url: 'send-verify-email/',
+        url: 'user/send-verify-email/',
         fetchFunction: fetchApi,
         onSuccessMessage: 'Verification email sent.',
         onErrorMessage: 'Failed to send verification email',

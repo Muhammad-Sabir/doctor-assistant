@@ -23,7 +23,7 @@ export default function ResetPassword() {
     const [redirectMessage, setRedirectMessage] = useState('');
 
     const { mutate: resetPassword, isSuccess} = useCustomMutation({
-        url: ({ uid, token }) => `reset-password-confirm/${uid}/${token}`,
+        url: ({ uid, token }) => `user/reset-password-confirm/${uid}/${token}`,
         fetchFunction: fetchApi,
         onSuccessMessage: 'Password reset successfully.',
         onErrorMessage: 'Failed to reset password',
