@@ -3,6 +3,10 @@ const validationRules = {
         test: (value) => /^[a-zA-Z]+ [a-zA-Z]+$/.test(value),
         message: "Name must include both first and last name",
     },
+    username: {
+        test: (value) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value) || /^(?:\+92|0)?\d{10}$/.test(value),
+        message: "Username must be a valid email or phone number",
+    },
     email: {
         test: (value) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value),
         message: "Email is invalid",
@@ -12,9 +16,9 @@ const validationRules = {
         message: "Password must be at least 8 characters long",
     },
     phoneNo: {
-        test: (value) => /^\+92 \d{3} \d{7}$/.test(value),
-        message: "Phone number must be in the format +92 000 0000000",
-    },
+        test: (value) => /^(?:\+92|0)?\d{10}$/.test(value),
+        message: "Phone number must be in the format '+923039916210' or '03039916210'.",
+    },    
     confirmPassword: {
         test: (value, password) => value === password,
         message: "Passwords do not match",

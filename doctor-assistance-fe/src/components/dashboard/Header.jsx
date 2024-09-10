@@ -1,13 +1,11 @@
-import React from 'react'
-import MobileMenu from './MobileMenu'
-import UserProfileMenu from './UserProfileMenu'
-import Notifications from './Notifications'
-import { AuthContext } from '@/contexts/AuthContext'
-import { useContext } from 'react'
+import React from 'react';
+import MobileMenu from './MobileMenu';
+import Notifications from './Notifications';
+import UserProfileMenu from './UserProfileMenu';
 
 export default function Header() {
-
-    const { user } = useContext(AuthContext);
+    const user = JSON.parse(localStorage.getItem('user'));
+    const role = user?.role;
 
     const currentDate = new Date().toLocaleDateString('en-GB', {
         day: 'numeric',
@@ -21,13 +19,13 @@ export default function Header() {
             <div className="w-full flex-1">
                 <form>
                     <div className="relative">
-                        <p className="text-md font-semibold">Hello, {user?.name || user.role}</p>
+                        <p className="text-md font-semibold">Hello, {role || 'Guest'}</p>
                     </div>
                 </form>
             </div>
             <p className="hidden sm:block text-sm font-medium text-gray-500">{currentDate}</p>
             <Notifications />
-            <UserProfileMenu />
+            <UserProfileMenu/>
         </header>
-    )
+    );
 }

@@ -6,23 +6,28 @@ import logo from '@/assets/images/svg/webLogo.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FcGoogle } from 'react-icons/fc';
-import { useAuthContext } from '@/contexts/AuthContext';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { BiSolidError } from "react-icons/bi";
 import { validateField } from '@/utils/validationRules';
+import { useCustomMutation } from '@/hooks/useCustomMutation';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function Login() {
     const [activeTab, setActiveTab] = useState('patient');
-    const { login, user} = useAuthContext();
     const navigate = useNavigate();
-
     const [loginDetails, setLoginDetails] = useState({
-        email: "",
+        username: "",
         password: ""
     });
-
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [inputErrors, setInputErrors] = useState({});
+
+    const {mutate: login, isSuccess, isError, data, error} = useCustomMutation({
+        url: 'login/',
+        fetchFunction: fetchWithAuth,
+        onSuccessMessage: 'Logged in successfully.',
+        onErrorMessage: 'Login failed'
+    });
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -38,31 +43,41 @@ export default function Login() {
         setInputErrors(errors);
     };
 
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault();
-        const { email, password } = loginDetails;
+        const { username, password } = loginDetails;
 
         if (Object.keys(inputErrors).length > 0) {
             return;
         }
 
-        await login(email, password, activeTab);
+        login({ username, password, role: activeTab });
     };
 
     useEffect(() => {
-        if (user) {
-            navigate(user.role === 'doctor' ? '/doctor' : '/patient');
+        if (isSuccess) {
+            const user = {
+                access_token: data.access,
+                refresh_token: data.refresh,
+                role: data.role,
+                is_profile_completed: data.is_profile_completed
+            };
+            localStorage.setItem('user', JSON.stringify(user));
+            navigate(`/${data.role}`);
+           
         }
-    }, [user, navigate]);
+        if (isError) {
+            if (error.status === 400) {
+                navigate('/verify-email');
+            }
+        }
+    }, [isSuccess, isError, data, navigate]);
 
     return (
         <>
             <div className="grid gap-2 text-center">
                 <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
                 <h1 className="text-3xl font-bold">Login</h1>
-                <p className="text-balance text-muted-foreground">
-                    Enter your email below to login to your account
-                </p>
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                     <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="patient">Patient</TabsTrigger>
@@ -72,20 +87,20 @@ export default function Login() {
             </div>
             <form className="grid gap-4" onSubmit={handleLogin}>
                 <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="username">Username</Label>
                     <Input
-                        id="email"
-                        type="email"
-                        placeholder="m@gmail.com"
-                        value={loginDetails.email}
+                        id="username"
+                        type="text"
+                        placeholder="Enter email or phone number"
+                        value={loginDetails.username}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className={inputErrors.email ? 'border-red-500' : ''}
+                        className={inputErrors.username ? 'border-red-500' : ''}
                         required
                     />
-                    {inputErrors.email && (
+                    {inputErrors.username && (
                         <div aria-live="assertive" className="flex text-red-500 text-sm">
-                            <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.email}
+                            <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.username}
                         </div>
                     )}
                 </div>

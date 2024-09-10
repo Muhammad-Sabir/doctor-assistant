@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '@/contexts/AuthContext';
 import logoIcon from '@/assets/images/svg/logo-icon.svg';
 import { Home, ShoppingCart, Package, Users, LineChart, Settings, LogOut } from 'lucide-react';
 
@@ -26,13 +25,15 @@ const accountLinks = [
 ];
 
 export default function Sidebar() {
-    const { user, logout } = useContext(AuthContext);
+    const user = JSON.parse(localStorage.getItem('user'));
+    const role = user?.role;
     const [activeItem, setActiveItem] = useState("Dashboard");
-    const items = sidebarItems[user.role] || [];
+    const items = sidebarItems[role] || [];
 
     const handleSetActive = async (itemName) => {
         if (itemName === "Logout") {
-            await logout();
+            localStorage.removeItem('user'); 
+            window.location.href = '/login'; 
         }
         setActiveItem(itemName);
     };
@@ -41,7 +42,7 @@ export default function Sidebar() {
         <div className="hidden bg-muted/40 md:block">
             <div className="flex h-full max-h-screen flex-col gap-2">
                 <div className="flex h-14 items-center px-4 lg:h-[60px] lg:px-6">
-                    <Link to={`/${user.role}`} className="flex items-center gap-2 font-semibold">
+                    <Link to={`/${role}`} className="flex items-center gap-2 font-semibold">
                         <img src={logoIcon} alt="LogoIcon" className="h-6 w-6" />
                         <span className="text-primary font-semibold">Doctor Assistance</span>
                     </Link>
@@ -69,7 +70,7 @@ export default function Sidebar() {
                         {accountLinks.map((item, index) => (
                             <Link
                                 key={index}
-                                to={`/${user.role}/${item.url}`}
+                                to={`/${role}/${item.url}`}
                                 onClick={() => handleSetActive(item.name)}
                                 className={`flex items-center gap-3 rounded-lg px-3 py-3 text-muted-foreground transition-all 
                                     ${activeItem === item.name ? 'bg-primary text-white' : 'hover:bg-accent'}`}

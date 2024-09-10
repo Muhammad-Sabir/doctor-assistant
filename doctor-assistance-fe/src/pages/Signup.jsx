@@ -7,24 +7,33 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FcGoogle } from 'react-icons/fc';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { useAuthContext } from '@/contexts/AuthContext';
 import { BiSolidError } from "react-icons/bi";
 import { validateField } from '@/utils/validationRules';
+import { useCustomMutation } from '@/hooks/useCustomMutation';
+import { fetchApi } from '@/utils/fetchApi';
 
 export default function SignUp() {
   const [activeTab, setActiveTab] = useState('patient');
-  const { register, user} = useAuthContext();
   const navigate = useNavigate();
 
   const [userDetails, setUserDetails] = useState({
-    name: "",
     email: "",
+    password: "",
     phoneNo: "",
-    password: ""
   });
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [inputErrors, setInputErrors] = useState({});
+
+  const signupMutation = useCustomMutation({
+    url: 'register/',
+    fetchFunction: fetchApi,
+    onSuccessMessage: 'A verification email has been sent to your email address.',
+    onErrorMessage: 'Signup failed',
+    onSuccess: () => {
+      navigate('/verify-email'); 
+    }
+  });
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -42,19 +51,15 @@ export default function SignUp() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const { name, email, password, phoneNo } = userDetails;
+    const { email, password, phoneNo} = userDetails;
 
     if (Object.keys(inputErrors).length > 0) {
       return;
     }
-    await register(name, email, password, phoneNo, activeTab);
+    
+    sessionStorage.setItem('email', email);
+    signupMutation.mutate({ email, password, phone_number: phoneNo, role:activeTab });
   };
-
-  useEffect(() => {
-    if (user) {
-      navigate(user.role === 'doctor' ? '/doctor' : '/patient');
-    }
-  }, [user, navigate]);
 
   return (
     <>
@@ -72,24 +77,6 @@ export default function SignUp() {
         </Tabs>
       </div>
       <form className="grid gap-4" onSubmit={handleSignup}>
-        <div className="grid gap-2">
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            type="text"
-            placeholder="First Last"
-            value={userDetails.name}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={inputErrors.name ? 'border-red-500' : ''}
-            required
-          />
-          {inputErrors.name && (
-            <div aria-live="assertive" className="flex text-red-500 text-sm">
-              <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.name}
-            </div>
-          )}
-        </div>
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
           <Input

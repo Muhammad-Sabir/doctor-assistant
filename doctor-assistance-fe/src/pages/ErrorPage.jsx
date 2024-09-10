@@ -1,15 +1,18 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '@/contexts/AuthContext';
 import errorImage from "@/assets/images/webp/errorImage.webp";
 
 export default function ErrorPage() {
-    const { user } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
     const handleButtonClick = () => {
-        if (user) {
-            navigate(`/${user.role}`);
+        const accessToken = user.access_token; 
+        const role = user.role;
+
+        if (accessToken && role) {
+            navigate(`/${role}`);
         } else {
             navigate('/login');
         }
@@ -30,7 +33,7 @@ export default function ErrorPage() {
                     onClick={handleButtonClick}
                     className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
                 >
-                    {user ? 'Go to Dashboard' : 'Go to Login'}
+                    {user.access_token && user.role ? 'Go to Dashboard' : 'Go to Login'}
                 </button>
             </div>
         </div>

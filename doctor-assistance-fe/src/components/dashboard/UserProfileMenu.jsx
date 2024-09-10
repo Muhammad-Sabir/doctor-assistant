@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -8,19 +8,23 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AuthContext } from '@/contexts/AuthContext';
 
 export default function UserProfileMenu() {
-
-    const { user, logout } = useContext(AuthContext);
+    const user = JSON.parse(localStorage.getItem('user')) || {};
+    const role = user.role || 'guest';
 
     const getInitials = () => {
-        const initials = user?.name?.split(' ').map(name => name[0]).join('') || 'AU';
+        const initials = role.split(' ').map(r => r[0]).join('') || 'G';
         return initials.toUpperCase();
     };
 
     const handleLogout = async () => {
-        await logout();
+        try {
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
     };
 
     return (

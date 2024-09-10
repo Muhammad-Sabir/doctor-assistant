@@ -1,23 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '@/assets/images/svg/webLogo.svg';
-import { Button } from '@/components/ui/button'; 
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { validateField } from '@/utils/validationRules';
 import { BiSolidError } from 'react-icons/bi';
-import { Link } from 'react-router-dom';
 import { useCustomMutation } from '@/hooks/useCustomMutation';
 import { fetchApi } from '@/utils/fetchApi';
 
-export default function ForgetPassword() {
+export default function VerifyEmail() {
     const [email, setEmail] = useState('');
     const [inputErrors, setInputErrors] = useState({});
 
-    const forgotPassword = useCustomMutation({
-        url: 'send-reset-password/',
+    const sendVerificationEmail = useCustomMutation({
+        url: 'send-verify-email/',
         fetchFunction: fetchApi,
-        onSuccessMessage: 'Password reset email sent.',
-        onErrorMessage: 'Failed to send reset email',
+        onSuccessMessage: 'Verification email sent.',
+        onErrorMessage: 'Failed to send verification email',
     });
+
+    useEffect(() => {
+        const storedEmail = sessionStorage.getItem('email');
+        if (storedEmail) {
+            setEmail(storedEmail);
+        }
+    }, []);
 
     const handleEmailChange = (e) => {
         const { value } = e.target;
@@ -26,34 +32,37 @@ export default function ForgetPassword() {
         setInputErrors(errors);
     };
 
-    const handleSubmit = (e) => {
+    const handleResendEmail = (e) => {
         e.preventDefault();
         if (Object.keys(inputErrors).length === 0) {
-            forgotPassword.mutate({ email });
+            if (email) {
+                sendVerificationEmail.mutate({ email });
+                sessionStorage.removeItem('email');
+            }
         }
     };
 
     return (
         <div className="grid gap-2 text-center">
             <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-auto" />
-            <h1 className="text-3xl font-bold">Forgot Password?</h1>
+            <h1 className="text-3xl font-bold">Verify Your Email</h1>
             <p className="text-gray-600 mb-6">
-                Please enter your email address below to receive a password reset link
+                {email ? "We have sent a verification link to:" : "Please enter your email address to receive a verification link:"}
             </p>
-            <form className="grid gap-4" onSubmit={handleSubmit}>
+            <form className="grid gap-4" onSubmit={handleResendEmail}>
                 <div className="grid gap-2">
                     <div className="relative">
                         <Input
                             id="email"
-                            type="text"
+                            type="email"
+                            placeholder={email ? "" : "Enter your email"}
                             value={email}
                             onChange={handleEmailChange}
-                            placeholder="Enter your email"
                             className={`${inputErrors.email ? 'border-red-500' : ''}`}
                             required
                         />
                         {inputErrors.email && (
-                            <div aria-live="assertive" className="flex text-red-500 text-sm mt-2">
+                            <div aria-live="assertive" className="flex text-red-500 text-sm mb-4 mt-2">
                                 <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.email}
                             </div>
                         )}
@@ -63,15 +72,9 @@ export default function ForgetPassword() {
                     type="submit"
                     className="w-full"
                 >
-                    Send Reset Link
+                    Resend Verification Email
                 </Button>
             </form>
-            <div className="mt-4 text-center text-sm">
-                Back to Login?{" "}
-                <Link to="/login" className="underline text-primary">
-                    Login
-                </Link>
-            </div>
         </div>
     );
 }

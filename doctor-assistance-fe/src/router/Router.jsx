@@ -7,6 +7,9 @@ import Login from '@/pages/Login';
 import ErrorPage from '@/pages/ErrorPage';
 import DoctorRoutes from './DoctorRoutes';
 import PatientRoutes from './PatientRoutes';
+import VerifyEmail from '@/pages/VerifyEmail';
+import EmailVerificationMessage from '@/pages/EmailVerificationMessage';
+import ResetPassword from '@/pages/ResetPassword';
 
 const Router = createBrowserRouter([
     {
@@ -22,8 +25,20 @@ const Router = createBrowserRouter([
         element: <AuthLayout children={<Login/>}/>,
     },
     {
+        path: 'reset-password/:reset_uid/:reset_token',
+        element: <AuthLayout children={<ResetPassword/>}/>,
+    },
+    {
         path: 'forgot-password',
         element: <AuthLayout children={<ForgetPassword/>}/>,
+    },
+    {
+        path: 'verify-email',
+        element: <AuthLayout children={<VerifyEmail/>}/>,
+    },
+    {
+        path: 'verify-account/:verify_uid/:verify_token',
+        element: <AuthLayout children={<EmailVerificationMessage/>}/>,
     },
     {
         path: '/doctor/*',

@@ -1,16 +1,19 @@
-import React from 'react'
-import { RouterProvider } from 'react-router-dom'
-import Router from './router/Router'
-import { AuthContextProvider } from './contexts/AuthContext'
+import React from 'react';
+import { RouterProvider } from 'react-router-dom';
+import Router from './router/Router';
 import { Toaster } from 'sonner';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 export default function App() {
+  const queryClient = new QueryClient();
+
   return (
-    <AuthContextProvider>
-      <Toaster richColors position="top-right" duration={3000} toastOptions={{
-        className: 'border border-gray-200 shadow-lg p-4'
-      }} />
-      <RouterProvider router={Router} />
-    </AuthContextProvider>
-  )
+      <QueryClientProvider client={queryClient}>
+        <Toaster richColors position="top-right" duration={3000} toastOptions={{
+          className: 'border border-gray-200 shadow-lg p-4'
+        }} />
+        <RouterProvider router={Router} />
+      </QueryClientProvider>
+    
+  );
 }
