@@ -10,7 +10,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { BiSolidError } from "react-icons/bi";
 import { validateField } from '@/utils/validationRules';
 import { useCustomMutation } from '@/hooks/useCustomMutation';
-import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import { fetchApi } from '@/utils/fetchApi';
 
 export default function Login() {
     const [activeTab, setActiveTab] = useState('patient');
@@ -24,7 +24,7 @@ export default function Login() {
 
     const {mutate: login, isSuccess, isError, data, error} = useCustomMutation({
         url: 'login/',
-        fetchFunction: fetchWithAuth,
+        fetchFunction: fetchApi,
         onSuccessMessage: 'Logged in successfully.',
         onErrorMessage: 'Login failed'
     });
@@ -56,15 +56,15 @@ export default function Login() {
 
     useEffect(() => {
         if (isSuccess) {
+            const { access, refresh, role, is_profile_completed } = data.data;
             const user = {
-                access_token: data.access,
-                refresh_token: data.refresh,
-                role: data.role,
-                is_profile_completed: data.is_profile_completed
+                access_token: access,
+                refresh_token: refresh,
+                role: role,
+                is_profile_completed: is_profile_completed
             };
             localStorage.setItem('user', JSON.stringify(user));
-            navigate(`/${data.role}`);
-           
+            navigate(`/${role}`);
         }
         if (isError) {
             if (error.status === 400) {
