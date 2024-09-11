@@ -45,7 +45,12 @@ export const useCustomMutation = ({
         },
         onError: (error) => {
             toast.dismiss(`${url}-loading`);
-            const errorMessage = error?.response?.non_field_errors?.[0] || error?.response?.message || error.message || 'An unexpected error occurred';
+            let errorMessage = 'An unexpected error occurred';
+            if (error.status === 401) {
+                errorMessage = 'Unauthorized: Invalid credentials';
+            } else if (error.response) {
+                errorMessage = error.response.non_field_errors?.[0] || error.response.message || 'An error occurred';
+            }
             toast.error(`${onErrorMessage}: ${errorMessage}`);
             onError(error);
         },
