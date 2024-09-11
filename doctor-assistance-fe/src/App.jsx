@@ -1,8 +1,9 @@
 import React from 'react';
 import { RouterProvider } from 'react-router-dom';
-import Router from './router/Router';
 import { Toaster } from 'sonner';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+
+import Router from './router/Router';
 
 export default function App() {
   const queryClient = new QueryClient();

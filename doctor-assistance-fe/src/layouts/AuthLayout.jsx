@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import authImage from "@/assets/images/webp/authImage.webp";
 
 export default function AuthLayout({ children }) {
@@ -15,10 +16,7 @@ export default function AuthLayout({ children }) {
            /*  if (!isProfileCompleted) {
                 navigate('/complete-profile');
             } else { */
-                
             navigate(role === 'doctor' ? '/doctor' : '/patient');
-        } else {
-            console.log('Access Token or Role is missing');
         }
     }, [navigate]);
 

@@ -1,6 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import { getErrorMessage } from '@/utils/errorUtils';
+
 export const useCustomMutation = ({
     url,
     method = 'POST',
@@ -45,12 +47,7 @@ export const useCustomMutation = ({
         },
         onError: (error) => {
             toast.dismiss(`${url}-loading`);
-            let errorMessage = 'An unexpected error occurred';
-            if (error.status === 401) {
-                errorMessage = 'Unauthorized: Invalid credentials';
-            } else if (error.response) {
-                errorMessage = error.response.non_field_errors?.[0] || error.response.message || 'An error occurred';
-            }
+            const errorMessage = getErrorMessage(error); 
             toast.error(`${onErrorMessage}: ${errorMessage}`);
             onError(error);
         },

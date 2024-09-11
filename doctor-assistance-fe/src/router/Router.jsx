@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
+
 import HomePage from '@/pages/home/HomePage';
 import AuthLayout from '@/layouts/AuthLayout';
 import ForgetPassword from '@/pages/ForgetPassword';

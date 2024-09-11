@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
+
 import ProtectedRoute from '@/utils/ProtectedRoutes';
 import Home from '@/pages/patient/Home';
 import Profile from '@/pages/patient/Profile';

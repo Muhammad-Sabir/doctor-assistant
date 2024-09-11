@@ -1,18 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Home, ShoppingCart, Package, Users, LineChart, Menu, Settings, LogOut } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
+
 import logoIcon from '@/assets/images/svg/logo-icon.svg';
-import {
-    Home,
-    ShoppingCart,
-    Package,
-    Users,
-    LineChart,
-    Menu,
-    Settings,
-    LogOut
-} from 'lucide-react';
 
 const menuItems = {
     doctor: [
@@ -47,8 +40,8 @@ export default function MobileMenu() {
 
     const handleSetActive = async (itemName) => {
         if (itemName === "Logout") {
-            localStorage.removeItem('user'); 
-            window.location.href = '/login'; 
+            localStorage.removeItem('user');
+            window.location.href = '/login';
         }
         setActiveItem(itemName);
         setIsOpen(false);

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import logo from '@/assets/images/svg/webLogo.svg';
 import { Link, useNavigate } from 'react-router-dom';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FcGoogle } from 'react-icons/fc';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { BiSolidError } from "react-icons/bi";
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+import logo from '@/assets/images/svg/webLogo.svg';
 import { validateField } from '@/utils/validationRules';
 import { useCustomMutation } from '@/hooks/useCustomMutation';
 import { fetchApi } from '@/utils/fetchApi';
@@ -67,7 +69,7 @@ export default function Login() {
             navigate(`/${role}`);
         }
         if (isError) {
-            if (error.status === 400) {
+            if (error.status === 400 && error.message === "Account is not verified.") {
                 navigate('/verify-email');
             }
         }

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logoIcon from '@/assets/images/svg/logo-icon.svg';
 import { Home, ShoppingCart, Package, Users, LineChart, Settings, LogOut } from 'lucide-react';
+
+import logoIcon from '@/assets/images/svg/logo-icon.svg';
 
 const sidebarItems = {
     doctor: [

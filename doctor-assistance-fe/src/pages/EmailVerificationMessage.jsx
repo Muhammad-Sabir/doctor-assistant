@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import logo from '@/assets/images/svg/webLogo.svg';
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { BiErrorCircle } from "react-icons/bi";
+
 import loadingSVG from '@/assets/images/svg/loading.svg';
+import logo from '@/assets/images/svg/webLogo.svg';
 import { fetchApi } from '@/utils/fetchApi';
 import { useCustomMutation } from '@/hooks/useCustomMutation';
 
-const EmailVerificationMessage = () => {
+export default function EmailVerificationMessage(){
     const { verify_uid, verify_token } = useParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('loading');
@@ -79,5 +80,3 @@ const EmailVerificationMessage = () => {
         </div>
     );
 };
-
-export default EmailVerificationMessage;

@@ -1,12 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import errorImage from "@/assets/images/webp/errorImage.webp";
 
 export default function ErrorPage() {
     const navigate = useNavigate();
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    
+
     const handleButtonClick = () => {
         const accessToken = user.access_token; 
         const role = user.role;

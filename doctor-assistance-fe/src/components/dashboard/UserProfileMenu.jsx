@@ -1,21 +1,15 @@
 import React from 'react';
+
 import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
+    DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, } from "@/components/ui/dropdown-menu";
 
 export default function UserProfileMenu() {
     const user = JSON.parse(localStorage.getItem('user')) || {};
     const role = user.role || 'guest';
 
     const getInitials = () => {
-        const initials = role.split(' ').map(r => r[0]).join('') || 'G';
-        return initials.toUpperCase();
+        return (role.charAt(0).toUpperCase());
     };
 
     const handleLogout = async () => {
