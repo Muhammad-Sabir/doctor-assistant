@@ -3,9 +3,10 @@ import { RouterProvider } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
-import Router from './router/Router';
+import Router from '@/router/Router';
 
 export default function App() {
+  
   const queryClient = new QueryClient();
 
   return (

@@ -1,6 +1,6 @@
 const validationRules = {
     name: {
-        test: (value) => /^[a-zA-Z]+ [a-zA-Z]+$/.test(value),
+        test: (value) => /^[a-zA-Z]+( [a-zA-Z]+)+$/.test(value),
         message: "Name must include both first and last name",
     },
     username: {

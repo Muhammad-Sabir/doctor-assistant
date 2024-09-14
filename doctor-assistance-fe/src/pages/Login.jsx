@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import logo from '@/assets/images/svg/webLogo.svg';
-import { validateField } from '@/utils/validationRules';
+import { validateField } from '@/utils/validationUtils';
 import { useCustomMutation } from '@/hooks/useCustomMutation';
 import { fetchApi } from '@/utils/fetchApi';
 
@@ -49,11 +49,10 @@ export default function Login() {
         e.preventDefault();
         const { username, password } = loginDetails;
 
-        if (Object.keys(inputErrors).length > 0) {
-            return;
+        const hasNoFieldErrors = () => Object.keys(inputErrors).length === 0;
+        if (hasNoFieldErrors()) {
+            login({ username, password, role: activeTab });
         }
-
-        login({ username, password, role: activeTab });
     };
 
     useEffect(() => {
@@ -139,7 +138,7 @@ export default function Login() {
                     )}
                 </div>
                 <Button type="submit" className="w-full">Login</Button>
-                <Button variant="outline" className="w-full">
+                <Button type="button" variant="outline" className="w-full">
                     <FcGoogle className="mr-2 text-xl" /> Login with Google
                 </Button>
             </form>

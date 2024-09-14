@@ -1,42 +1,31 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Home, ShoppingCart, Package, Users, LineChart, Settings, LogOut } from 'lucide-react';
 
 import logoIcon from '@/assets/images/svg/logo-icon.svg';
-
-const sidebarItems = {
-    doctor: [
-        { icon: <Home className="icon-size" />, url: "/doctor/dashboard", name: "Dashboard" },
-        { icon: <ShoppingCart className="icon-size" />, url: "/doctor/orders", name: "Orders" },
-        { icon: <Package className="icon-size" />, url: "/doctor/products", name: "Products" },
-        { icon: <Users className="icon-size" />, url: "/doctor/customers", name: "Customers" },
-        { icon: <LineChart className="icon-size" />, url: "/doctor/analytics", name: "Analytics" },
-    ],
-    patient: [
-        { icon: <Home className="icon-size" />, url: "/patient/chat", name: "Chat" },
-        { icon: <ShoppingCart className="icon-size" />, url: "/patient/my-patients", name: "My Patients" },
-        { icon: <LineChart className="icon-size" />, url: "/patient/my-doctors", name: "My Doctors" },
-        { icon: <Home className="icon-size" />, url: "/patient/home", name: "Dashboard" },
-    ],
-};
-
-const accountLinks = [
-    { icon: <Settings className="icon-size" />, url: "profile", name: "Profile" },
-    { icon: <LogOut className="icon-size" />, url: "logout", name: "Logout" },
-];
+import { getAuthStatus } from '@/utils/authUtils';
+import { menuItems, accountLinks } from '@/assets/data/MenuData';
 
 export default function Sidebar() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const role = user?.role;
-    const [activeItem, setActiveItem] = useState("Dashboard");
-    const items = sidebarItems[role] || [];
 
-    const handleSetActive = async (itemName) => {
-        if (itemName === "Logout") {
-            localStorage.removeItem('user'); 
-            window.location.href = '/login'; 
+    const { user } = getAuthStatus();
+    const role = user?.role;
+
+    const [activeItem, setActiveItem] = useState("Dashboard");
+    const items = menuItems[role] || [];
+
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+    };
+
+    const handleMenuItemClick = async (itemName) => {
+        const isLogoutItem = () => itemName === "Logout";
+
+        if (isLogoutItem()) {
+            handleLogout();
+        } else {
+            setActiveItem(itemName);
         }
-        setActiveItem(itemName);
     };
 
     return (
@@ -55,7 +44,7 @@ export default function Sidebar() {
                             <Link
                                 key={index}
                                 to={item.url}
-                                onClick={() => handleSetActive(item.name)}
+                                onClick={() => handleMenuItemClick(item.name)}
                                 className={`flex items-center gap-3 rounded-lg px-3 py-3 text-muted-foreground transition-all 
                                     ${activeItem === item.name ? 'bg-primary text-white' : 'hover:bg-accent'}`}
                             >
@@ -72,7 +61,7 @@ export default function Sidebar() {
                             <Link
                                 key={index}
                                 to={`/${role}/${item.url}`}
-                                onClick={() => handleSetActive(item.name)}
+                                onClick={() => handleMenuItemClick(item.name)}
                                 className={`flex items-center gap-3 rounded-lg px-3 py-3 text-muted-foreground transition-all 
                                     ${activeItem === item.name ? 'bg-primary text-white' : 'hover:bg-accent'}`}
                             >

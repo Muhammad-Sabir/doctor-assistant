@@ -1,10 +1,11 @@
 import { fetchApi } from '@/utils/fetchApi';
 import { refreshAccessToken } from './refreshAccessToken';
+import { getAuthStatus } from './authUtils';
 
 export const fetchWithAuth = async (url, options = {}) => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const {user} = getAuthStatus();
     let accessToken = user.access_token; 
-    const refreshToken = user.refresh_token;
+    let refreshToken = user.refresh_token;
 
     if (accessToken) {
         options.headers = {

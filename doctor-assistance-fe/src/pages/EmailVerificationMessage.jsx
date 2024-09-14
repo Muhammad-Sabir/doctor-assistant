@@ -8,7 +8,7 @@ import logo from '@/assets/images/svg/webLogo.svg';
 import { fetchApi } from '@/utils/fetchApi';
 import { useCustomMutation } from '@/hooks/useCustomMutation';
 
-export default function EmailVerificationMessage(){
+export default function EmailVerificationMessage() {
     const { verify_uid, verify_token } = useParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('loading');
@@ -21,12 +21,8 @@ export default function EmailVerificationMessage(){
     });
 
     useEffect(() => {
-        if (verify_uid && verify_token) {
-            verifyAccount({ uid: verify_uid, token: verify_token });
-        } else {
-            navigate('*');
-        }
-    }, [verify_uid, verify_token, verifyAccount, navigate]);
+        verifyAccount({ uid: verify_uid, token: verify_token });
+    }, [verify_uid, verify_token, verifyAccount]);
 
     useEffect(() => {
         if (isSuccess) {
@@ -72,7 +68,7 @@ export default function EmailVerificationMessage(){
                         <h1 className="text-xl font-semibold mb-4 text-red-700">Verification Failed!</h1>
                         <p className="text-gray-600">
                             There was an issue verifying your account.<br />
-                            Your link might have expired. Please <Link to={"/verify-email"} className="text-blue-500 hover:underline">click here</Link> to request a new verification email.
+                            Your link might have expired or is incorrect. Please <Link to={"/verify-email"} className="text-blue-500 hover:underline">click here</Link> to request a new verification email.
                         </p>
                     </div>
                 )}

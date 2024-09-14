@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import logo from '@/assets/images/svg/webLogo.svg';
-import { validateField } from '@/utils/validationRules';
+import { validateField } from '@/utils/validationUtils';
 import { useCustomMutation } from '@/hooks/useCustomMutation';
 import { fetchApi } from '@/utils/fetchApi';
 
@@ -36,11 +36,11 @@ export default function VerifyEmail() {
 
     const handleResendEmail = (e) => {
         e.preventDefault();
-        if (Object.keys(inputErrors).length === 0) {
-            if (email) {
-                sendVerificationEmail.mutate({ email });
-                sessionStorage.removeItem('email');
-            }
+
+        const hasNoFieldErrors = () => Object.keys(inputErrors).length === 0;
+        if (hasNoFieldErrors()) {
+            sendVerificationEmail.mutate({ email });
+            sessionStorage.removeItem('email');
         }
     };
 

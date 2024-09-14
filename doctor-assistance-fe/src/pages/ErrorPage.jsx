@@ -2,18 +2,16 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import errorImage from "@/assets/images/webp/errorImage.webp";
+import { getAuthStatus } from '@/utils/authUtils';
 
 export default function ErrorPage() {
     const navigate = useNavigate();
 
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const { isAuthenticated, user } = getAuthStatus();
 
     const handleButtonClick = () => {
-        const accessToken = user.access_token; 
-        const role = user.role;
-
-        if (accessToken && role) {
-            navigate(`/${role}`);
+        if (isAuthenticated) {
+            navigate(`/${user.role}`);
         } else {
             navigate('/login');
         }
@@ -24,7 +22,7 @@ export default function ErrorPage() {
             <h1 className="text-3xl font-bold text-primary mb-1">Oops!</h1>
             <img
                 src={errorImage}
-                alt="ErrorImage"
+                alt="Error page illustration"
                 className="w-full max-w-[400px] h-auto object-contain"
             />
             <div className="text-center mt-5">
@@ -34,7 +32,7 @@ export default function ErrorPage() {
                     onClick={handleButtonClick}
                     className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
                 >
-                    {user.access_token && user.role ? 'Go to Dashboard' : 'Go to Login'}
+                    {isAuthenticated? 'Go to Dashboard' : 'Go to Login'}
                 </button>
             </div>
         </div>

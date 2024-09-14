@@ -2,24 +2,29 @@ import React from 'react';
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
-    DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, } from "@/components/ui/dropdown-menu";
+    DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
+import { getAuthStatus } from '@/utils/authUtils';    
 
 export default function UserProfileMenu() {
-    const user = JSON.parse(localStorage.getItem('user')) || {};
-    const role = user.role || 'guest';
+
+    const { user } = getAuthStatus(); 
+    const role = user?.role || 'guest';
 
     const getInitials = () => {
-        return (role.charAt(0).toUpperCase());
+        return role.charAt(0).toUpperCase();
     };
 
-    const handleLogout = async () => {
-        try {
-            localStorage.removeItem('user');
-            window.location.href = '/login';
-        } catch (error) {
-            console.error('Logout failed:', error);
-        }
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        window.location.href = '/login';
     };
+
+    const menuItems = [
+        { label: 'Settings', onClick: () => {} },
+        { label: 'Support', onClick: () => {} },
+        { label: 'Logout', onClick: handleLogout },
+    ];
 
     return (
         <div className='hidden sm:block'>
@@ -27,8 +32,9 @@ export default function UserProfileMenu() {
                 <DropdownMenuTrigger asChild>
                     <Button
                         variant="outline"
-                        size='smallIcon'
+                        size="smallIcon"
                         className="overflow-hidden rounded-full p-2 bg-primary"
+                        aria-label="User profile menu"
                     >
                         <div className="flex items-center justify-center bg-primary">
                             <span className="text-xs text-white">
@@ -40,10 +46,11 @@ export default function UserProfileMenu() {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                    <DropdownMenuItem>Support</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+                    {menuItems.map((item, index) => (
+                        <DropdownMenuItem key={index} onClick={item.onClick}>
+                            {item.label}
+                        </DropdownMenuItem>
+                    ))}
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>

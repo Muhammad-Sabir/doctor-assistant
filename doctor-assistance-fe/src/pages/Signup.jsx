@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import logo from '@/assets/images/svg/webLogo.svg';
-import { validateField } from '@/utils/validationRules';
+import { validateField } from '@/utils/validationUtils';
 import { useCustomMutation } from '@/hooks/useCustomMutation';
 import { fetchApi } from '@/utils/fetchApi';
 
@@ -33,7 +33,7 @@ export default function SignUp() {
     onSuccessMessage: 'A verification email has been sent to your email address.',
     onErrorMessage: 'Signup failed',
     onSuccess: () => {
-      navigate('/verify-email'); 
+      navigate('/verify-email');
     }
   });
 
@@ -53,14 +53,13 @@ export default function SignUp() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const { email, password, phoneNo} = userDetails;
+    const { email, password, phoneNo } = userDetails;
 
-    if (Object.keys(inputErrors).length > 0) {
-      return;
+    const hasNoFieldErrors = () => Object.keys(inputErrors).length === 0;
+    if (hasNoFieldErrors()) {
+      sessionStorage.setItem('email', email);
+      signupMutation.mutate({ email, password, phone_number: phoneNo, role: activeTab });
     }
-    
-    sessionStorage.setItem('email', email);
-    signupMutation.mutate({ email, password, phone_number: phoneNo, role:activeTab });
   };
 
   return (
@@ -143,7 +142,7 @@ export default function SignUp() {
           )}
         </div>
         <Button type="submit" className="w-full">Sign Up</Button>
-        <Button variant="outline" className="w-full">
+        <Button type="button" variant="outline" className="w-full">
           <FcGoogle className="mr-2 text-xl" /> Sign Up with Google
         </Button>
       </form>

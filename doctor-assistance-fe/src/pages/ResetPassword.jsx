@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import logo from "@/assets/images/svg/webLogo.svg";
-import { validateField } from '@/utils/validationRules';
+import { validateField } from "@/utils/validationUtils";
 import { useCustomMutation } from '@/hooks/useCustomMutation';
 import { fetchApi } from '@/utils/fetchApi';
 
@@ -24,7 +24,7 @@ export default function ResetPassword() {
     const [inputErrors, setInputErrors] = useState({});
     const [redirectMessage, setRedirectMessage] = useState('');
 
-    const { mutate: resetPassword, isSuccess} = useCustomMutation({
+    const { mutate: resetPassword, isSuccess } = useCustomMutation({
         url: ({ uid, token }) => `user/reset-password-confirm/${uid}/${token}`,
         fetchFunction: fetchApi,
         onSuccessMessage: 'Password reset successfully.',
@@ -59,7 +59,8 @@ export default function ResetPassword() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (formData.password !== formData.confirmPassword) {
+        const passwordsMatch = formData.password === formData.confirmPassword;
+        if (!passwordsMatch) {
             setInputErrors({
                 ...inputErrors,
                 confirmPassword: 'Passwords do not match'
@@ -67,7 +68,8 @@ export default function ResetPassword() {
             return;
         }
 
-        if (Object.keys(inputErrors).length === 0) {
+        const hasNoFieldErrors = () => Object.keys(inputErrors).length === 0;
+        if (hasNoFieldErrors()) {
             resetPassword({
                 uid: reset_uid,
                 token: reset_token,

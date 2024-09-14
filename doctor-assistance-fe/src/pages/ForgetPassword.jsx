@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import logo from '@/assets/images/svg/webLogo.svg';
-import { validateField } from '@/utils/validationRules';
+import { validateField } from '@/utils/validationUtils';
 import { useCustomMutation } from '@/hooks/useCustomMutation';
 import { fetchApi } from '@/utils/fetchApi';
 
@@ -30,7 +30,9 @@ export default function ForgetPassword() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (Object.keys(inputErrors).length === 0) {
+
+        const hasNoFieldErrors = () => Object.keys(inputErrors).length === 0;
+        if (hasNoFieldErrors()) {
             forgotPassword.mutate({ email });
         }
     };
