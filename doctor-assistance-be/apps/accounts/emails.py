@@ -14,7 +14,7 @@ def send_verification_email(user, uid, token):
     send_email(data)
 
 def send_password_reset_email(user, uid, token):
-    reset_url = f"{config('CLIENT_URL')}/{uid}/{token}"
+    reset_url = f"{config('CLIENT_URL')}/reset-password/{uid}/{token}"
     body = f"Click the following link to reset your password:\n{reset_url}"
     data = {
         'subject': 'Reset Your Password',
