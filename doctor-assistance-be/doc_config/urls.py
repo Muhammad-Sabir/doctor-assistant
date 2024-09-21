@@ -9,5 +9,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/user/', include('apps.accounts.urls')),
     path('api/', include('apps.facilities.urls')),
+    path('api/', include('apps.profiles.urls')),
     path('__debug__/', include(debug_toolbar.urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -12,5 +12,6 @@ First replace the .env.template with .env and fill its fields and make sure, you
     - `python manage.py migrate`
 3.  If you are running the django first time:
     - `python manage.py load_hospitals`
+    - `python manage.py load_specialities`
 4.  To Run the server:
     - `python manage.py runserver`
