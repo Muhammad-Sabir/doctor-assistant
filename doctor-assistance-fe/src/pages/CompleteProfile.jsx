@@ -28,21 +28,21 @@ export default function CompleteProfile() {
     });
 
     const nextStep = () => {
-        if (currentStep < totalSteps) {
-            setCurrentStep(currentStep + 1);
-        }
+        setCurrentStep(prev => prev + 1);
     };
-
+    
     const prevStep = () => {
-        if (currentStep > 1) {
-            setCurrentStep(currentStep - 1);
-        }
+        setCurrentStep(prev => prev - 1);
     };
 
+    const stepNames = {
+        1: 'Enter your Personal Info',
+        2: 'Enter your Education Details',
+        3: 'Enter your Professional Details',
+    };
+    
     const getStepName = (step) => {
-        if (step === 1) return 'Enter your Personal Info';
-        if (step === 2) return 'Enter your Education Details';
-        if (step === 3) return 'Enter your Professional Details';
+        return stepNames[step] || 'Unknown Step';
     };
 
     const renderStepIndicator = () => {
@@ -50,17 +50,18 @@ export default function CompleteProfile() {
             <div className='-mt-3'>
                 <p className="text-sm font-semibold mb-2">Step {currentStep}: {getStepName(currentStep)}</p>
                 <div className="flex gap-2">
-                    {[...Array(totalSteps)].map((_, index) => (
-                        <div
-                            key={index}
-                            className={`h-2 w-[33.33%] rounded ${index + 1 < currentStep
-                                ? 'bg-accent'
-                                : index + 1 === currentStep
-                                    ? 'bg-primary'
-                                    : 'bg-gray-300'
-                                }`}
-                        ></div>
-                    ))}
+                    {[...Array(totalSteps)].map((_, index) => {
+                        const isCurrentStep = index + 1 === currentStep;
+                        const isCompletedStep = index + 1 < currentStep;
+                        const bgColor = isCompletedStep ? 'bg-accent' : isCurrentStep ? 'bg-primary' : 'bg-gray-300';
+    
+                        return (
+                            <div
+                                key={index}
+                                className={`h-2 w-[33.33%] rounded ${bgColor}`}
+                            ></div>
+                        );
+                    })}
                 </div>
             </div>
         );
@@ -89,12 +90,21 @@ export default function CompleteProfile() {
         }
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+    };
+
     useEffect(() => {
         const { isAuthenticated, user } = getAuthStatus();
 
+        const isDoctorWithIncompleteProfile = () => {
+            return user.role === 'doctor' && !user.is_profile_completed;
+        };
+
         if (!isAuthenticated) {
-            navigate('/login');
-        } else if (!(user.role === 'doctor' && !user.is_profile_completed)) {
+            navigate('/login');   
+        } else if (isDoctorWithIncompleteProfile()) {
             navigate(`/${user.role}`);
         }
     }, [navigate]);
@@ -285,10 +295,16 @@ export default function CompleteProfile() {
             </form>
 
             <div className="mt-4 text-center text-sm">
-                Go back to login Page?{' '}
-                <Link to="/login" className="underline text-primary">
-                    Login
-                </Link>
+                <p>
+                    Thinking of logging out?
+                    <Button
+                        onClick={handleLogout}
+                        variant = 'link'
+                        className="bg-transparent cursor-pointer p-1 underline text-primary ml-1"
+                    >
+                        Click Here
+                    </Button>
+                </p>
             </div>
         </>
     );
