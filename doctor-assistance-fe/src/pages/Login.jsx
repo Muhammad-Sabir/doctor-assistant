@@ -10,9 +10,9 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import logo from '@/assets/images/svg/webLogo.svg';
-import { validateField } from '@/utils/validationUtils';
-import { useCustomMutation } from '@/hooks/useCustomMutation';
-import { fetchApi } from '@/utils/fetchApi';
+import { validateField, hasNoFieldErrors } from '@/utils/validations';
+import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
+import { fetchApi } from '@/utils/fetchApis';
 
 export default function Login() {
     const [activeTab, setActiveTab] = useState('patient');
@@ -24,8 +24,9 @@ export default function Login() {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [inputErrors, setInputErrors] = useState({});
 
-    const {mutate: login, isSuccess, isError, data, error} = useCustomMutation({
+    const { mutate: login, isSuccess, isError, data, error } = useCreateUpdateMutation({
         url: 'user/login/',
+        method: 'POST',
         fetchFunction: fetchApi,
         onSuccessMessage: 'Logged in successfully.',
         onErrorMessage: 'Login failed'
@@ -49,8 +50,7 @@ export default function Login() {
         e.preventDefault();
         const { username, password } = loginDetails;
 
-        const hasNoFieldErrors = () => Object.keys(inputErrors).length === 0;
-        if (hasNoFieldErrors()) {
+        if (hasNoFieldErrors(inputErrors)) {
             login({ username, password, role: activeTab });
         }
     };
@@ -65,23 +65,23 @@ export default function Login() {
                 is_profile_completed: is_profile_completed
             };
             localStorage.setItem('user', JSON.stringify(user));
-            navigate(`/${role}`);
+            navigate(role === 'doctor' && !is_profile_completed ? '/complete-profile' : `/${role}`);
         }
-        if (isError) {
-            if (error.status === 400 && error.message === "Account is not verified.") {
-                navigate('/verify-email');
-            }
+
+        if (isError && error.status === 400 && error.message === "Account is not verified.") {
+            navigate('/verify-email');
         }
+
     }, [isSuccess, isError, data, navigate]);
 
     return (
         <>
             <div className="grid gap-2 text-center">
                 <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
-                <h1 className="text-3xl font-bold">Login</h1>
+                <h1 className="text-3xl font-bold mb-2">Login</h1>
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                     <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="patient">Patient</TabsTrigger>
+                        <TabsTrigger className='mr-3' value="patient">Patient</TabsTrigger>
                         <TabsTrigger value="doctor">Doctor</TabsTrigger>
                     </TabsList>
                 </Tabs>

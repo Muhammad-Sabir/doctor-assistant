@@ -10,9 +10,9 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import logo from '@/assets/images/svg/webLogo.svg';
-import { validateField } from '@/utils/validationUtils';
-import { useCustomMutation } from '@/hooks/useCustomMutation';
-import { fetchApi } from '@/utils/fetchApi';
+import { validateField, hasNoFieldErrors } from '@/utils/validations';
+import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
+import { fetchApi } from '@/utils/fetchApis';
 
 export default function SignUp() {
   const [activeTab, setActiveTab] = useState('patient');
@@ -27,8 +27,9 @@ export default function SignUp() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [inputErrors, setInputErrors] = useState({});
 
-  const signupMutation = useCustomMutation({
+  const signupMutation = useCreateUpdateMutation({
     url: 'user/register/',
+    method: 'POST',
     fetchFunction: fetchApi,
     onSuccessMessage: 'A verification email has been sent to your email address.',
     onErrorMessage: 'Signup failed',
@@ -55,8 +56,7 @@ export default function SignUp() {
     e.preventDefault();
     const { email, password, phoneNo } = userDetails;
 
-    const hasNoFieldErrors = () => Object.keys(inputErrors).length === 0;
-    if (hasNoFieldErrors()) {
+    if (hasNoFieldErrors(inputErrors)) {
       sessionStorage.setItem('email', email);
       signupMutation.mutate({ email, password, phone_number: phoneNo, role: activeTab });
     }
@@ -67,12 +67,12 @@ export default function SignUp() {
       <div className="grid gap-2 text-center">
         <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
         <h1 className="text-3xl font-bold">Sign Up</h1>
-        <p className="text-balance text-muted-foreground">
+        <p className="text-balance text-muted-foreground mb-2">
           Enter your information to create an account
         </p>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="patient">Patient</TabsTrigger>
+            <TabsTrigger className='mr-3' value="patient">Patient</TabsTrigger>
             <TabsTrigger value="doctor">Doctor</TabsTrigger>
           </TabsList>
         </Tabs>

@@ -3,7 +3,7 @@ import React from 'react';
 import MobileMenu from '@/components/dashboard/MobileMenu';
 import Notifications from '@/components/dashboard/Notifications';
 import UserProfileMenu from '@/components/dashboard/UserProfileMenu';
-import { getAuthStatus } from '@/utils/authUtils';
+import { getAuthStatus } from '@/utils/auth';
 
 const currentDate = new Date().toLocaleDateString('en-GB', {
     day: 'numeric',

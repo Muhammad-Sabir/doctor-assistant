@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { getErrorMessage } from '@/utils/errorUtils';
+import { getErrorMessage } from '@/utils/errors';
 
-export const useCustomMutation = ({
+export const useCreateUpdateMutation = ({
     url,
-    method = 'POST',
+    method,
     fetchFunction,
     onSuccessMessage,
     onErrorMessage,

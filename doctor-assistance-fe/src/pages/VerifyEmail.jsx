@@ -5,16 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import logo from '@/assets/images/svg/webLogo.svg';
-import { validateField } from '@/utils/validationUtils';
-import { useCustomMutation } from '@/hooks/useCustomMutation';
-import { fetchApi } from '@/utils/fetchApi';
+import { validateField, hasNoFieldErrors } from '@/utils/validations';
+import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
+import { fetchApi } from '@/utils/fetchApis';
 
 export default function VerifyEmail() {
     const [email, setEmail] = useState('');
     const [inputErrors, setInputErrors] = useState({});
 
-    const sendVerificationEmail = useCustomMutation({
+    const sendVerificationEmail = useCreateUpdateMutation({
         url: 'user/send-verify-email/',
+        method: 'POST',
         fetchFunction: fetchApi,
         onSuccessMessage: 'Verification email sent.',
         onErrorMessage: 'Failed to send verification email',
@@ -37,8 +38,7 @@ export default function VerifyEmail() {
     const handleResendEmail = (e) => {
         e.preventDefault();
 
-        const hasNoFieldErrors = () => Object.keys(inputErrors).length === 0;
-        if (hasNoFieldErrors()) {
+        if (hasNoFieldErrors(inputErrors)) {
             sendVerificationEmail.mutate({ email });
             sessionStorage.removeItem('email');
         }

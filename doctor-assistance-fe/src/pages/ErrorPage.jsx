@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import errorImage from "@/assets/images/webp/errorImage.webp";
-import { getAuthStatus } from '@/utils/authUtils';
+import { getAuthStatus } from '@/utils/auth';
 
 export default function ErrorPage() {
     const navigate = useNavigate();

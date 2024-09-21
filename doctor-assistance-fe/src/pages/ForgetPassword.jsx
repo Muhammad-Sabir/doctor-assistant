@@ -6,16 +6,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import logo from '@/assets/images/svg/webLogo.svg';
-import { validateField } from '@/utils/validationUtils';
-import { useCustomMutation } from '@/hooks/useCustomMutation';
-import { fetchApi } from '@/utils/fetchApi';
+import { validateField, hasNoFieldErrors } from '@/utils/validations';
+import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
+import { fetchApi } from '@/utils/fetchApis';
 
 export default function ForgetPassword() {
     const [email, setEmail] = useState('');
     const [inputErrors, setInputErrors] = useState({});
 
-    const forgotPassword = useCustomMutation({
+    const forgotPassword = useCreateUpdateMutation({
         url: 'user/send-reset-password/',
+        method: 'POST',
         fetchFunction: fetchApi,
         onSuccessMessage: 'Password reset email sent.',
         onErrorMessage: 'Failed to send reset email',
@@ -31,8 +32,7 @@ export default function ForgetPassword() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const hasNoFieldErrors = () => Object.keys(inputErrors).length === 0;
-        if (hasNoFieldErrors()) {
+        if (hasNoFieldErrors(inputErrors)) {
             forgotPassword.mutate({ email });
         }
     };

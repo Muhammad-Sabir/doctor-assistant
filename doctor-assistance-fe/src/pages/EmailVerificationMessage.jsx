@@ -5,16 +5,17 @@ import { BiErrorCircle } from "react-icons/bi";
 
 import loadingSVG from '@/assets/images/svg/loading.svg';
 import logo from '@/assets/images/svg/webLogo.svg';
-import { fetchApi } from '@/utils/fetchApi';
-import { useCustomMutation } from '@/hooks/useCustomMutation';
+import { fetchApi } from '@/utils/fetchApis';
+import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 
 export default function EmailVerificationMessage() {
     const { verify_uid, verify_token } = useParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('loading');
 
-    const { mutate: verifyAccount, isSuccess, isError } = useCustomMutation({
+    const { mutate: verifyAccount, isSuccess, isError } = useCreateUpdateMutation({
         url: ({ uid, token }) => `user/verify-account/${uid}/${token}`,
+        method: 'POST',
         fetchFunction: fetchApi,
         onSuccessMessage: 'Your account has been verified successfully.',
         onErrorMessage: 'Verification failed',

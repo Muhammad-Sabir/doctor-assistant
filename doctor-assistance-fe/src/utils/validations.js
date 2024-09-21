@@ -23,7 +23,31 @@ const validationRules = {
         test: (value, password) => value === password,
         message: "Passwords do not match",
     },
-};
+    age: {
+        test: (value) => value > 24,
+        message: "Age must be greater than 24",
+    },
+    specialization: {
+        test: (value) => value !== "none" && value !== "",
+        message: "Specialization is required",
+    },
+    degree: {
+        test: (value) => value?.trim() && /^([A-Z]+(\([A-Z][a-z]*\))?(,\s?[A-Z]+(\([A-Z][a-z]*\))?)*?)$/.test(value.trim()),
+        message: "Degree must be uppercase, with optional country or specialization, separated by commas.",
+    },
+    registrationNo: {
+        test: (value) => /^[A-Z0-9]{5,}$/i.test(value),
+        message: "PMDC Registration No. must be valid",
+    },
+    experience: {
+        test: (value) => value !== '' && value >= 0,
+        message: "Experience cannot be negative or empty",
+    },
+    designation: {
+        test: (value) => value.trim() !== "",
+        message: "Designation is required",
+    },
+}
 
 export const validateField = (id, value, inputErrors, password = '') => {
     const errors = { ...inputErrors };
@@ -37,4 +61,8 @@ export const validateField = (id, value, inputErrors, password = '') => {
     }
     
     return errors;
+};
+
+export const hasNoFieldErrors = (inputErrors) => {
+    return Object.keys(inputErrors).length === 0;
 };

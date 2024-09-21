@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import authImage from "@/assets/images/webp/authImage.webp";
-import { getAuthStatus } from '@/utils/authUtils';
+import { getAuthStatus } from '@/utils/auth';
 
 export default function AuthLayout({ children }) {
     const navigate = useNavigate();
@@ -11,7 +11,7 @@ export default function AuthLayout({ children }) {
         const { isAuthenticated, user } = getAuthStatus();
 
         if (isAuthenticated) {
-            navigate(user.role === 'doctor' ? '/doctor' : '/patient');
+            navigate(user.role === 'doctor' && !user.is_profile_completed ? '/complete-profile' : `/${user.role}`);
         }
     }, [navigate]);
 

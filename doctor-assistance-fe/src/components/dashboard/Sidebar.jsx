@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import logoIcon from '@/assets/images/svg/logo-icon.svg';
-import { getAuthStatus } from '@/utils/authUtils';
-import { menuItems, accountLinks } from '@/assets/data/MenuData';
+import { getAuthStatus } from '@/utils/auth';
+import { menuItems, accountLinks } from '@/components/shared/MenuData';
 
 export default function Sidebar() {
 
@@ -38,7 +38,7 @@ export default function Sidebar() {
                     </Link>
                 </div>
                 <div className="flex-col">
-                    <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+                    <nav className="grid gap-2 items-start px-2 text-sm font-medium lg:px-4">
                         <h2 className="text-xs font-medium p-2.5 pb-2 text-black">MAIN MENU</h2>
                         {items.map((item, index) => (
                             <Link

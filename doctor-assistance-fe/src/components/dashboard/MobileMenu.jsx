@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 
 import logoIcon from '@/assets/images/svg/logo-icon.svg';
-import { getAuthStatus } from '@/utils/authUtils';
-import { menuItems, accountLinks } from '@/assets/data/MenuData';
+import { getAuthStatus } from '@/utils/auth';
+import { menuItems, accountLinks } from '@/components/shared/MenuData';
 
 export default function MobileMenu() {
 

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
     DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-import { getAuthStatus } from '@/utils/authUtils';    
+import { getAuthStatus } from '@/utils/auth';    
 
 export default function UserProfileMenu() {
 

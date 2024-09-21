@@ -12,8 +12,11 @@
    ```bash
    npm install
    ```
+3.  **Create a `.env` file** 
+    In root directory (`/doctor-assistance-fe`) create .env file with the following variable:
+    VITE_API_BASE_URL=
 
-3. **Start the project**:
+4. **Start the project**:
     ```bash
     npm run dev
     ``` 

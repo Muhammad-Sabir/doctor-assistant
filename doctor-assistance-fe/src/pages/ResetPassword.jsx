@@ -8,9 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import logo from "@/assets/images/svg/webLogo.svg";
-import { validateField } from "@/utils/validationUtils";
-import { useCustomMutation } from '@/hooks/useCustomMutation';
-import { fetchApi } from '@/utils/fetchApi';
+import { validateField, hasNoFieldErrors } from "@/utils/validations";
+import { useCreateUpdateMutation } from "@/hooks/useCreateUpdateMutation";
+import { fetchApi } from '@/utils/fetchApis';
 
 export default function ResetPassword() {
     const { reset_uid, reset_token } = useParams();
@@ -24,8 +24,9 @@ export default function ResetPassword() {
     const [inputErrors, setInputErrors] = useState({});
     const [redirectMessage, setRedirectMessage] = useState('');
 
-    const { mutate: resetPassword, isSuccess } = useCustomMutation({
+    const { mutate: resetPassword, isSuccess } = useCreateUpdateMutation({
         url: ({ uid, token }) => `user/reset-password-confirm/${uid}/${token}`,
+        method: 'POST',
         fetchFunction: fetchApi,
         onSuccessMessage: 'Password reset successfully.',
         onErrorMessage: 'Failed to reset password',
@@ -33,12 +34,7 @@ export default function ResetPassword() {
 
     useEffect(() => {
         if (isSuccess) {
-            setRedirectMessage('Password reset confirmed. Redirecting to login page in few seconds...');
-            const timer = setTimeout(() => {
-                navigate('/login');
-            }, 4000);
-
-            return () => clearTimeout(timer);
+           navigate('/login');  
         }
     }, [isSuccess, navigate]);
 
@@ -68,8 +64,7 @@ export default function ResetPassword() {
             return;
         }
 
-        const hasNoFieldErrors = () => Object.keys(inputErrors).length === 0;
-        if (hasNoFieldErrors()) {
+        if (hasNoFieldErrors(inputErrors)) {
             resetPassword({
                 uid: reset_uid,
                 token: reset_token,

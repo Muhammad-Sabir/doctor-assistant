@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 
-import ProtectedRoute from '@/utils/ProtectedRoutes';
+import ProtectedRoute from '@/router/ProtectedRoutes';
 import Home from '@/pages/patient/Home';
 import Profile from '@/pages/patient/Profile';
 import DashboardLayout from '@/layouts/DashboardLayout';

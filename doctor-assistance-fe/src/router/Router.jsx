@@ -11,6 +11,7 @@ import PatientRoutes from './PatientRoutes';
 import VerifyEmail from '@/pages/VerifyEmail';
 import EmailVerificationMessage from '@/pages/EmailVerificationMessage';
 import ResetPassword from '@/pages/ResetPassword';
+import CompleteProfile from '@/pages/CompleteProfile';
 
 const Router = createBrowserRouter([
     {
@@ -40,6 +41,10 @@ const Router = createBrowserRouter([
     {
         path: 'verify-account/:verify_uid/:verify_token',
         element: <AuthLayout children={<EmailVerificationMessage/>}/>,
+    },
+    {
+        path: 'complete-profile',
+        element: <AuthLayout children={<CompleteProfile/>}/>,
     },
     {
         path: '/doctor/*',

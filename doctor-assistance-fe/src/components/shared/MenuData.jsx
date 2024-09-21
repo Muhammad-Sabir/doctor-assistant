@@ -9,10 +9,10 @@ export const menuItems = {
         { icon: <LineChart className="h-5 w-5" />, url: "/doctor/analytics", name: "Analytics" },
     ],
     patient: [
+        { icon: <Home className="h-5 w-5" />, url: "/patient/dashboard", name: "Dashboard" },
         { icon: <Home className="h-5 w-5" />, url: "/patient/chat", name: "Chat" },
         { icon: <Package className="h-5 w-5" />, url: "/patient/my-patients", name: "My Patients" },
         { icon: <Users className="h-5 w-5" />, url: "/patient/my-doctors", name: "My Doctors" },
-        { icon: <Home className="h-5 w-5" />, url: "/patient/home", name: "Home" },
     ],
 };
 
