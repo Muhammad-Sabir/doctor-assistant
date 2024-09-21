@@ -6,7 +6,7 @@ First replace the .env.template with .env and fill its fields and make sure, you
 
 ### Make Sure, You are inside the Doctor-Assistance-be
 
-1.  Install all the packages through: `python install -r requirements.txt`
+1.  Install all the packages through: `pip install -r requirements.txt`
 2.  Run the followings command:
     - `python manage.py makemigrations`
     - `python manage.py migrate`
