@@ -1,9 +1,13 @@
 import React from 'react'
 
+import Header from '@/components/home/Header'
+import HeroSection from '@/components/home/HeroSection'
+
 export default function HomePage() {
   return (
     <div>
-      This is Home Page
+      <Header/>
+      <HeroSection/>
     </div>
   )
 }

@@ -12,8 +12,8 @@
     --popover-foreground: 222.2 84% 4.9%;
     --primary: 203 87 30%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 197 87% 46%;
-    --secondary-foreground: 197 47.4% 11.2%;
+    --secondary: 197 90% 45%;
+    --secondary-foreground: 197 90% 45%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 214 95 93%;
@@ -76,4 +76,8 @@
   @apply flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm text-gray-500 shadow-sm transition-colors;
   @apply file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground;
   @apply focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.section-padding {
+  @apply px-4 sm:px-9 lg:px-14;
 }
