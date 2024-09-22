@@ -1,8 +1,9 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
-from django_filters.rest_framework import DjangoFilterBackend
 
+from apps.core.mixins import FileUploadMixin
+from apps.core.viewsets import BaseReadOnlyViewSet
 from apps.profiles.models import Speciality, Degree, Disease, DoctorProfile
 from apps.profiles.serializers import (
     DoctorProfileSerializer,
@@ -11,26 +12,21 @@ from apps.profiles.serializers import (
     DiseaseSerializer,
 )
 from apps.profiles.filters import SpecialityFilter, DegreeFilter, DiseaseFilter
-from apps.core.mixins import FileUploadMixin
 
 
-class BaseViewSet(ModelViewSet):
-    filter_backends = [DjangoFilterBackend]
-    http_method_names = ['get']
-
-class SpecialityViewSet(BaseViewSet):
+class SpecialityViewSet(BaseReadOnlyViewSet):
     queryset = Speciality.objects.all()
     serializer_class = SpecialitySerializer
     filterset_class = SpecialityFilter
 
 
-class DegreeViewSet(BaseViewSet):
+class DegreeViewSet(BaseReadOnlyViewSet):
     queryset = Degree.objects.all()
     serializer_class = DegreeSerializer
     filterset_class = DegreeFilter
 
 
-class DiseaseViewSet(BaseViewSet):
+class DiseaseViewSet(BaseReadOnlyViewSet):
     queryset = Disease.objects.all()
     serializer_class = DiseaseSerializer
     filterset_class = DiseaseFilter
