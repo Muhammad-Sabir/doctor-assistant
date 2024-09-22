@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from apps.facilities.views import HospitalViewSet
 
 router = DefaultRouter()
-router.register(r'hospitals', HospitalViewSet, basename='hospital')
+router.register('hospitals', HospitalViewSet, basename='hospital')
 
 
 urlpatterns = [
