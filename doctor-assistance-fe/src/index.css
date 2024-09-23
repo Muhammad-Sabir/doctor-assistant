@@ -79,5 +79,14 @@
 }
 
 .section-padding {
-  @apply px-4 sm:px-9 lg:px-14;
+  @apply px-4 sm:px-9 md:px-20 lg:px-14;
+}
+
+.slick-slide div {
+  width: 98% !important;
+  box-sizing: border-box; 
+}
+
+.slick-list {
+  padding-bottom: 2rem; 
 }

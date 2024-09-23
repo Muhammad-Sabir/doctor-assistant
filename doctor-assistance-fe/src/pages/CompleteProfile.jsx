@@ -30,7 +30,7 @@ export default function CompleteProfile() {
     const nextStep = () => {
         setCurrentStep(prev => prev + 1);
     };
-    
+
     const prevStep = () => {
         setCurrentStep(prev => prev - 1);
     };
@@ -40,7 +40,7 @@ export default function CompleteProfile() {
         2: 'Enter your Education Details',
         3: 'Enter your Professional Details',
     };
-    
+
     const getStepName = (step) => {
         return stepNames[step] || 'Unknown Step';
     };
@@ -54,7 +54,7 @@ export default function CompleteProfile() {
                         const isCurrentStep = index + 1 === currentStep;
                         const isCompletedStep = index + 1 < currentStep;
                         const bgColor = isCompletedStep ? 'bg-accent' : isCurrentStep ? 'bg-primary' : 'bg-gray-300';
-    
+
                         return (
                             <div
                                 key={index}
@@ -103,7 +103,7 @@ export default function CompleteProfile() {
         };
 
         if (!isAuthenticated) {
-            navigate('/login');   
+            navigate('/login');
         } else if (isDoctorWithIncompleteProfile()) {
             navigate(`/${user.role}`);
         }
@@ -263,7 +263,9 @@ export default function CompleteProfile() {
     return (
         <>
             <div className="grid gap-2 text-center">
-                <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
+                <Link to={'/'}>
+                    <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
+                </Link>
                 <h1 className="text-3xl font-bold mb-2">Complete Your Profile</h1>
                 <p className="text-balance text-muted-foreground mb-2 -mt-2">
                     Enter your complete information to continue
@@ -299,7 +301,7 @@ export default function CompleteProfile() {
                     Thinking of logging out?
                     <Button
                         onClick={handleLogout}
-                        variant = 'link'
+                        variant='link'
                         className="bg-transparent cursor-pointer p-1 underline text-primary ml-1"
                     >
                         Click Here

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 import heroImg1 from '@/assets/images/webp/heroImg1.webp';
 import heroImg2 from '@/assets/images/webp/heroImg2.webp';
-import heroVideo from '@/assets/videos/heroVideo.mp4';
+import heroVideo from '@/assets/videos/heroVideo.webm';
 
 const HeroSection = () => {
     return (
@@ -35,18 +35,18 @@ const HeroSection = () => {
                     <div className="lg:grid grid-cols-1 min-[450px]:grid-cols-2 md:grid-cols-3 gap-8">
                         <img
                             src={heroImg1}
-                            alt="Team tailwind section"
+                            alt="Hero section Image"
                             className="hidden lg:block w-44 h-80 rounded-xl object-cover mt-11"
                         />
                         <video
                             src={heroVideo}
-                            alt="Team tailwind section"
+                            alt="Hero section Video"
                             className="w-full lg:w-44 h-80 rounded-xl object-cover md:mx-auto mt-11 lg:mt-20"
                             loop autoPlay muted
                         />
                         <img
                             src={heroImg2}
-                            alt="Team tailwind section"
+                            alt="Hero section Image"
                             className="hidden lg:block w-44 h-80 rounded-xl object-cover mt-32"
                         />
                     </div>

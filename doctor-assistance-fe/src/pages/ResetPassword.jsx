@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { BiSolidError } from "react-icons/bi";
 
@@ -22,7 +22,6 @@ export default function ResetPassword() {
         confirmPassword: ""
     });
     const [inputErrors, setInputErrors] = useState({});
-    const [redirectMessage, setRedirectMessage] = useState('');
 
     const { mutate: resetPassword, isSuccess } = useCreateUpdateMutation({
         url: ({ uid, token }) => `user/reset-password-confirm/${uid}/${token}`,
@@ -34,7 +33,7 @@ export default function ResetPassword() {
 
     useEffect(() => {
         if (isSuccess) {
-           navigate('/login');  
+            navigate('/login');
         }
     }, [isSuccess, navigate]);
 
@@ -76,7 +75,9 @@ export default function ResetPassword() {
     return (
         <>
             <div className="grid gap-2 text-center">
-                <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
+                <Link to={'/'}>
+                    <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
+                </Link>
                 <h1 className="text-3xl font-bold">Reset Your Password</h1>
                 <p className="text-balance text-muted-foreground">
                     Enter your new password and confirm it below.
@@ -148,9 +149,6 @@ export default function ResetPassword() {
                     Submit
                 </Button>
             </form>
-            {redirectMessage && (
-                <p className="text-center text-green-500 mt-4">{redirectMessage}</p>
-            )}
         </>
     );
 }
