@@ -15,6 +15,7 @@ from apps.profiles.serializers import (
 from apps.profiles.filters import SpecialityFilter, DegreeFilter, DiseaseFilter
 from apps.profiles.permissions import IsDoctorOrOwner
 
+
 class SpecialityViewSet(BaseReadOnlyViewSet):
     queryset = Speciality.objects.all()
     serializer_class = SpecialitySerializer
