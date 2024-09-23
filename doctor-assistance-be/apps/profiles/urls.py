@@ -7,7 +7,7 @@ router = DefaultRouter()
 router.register('specialities', SpecialityViewSet, basename='speciality')
 router.register('degrees', DegreeViewSet, basename='degree')
 router.register('diseases', DiseaseViewSet, basename='disease')
-router.register('doctor-profile', DoctorProfileViewSet, basename='doctor-profile')
+router.register('doctors', DoctorProfileViewSet, basename='doctor')
 
 
 urlpatterns = [
