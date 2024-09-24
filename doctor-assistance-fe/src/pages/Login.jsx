@@ -77,7 +77,9 @@ export default function Login() {
     return (
         <>
             <div className="grid gap-2 text-center">
-                <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
+                <Link to={'/'}>
+                    <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
+                </Link>
                 <h1 className="text-3xl font-bold mb-2">Login</h1>
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                     <TabsList className="grid w-full grid-cols-2">

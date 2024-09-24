@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BiSolidError } from 'react-icons/bi';
 
-import { Button } from '@/components/ui/button'; 
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import logo from '@/assets/images/svg/webLogo.svg';
@@ -39,7 +39,9 @@ export default function ForgetPassword() {
 
     return (
         <div className="grid gap-2 text-center">
-            <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-auto" />
+            <Link to={'/'}>
+                <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
+            </Link>
             <h1 className="text-3xl font-bold">Forgot Password?</h1>
             <p className="text-gray-600 mb-6">
                 Please enter your email address below to receive a password reset link

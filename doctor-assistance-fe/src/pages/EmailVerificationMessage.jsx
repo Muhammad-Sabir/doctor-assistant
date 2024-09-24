@@ -41,7 +41,9 @@ export default function EmailVerificationMessage() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-[70vh] p-4">
-            <img src={logo} alt="Logo" className="mb-6 h-12 w-auto" />
+            <Link to={'/'}>
+                <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
+            </Link>
             <div className="text-center">
                 {status === 'loading' && (
                     <div className="flex flex-col items-center text-center">

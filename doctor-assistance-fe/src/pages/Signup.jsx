@@ -65,7 +65,9 @@ export default function SignUp() {
   return (
     <>
       <div className="grid gap-2 text-center">
-        <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
+        <Link to={'/'}>
+          <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
+        </Link>
         <h1 className="text-3xl font-bold">Sign Up</h1>
         <p className="text-balance text-muted-foreground mb-2">
           Enter your information to create an account
