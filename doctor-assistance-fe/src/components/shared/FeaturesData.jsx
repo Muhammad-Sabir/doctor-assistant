@@ -20,7 +20,7 @@ export const doctorFeatures = [
     {
         icon: <FaUserEdit size={30} />,
         title: "Manage Profile ",
-        description: "Easily update and manage your health information.",
+        description: "Easily update and manage your profile information.",
     },
 ];
 
@@ -38,7 +38,7 @@ export const patientFeatures = [
     {
         icon: <FaUserEdit size={30} />,
         title: "Manage Profile ",
-        description: "Easily update and manage your health information.",
+        description: "Easily update and manage your profile information.",
     },
     {
         icon: <FaNotesMedical size={30} />,
