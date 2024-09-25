@@ -25,5 +25,6 @@ class BaseFileUpload(TimeStampedModel):
         try:
             file_name = default_storage.save(file.name, ContentFile(file.read()))
             self.file_url = default_storage.url(file_name)
+            self.save(update_fields=['file_url'] if self.pk else None)
         except Exception as e:
             raise ValidationError(f"File upload failed: {e}")
