@@ -60,10 +60,12 @@ class DoctorProfileViewSet(FileUploadMixin, ModelViewSet):
         self.handle_file_upload(doctor_instance)
 
     def perform_update(self, serializer):
-        doctor_instance = super().perform_update(serializer)
-        self.handle_file_upload(doctor_instance)
+        doctor_instance = serializer.save()
+        
+        if doctor_instance:
+            self.handle_file_upload(doctor_instance)
 
     def handle_file_upload(self, doctor_instance):
         file = self.request.FILES.get('image_file')
         if file:
-            self.handle_file_upload(doctor_instance, file)
+            doctor_instance.save_file(file)
