@@ -5,7 +5,8 @@ from apps.profiles.models import (
     Degree, 
     Disease, 
     DoctorProfile,
-    PatientProfile
+    PatientProfile,
+    Allergy
 )
 
 
@@ -14,3 +15,4 @@ admin.site.register(Degree)
 admin.site.register(Disease)
 admin.site.register(DoctorProfile)
 admin.site.register(PatientProfile)
+admin.site.register(Allergy)

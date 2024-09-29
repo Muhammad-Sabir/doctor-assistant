@@ -14,5 +14,6 @@ First replace the .env.template with .env and fill its fields and make sure, you
     - `python manage.py load_hospitals`
     - `python manage.py load_specialities`
     - `python manage.py load_doctors`
+    - `python manage.py load_allergies`
 4.  To Run the server:
     - `python manage.py runserver`
