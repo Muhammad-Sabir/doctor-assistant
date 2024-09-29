@@ -7,7 +7,9 @@ from apps.profiles.views import (
     DiseaseViewSet, 
     DoctorProfileViewSet,
     PrimaryPatientViewSet,
-    DependentProfileViewSet
+    DependentProfileViewSet,
+    PatientAllergyViewSet,
+    AllergyViewSet
 )
 
 router = DefaultRouter()
@@ -16,6 +18,8 @@ router.register('degrees', DegreeViewSet, basename='degree')
 router.register('diseases', DiseaseViewSet, basename='disease')
 router.register('doctors', DoctorProfileViewSet, basename='doctor')
 
+router.register('allergies', AllergyViewSet, basename='allergy')
+router.register('patient-allergies', PatientAllergyViewSet, basename='patient-allergy')
 router.register('patients', PrimaryPatientViewSet, basename='patient')
 router.register('dependents', DependentProfileViewSet, basename='dependent')
 

@@ -1,9 +1,17 @@
+from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.exceptions import ValidationError
 
-from apps.profiles.models import PatientProfile
-from apps.profiles.serializers import PatientProfileSerializer, DependentProfileSerializer
-from apps.profiles.permissions import IsPatientOrOwner
+from apps.core.viewsets import BaseReadOnlyViewSet
+from apps.profiles.models import PatientProfile, PatientAllergy, Allergy
+from apps.profiles.serializers import (
+    PatientProfileSerializer,
+    DependentProfileSerializer,
+    PatientAllergySerializer,
+    AllergySerializer
+)
+from apps.profiles.permissions import IsPatientOrOwner, isDoctor
+from apps.profiles.filters import AllergyFilter
 
 
 class PrimaryPatientViewSet(ModelViewSet):
@@ -40,3 +48,22 @@ class DependentProfileViewSet(ModelViewSet):
         if not primary_patient:
             raise ValidationError("Primary patient profile not found.")
         serializer.save(primary_patient=primary_patient)
+
+
+class PatientAllergyViewSet(ModelViewSet):
+    serializer_class = PatientAllergySerializer
+    permission_classes = [isDoctor]
+
+    def get_queryset(self):
+        if self.request.user.role == 'doctor':
+            return PatientAllergy.objects.all()
+        
+        return PatientAllergy.objects.filter(
+                    Q(patient__user=self.request.user) |
+                    Q(patient__primary_patient__user=self.request.user)
+                )
+
+class AllergyViewSet(BaseReadOnlyViewSet):
+    queryset = Allergy.objects.all()
+    serializer_class = AllergySerializer
+    filterset_class = AllergyFilter

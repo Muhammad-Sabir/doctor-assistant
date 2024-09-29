@@ -8,4 +8,6 @@ from apps.profiles.views.doctors import (
 from apps.profiles.views.patients import (
     PrimaryPatientViewSet,
     DependentProfileViewSet,
+    PatientAllergyViewSet,
+    AllergyViewSet
 )
