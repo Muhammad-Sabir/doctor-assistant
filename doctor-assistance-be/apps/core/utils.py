@@ -1,5 +1,6 @@
 from decouple import config
 from django.core.mail import EmailMessage
+from django.http import QueryDict
 
 
 def send_email(data):
@@ -23,9 +24,10 @@ def update_or_create_related_fields(instance, initial_data, related_fields):
 	Returns:
 		None
 	"""
+	mutable_initial_data = initial_data.copy() if isinstance(initial_data, QueryDict) else initial_data
 	for field_name, model in related_fields.items():
-		if field_name in initial_data:
-			ids = initial_data.pop(field_name, [])
+		if field_name in mutable_initial_data:
+			ids = mutable_initial_data.pop(field_name, [])
 			current_ids = set(getattr(instance, field_name).values_list('id', flat=True))
 
 			if set(ids) != current_ids:
