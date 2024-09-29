@@ -1,6 +1,9 @@
 from rest_framework import serializers
 
+from apps.core.utils import update_or_create_related_fields
 from apps.profiles.models import Speciality, Disease, Degree, DoctorProfile
+from apps.facilities.models import Hospital
+from apps.facilities.serializers import HospitalSerializer
 
 
 class BaseSerializer(serializers.ModelSerializer):
@@ -24,6 +27,29 @@ class DiseaseSerializer(BaseSerializer):
 
 
 class DoctorProfileSerializer(BaseSerializer):
+    specialities = SpecialitySerializer(many=True, read_only=True)
+    degrees = DegreeSerializer(many=True, read_only=True)
+    diseases = DiseaseSerializer(many=True, read_only=True)
+    hospitals = HospitalSerializer(many=True, read_only=True)
+
+    related_fields = {
+            'specialities': Speciality,
+            'degrees': Degree,
+            'diseases': Disease,
+            'hospitals': Hospital
+    }
+
     class Meta(BaseSerializer.Meta):
         model = DoctorProfile
-        read_only_fields = ['user'] 
+        read_only_fields = ['user']
+
+
+    def create(self, validated_data):
+        doctor_profile = DoctorProfile.objects.create(**validated_data)
+        update_or_create_related_fields(doctor_profile, self.initial_data, self.related_fields)
+        return doctor_profile
+
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        update_or_create_related_fields(instance, self.initial_data, self.related_fields)
+        return instance
