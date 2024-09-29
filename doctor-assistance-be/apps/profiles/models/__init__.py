@@ -4,3 +4,5 @@ from apps.profiles.models.doctors import (
     Degree,
     Disease
 )
+
+from apps.profiles.models.patients import PatientProfile

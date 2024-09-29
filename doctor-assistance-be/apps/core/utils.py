@@ -2,6 +2,7 @@ from decouple import config
 from django.core.mail import EmailMessage
 from django.http import QueryDict
 
+
 def send_email(data):
 	email = EmailMessage(
 	  subject=data['subject'],
