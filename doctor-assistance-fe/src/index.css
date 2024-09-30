@@ -90,3 +90,19 @@
 .slick-list {
   padding-bottom: 2rem; 
 }
+
+::-webkit-datetime-edit { padding: 0.5em; }
+::-webkit-datetime-edit-fields-wrapper { color: rgb(118, 115, 115); }
+::-webkit-datetime-edit-text { padding: 0 0.3em; }
+::-webkit-calendar-picker-indicator { margin-left: 12rem; }
+::-webkit-datetime-edit-month-field { text-transform: uppercase; }
+::-webkit-datetime-edit-day-field { text-transform: uppercase; }
+::-webkit-datetime-edit-year-field { text-transform: uppercase; }
+
+input[type='radio'] {
+  accent-color: #2c378d;
+}
+
+input[type=file]::file-selector-button {
+  @apply text-primary font-normal
+}

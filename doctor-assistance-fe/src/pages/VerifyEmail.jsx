@@ -17,6 +17,7 @@ export default function VerifyEmail() {
     const sendVerificationEmail = useCreateUpdateMutation({
         url: 'user/send-verify-email/',
         method: 'POST',
+        headers: {'Content-Type': 'application/json'},
         fetchFunction: fetchApi,
         onSuccessMessage: 'Verification email sent.',
         onErrorMessage: 'Failed to send verification email',
@@ -40,7 +41,7 @@ export default function VerifyEmail() {
         e.preventDefault();
 
         if (hasNoFieldErrors(inputErrors)) {
-            sendVerificationEmail.mutate({ email });
+            sendVerificationEmail.mutate(JSON.stringify({ email }));
             sessionStorage.removeItem('email');
         }
     };

@@ -27,6 +27,7 @@ export default function Login() {
     const { mutate: login, isSuccess, isError, data, error } = useCreateUpdateMutation({
         url: 'user/login/',
         method: 'POST',
+        headers: {'Content-Type': 'application/json'},
         fetchFunction: fetchApi,
         onSuccessMessage: 'Logged in successfully.',
         onErrorMessage: 'Login failed'
@@ -51,7 +52,7 @@ export default function Login() {
         const { username, password } = loginDetails;
 
         if (hasNoFieldErrors(inputErrors)) {
-            login({ username, password, role: activeTab });
+            login(JSON.stringify({username, password, role: activeTab}));
         }
     };
 

@@ -11,7 +11,11 @@ import PatientRoutes from './PatientRoutes';
 import VerifyEmail from '@/pages/VerifyEmail';
 import EmailVerificationMessage from '@/pages/EmailVerificationMessage';
 import ResetPassword from '@/pages/ResetPassword';
-import CompleteProfile from '@/pages/CompleteProfile';
+import CompleteProfileStep1 from '@/pages/CompleteProfileStep1';
+import CompleteProfileStep2 from '@/pages/CompleteProfileStep2';
+import CompleteProfileStep3 from '@/pages/CompleteProfileStep3';
+import MultiStepFormLayout from '@/layouts/MultiStepFormLayout';
+import CompleteProfileStep4 from '@/pages/CompleteProfileStep4';
 
 const Router = createBrowserRouter([
     {
@@ -43,8 +47,20 @@ const Router = createBrowserRouter([
         element: <AuthLayout children={<EmailVerificationMessage/>}/>,
     },
     {
-        path: 'complete-profile',
-        element: <AuthLayout children={<CompleteProfile/>}/>,
+        path: 'complete-profile/',
+        element: <MultiStepFormLayout children={<CompleteProfileStep1/>}/>,
+    },
+    {
+        path: 'complete-profile/two',
+        element: <MultiStepFormLayout children={<CompleteProfileStep2/>}/>,
+    },
+    {
+        path: 'complete-profile/three',
+        element: <MultiStepFormLayout children={<CompleteProfileStep3/>}/>,
+    },
+    {
+        path: 'complete-profile/four',
+        element: <MultiStepFormLayout children={<CompleteProfileStep4/>}/>,
     },
     {
         path: '/doctor/*',

@@ -1,10 +1,10 @@
 import { getAuthStatus } from '@/utils/auth';
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
 
 export const fetchApi = async (url, options = {}) => {
 
-    const response = await fetch(`${baseUrl}/${url}`, options);
+    const response = await fetch(`${baseUrl}/api/${url}`, options);
     const data = await response.json();
 
     if (!response.ok) {
@@ -24,7 +24,7 @@ export const fetchApi = async (url, options = {}) => {
 
 const refreshAccessToken = async (refreshToken) => {
     try {
-        const response = await fetchApi(`${baseUrl}/token/refresh/`, {
+        const response = await fetchApi(`user/token/refresh/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,27 +50,34 @@ export const fetchWithAuth = async (url, options = {}) => {
     }
 
     try {
-        let response = await fetchApi(url, options);
-
-        if (response.status === 401) {
-            console.log('Access token expired. Attempting to refresh...');
-
-            // Refresh the token
-            const refreshResponse = await refreshAccessToken(refreshToken);
-
-            // Update localStorage with the new access token
-            const updatedAccessToken = refreshResponse.data.access;
-            const updatedUser = { ...user, access_token: updatedAccessToken };
-            localStorage.setItem('user', JSON.stringify(updatedUser));
-
-            // Retry the request with the new access token
-            options.headers['Authorization'] = `Bearer ${updatedAccessToken}`;
-            response = await fetchApi(url, options);
-        }
+        const response = await fetchApi(url, options);
         return response;
 
     } catch (error) {
-        console.error('Request failed:', error);
-        throw error;
+        if (error.status === 401) {
+            console.log('Access token expired. Attempting to refresh...');
+
+            try {
+                const refreshResponse = await refreshAccessToken(refreshToken);
+                if (refreshResponse.status === 200) {
+                    const updatedAccessToken = refreshResponse.data.access;
+                    const updatedUser = { ...user, access_token: updatedAccessToken };
+                    localStorage.setItem('user', JSON.stringify(updatedUser));
+
+                    options.headers['Authorization'] = `Bearer ${updatedAccessToken}`;
+                    const retryResponse = await fetchApi(url, options);
+                    return retryResponse;
+                } else {
+                    console.log('Failed to refresh access token.');
+                }
+            } catch (refreshError) {
+                console.log('Error after refeshing token:', refreshError);
+                throw refreshError;
+            }
+        } else {
+            console.log(`API returned an error: ${error.status}`);
+            throw error;
+        }
     }
 };
+

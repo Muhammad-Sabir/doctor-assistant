@@ -3,14 +3,16 @@ import Header from '@/components/dashboard/Header.jsx'
 
 export default function DashboardLayout({ children }) {
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[230px_1fr]">
-      <Sidebar/>
-      <div className="flex flex-col">
-        <Header/>
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 lg:pt-3 bg-indigo-50">
+    <div className="flex min-h-screen">
+      <div className="hidden md:block">
+        <Sidebar />
+      </div>
+      <div className="flex flex-col flex-1 md:ml-[218px] lg:ml-[234px]">
+        <Header />
+        <main className="flex-1 overflow-auto p-4">
           {children}
         </main>
       </div>
     </div>
-  )
+  );
 }
