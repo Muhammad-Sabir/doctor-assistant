@@ -67,13 +67,19 @@ export default function CompleteProfileStep4() {
 
         const profileData = JSON.parse(sessionStorage.getItem('profileData'));
         const finalData = { ...profileData, ...inputValues };
-        
-        const getIds = (key) => finalData[key]?.map(item => item.id) || [];
-        const specialityIds = getIds('specialities');
-        const hospitalIds = getIds('hospitals');
-        const diseasesIds = getIds('diseases');
-        const degreesIds = getIds('degrees');
 
+        const formData = createFormData(finalData);
+        completeProfileMutation.mutate(formData)
+    };
+
+    const getIds = (key, data) => data[key]?.map(item => item.id) || [];
+
+    const createFormData = (finalData) => {
+        const specialityIds = getIds('specialities', finalData);
+        const hospitalIds = getIds('hospitals', finalData);
+        const diseasesIds = getIds('diseases', finalData);
+        const degreesIds = getIds('degrees', finalData);
+    
         const formData = new FormData();
         formData.append('name', finalData.name);
         formData.append('date_of_birth', finalData.birthDate);
@@ -86,9 +92,9 @@ export default function CompleteProfileStep4() {
         degreesIds.forEach(id => { formData.append('degrees', id); });
         diseasesIds.forEach(id => { formData.append('diseases', id); });
 
-        completeProfileMutation.mutate(formData)
-    };
-
+        return formData;
+      };
+    
     const handlePrev = () => {
         sessionStorage.setItem('currentStep', 3);
         navigate('/complete-profile/three');

@@ -13,8 +13,7 @@
    npm install
    ```
 3.  **Create a `.env` file** 
-    In root directory (`/doctor-assistance-fe`) create .env file with the following variable:
-    VITE_API_BASE_URL=
+    In root directory (`/doctor-assistance-fe`) replace the .env.template with .env and fill its fields with the backend base url
 
 4. **Start the project**:
     ```bash
