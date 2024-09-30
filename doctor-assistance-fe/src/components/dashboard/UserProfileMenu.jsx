@@ -4,15 +4,10 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
     DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-import { getAuthStatus } from '@/utils/auth';    
-
-export default function UserProfileMenu() {
-
-    const { user } = getAuthStatus(); 
-    const role = user?.role || 'guest';
+export default function UserProfileMenu({userName}) {
 
     const getInitials = () => {
-        return role.charAt(0).toUpperCase();
+        return userName.charAt(0).toUpperCase();
     };
 
     const handleLogout = () => {
