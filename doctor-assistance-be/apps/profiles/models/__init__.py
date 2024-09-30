@@ -5,4 +5,4 @@ from apps.profiles.models.doctors import (
     Disease
 )
 
-from apps.profiles.models.patients import PatientProfile
+from apps.profiles.models.patients import PatientProfile, Allergy, PatientAllergy

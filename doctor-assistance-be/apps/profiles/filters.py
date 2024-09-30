@@ -1,7 +1,7 @@
 from django_filters import FilterSet
 from django_filters import CharFilter
 
-from apps.profiles.models import Speciality, Degree, Disease
+from apps.profiles.models import Speciality, Degree, Disease, Allergy
 
 
 class BaseFilter(FilterSet):
@@ -23,4 +23,10 @@ class DegreeFilter(BaseFilter):
 class DiseaseFilter(BaseFilter):
     class Meta:
         model = Disease
+        fields = ['name']
+
+
+class AllergyFilter(BaseFilter):
+    class Meta:
+        model = Allergy
         fields = ['name']

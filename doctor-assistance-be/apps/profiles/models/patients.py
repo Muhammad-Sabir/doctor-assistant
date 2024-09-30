@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from apps.core.models import TimeStampedModel
+from apps.profiles.models import DoctorProfile
 
 User = get_user_model()
 
@@ -36,3 +37,22 @@ class PatientProfile(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+
+class Allergy(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    
+    def __str__(self):
+        return self.name
+
+
+class PatientAllergy(TimeStampedModel):
+    allergy = models.ForeignKey(Allergy, on_delete=models.CASCADE)
+    patient = models.ForeignKey(PatientProfile, on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('allergy', 'patient') 
+
+    def __str__(self):
+        return f"{self.allergy.name} - {self.patient.name}"
