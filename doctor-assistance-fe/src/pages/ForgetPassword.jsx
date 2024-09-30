@@ -17,6 +17,7 @@ export default function ForgetPassword() {
     const forgotPassword = useCreateUpdateMutation({
         url: 'user/send-reset-password/',
         method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
         fetchFunction: fetchApi,
         onSuccessMessage: 'Password reset email sent.',
         onErrorMessage: 'Failed to send reset email',
@@ -33,7 +34,7 @@ export default function ForgetPassword() {
         e.preventDefault();
 
         if (hasNoFieldErrors(inputErrors)) {
-            forgotPassword.mutate({ email });
+            forgotPassword.mutate(JSON.stringify({ email }));
         }
     };
 

@@ -31,6 +31,7 @@ export default function SignUp() {
     url: 'user/register/',
     method: 'POST',
     fetchFunction: fetchApi,
+    headers: {'Content-Type': 'application/json'},
     onSuccessMessage: 'A verification email has been sent to your email address.',
     onErrorMessage: 'Signup failed',
     onSuccess: () => {
@@ -58,7 +59,7 @@ export default function SignUp() {
 
     if (hasNoFieldErrors(inputErrors)) {
       sessionStorage.setItem('email', email);
-      signupMutation.mutate({ email, password, phone_number: phoneNo, role: activeTab });
+      signupMutation.mutate( JSON.stringify({email, password, phone_number: phoneNo, role: activeTab}));
     }
   };
 

@@ -14,15 +14,16 @@ export default function EmailVerificationMessage() {
     const [status, setStatus] = useState('loading');
 
     const { mutate: verifyAccount, isSuccess, isError } = useCreateUpdateMutation({
-        url: ({ uid, token }) => `user/verify-account/${uid}/${token}`,
+        url: () => `user/verify-account/${verify_uid}/${verify_token}`,
         method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
         fetchFunction: fetchApi,
         onSuccessMessage: 'Your account has been verified successfully.',
         onErrorMessage: 'Verification failed',
     });
 
     useEffect(() => {
-        verifyAccount({ uid: verify_uid, token: verify_token });
+        verifyAccount(JSON.stringify({uid: verify_uid, token: verify_token}));
     }, [verify_uid, verify_token, verifyAccount]);
 
     useEffect(() => {

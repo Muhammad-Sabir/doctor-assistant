@@ -24,8 +24,9 @@ export default function ResetPassword() {
     const [inputErrors, setInputErrors] = useState({});
 
     const { mutate: resetPassword, isSuccess } = useCreateUpdateMutation({
-        url: ({ uid, token }) => `user/reset-password-confirm/${uid}/${token}`,
+       url: () => `user/reset-password-confirm/${reset_uid}/${reset_token}`,
         method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
         fetchFunction: fetchApi,
         onSuccessMessage: 'Password reset successfully.',
         onErrorMessage: 'Failed to reset password',
@@ -64,11 +65,7 @@ export default function ResetPassword() {
         }
 
         if (hasNoFieldErrors(inputErrors)) {
-            resetPassword({
-                uid: reset_uid,
-                token: reset_token,
-                password: formData.password
-            });
+            resetPassword(JSON.stringify({  uid: reset_uid, token: reset_token, password: formData.password}));
         }
     };
 

@@ -23,25 +23,53 @@ const validationRules = {
         test: (value, password) => value === password,
         message: "Passwords do not match",
     },
-    age: {
-        test: (value) => value > 24,
-        message: "Age must be greater than 24",
-    },
-    specialization: {
-        test: (value) => value !== "none" && value !== "",
-        message: "Specialization is required",
-    },
-    degree: {
-        test: (value) => value?.trim() && /^([A-Z]+(\([A-Z][a-z]*\))?(,\s?[A-Z]+(\([A-Z][a-z]*\))?)*?)$/.test(value.trim()),
-        message: "Degree must be uppercase, with optional country or specialization, separated by commas.",
+    birthDate: {
+        test: (value) => {
+            if (!isDateSelected(value)) {
+                validationRules.birthDate.message = "Please select date of birth.";
+                return false;
+            }
+            if (!isDateValid(value, 20)) {
+                validationRules.birthDate.message = "You must be at least 20 years old";
+                return false;
+            }
+            validationRules.birthDate.message = "";
+            return true;
+        },
     },
     registrationNo: {
         test: (value) => /^[A-Z0-9]{5,}$/i.test(value),
         message: "PMDC Registration No. must be valid",
     },
+    picture: {
+        test: (file) => {
+            const maxFileSize = 2 * 1024 * 1024;
+            const allowedFileTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+            if (!file) return true;
+            if (!allowedFileTypes.includes(file.type)) return false;
+            if (file.size > maxFileSize) return false;
+            return true;
+        },
+        message: "Image must be a JPEG, PNG, or WEBP and less than 2MB",
+    },
+    gender: {
+        test: (value) => value === 'M' || value === 'F',
+        message: "Please select your gender",
+    },
     experience: {
-        test: (value) => value !== '' && value >= 0,
-        message: "Experience cannot be negative or empty",
+        test: (value) => {
+            if (!isDateSelected(value)) {
+                validationRules.experience.message = "Please select date of experience.";
+                return false;
+            }
+            if (!isDateValid(value,1)) {
+                validationRules.experience.message = "At least 1 year experience required.";
+                return false;
+            }
+            validationRules.experience.message = "";
+            return true;
+        },
     },
     designation: {
         test: (value) => value.trim() !== "",
@@ -65,4 +93,11 @@ export const validateField = (id, value, inputErrors, password = '') => {
 
 export const hasNoFieldErrors = (inputErrors) => {
     return Object.keys(inputErrors).length === 0;
+};
+
+const isDateSelected = (value) => value !== "none" && value !== "";
+
+const isDateValid = (value, minYears) => {
+    const diff = new Date().getFullYear() - new Date(value).getFullYear();
+    return diff > minYears || (diff === minYears && new Date().getMonth() >= new Date(value).getMonth());
 };

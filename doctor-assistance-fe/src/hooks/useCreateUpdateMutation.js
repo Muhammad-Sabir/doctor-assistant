@@ -21,10 +21,9 @@ export const useCreateUpdateMutation = ({
                 const response = await fetchFunction(fullUrl, {
                     method,
                     headers: {
-                        'Content-Type': 'application/json',
                         ...headers,
                     },
-                    body: JSON.stringify(body),
+                    body: body,
                 });
                 console.log('Response:', response);
                 return response;
