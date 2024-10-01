@@ -26,12 +26,12 @@ export default function Profile() {
     fetchFunction: fetchWithAuth,
   });
 
-  const completeProfileMutation = useCreateUpdateMutation({
+  const updateProfileMutation = useCreateUpdateMutation({
     url: 'doctors/me/',
     method: 'PATCH',
     fetchFunction: fetchWithAuth,
     onSuccessMessage: 'Profile Successfully Updated',
-    onErrorMessage: 'Profile Setup Failed',
+    onErrorMessage: 'Profile Update Failed',
     onSuccess: () => {
       window.location.reload();
     }
@@ -75,7 +75,7 @@ export default function Profile() {
       return;
     }
     const formData = createFormData(inputValues);
-    completeProfileMutation.mutate(formData);
+    updateProfileMutation.mutate(formData);
   };
 
   const getIds = (key) => inputValues[key]?.map(item => item.id) || [];
