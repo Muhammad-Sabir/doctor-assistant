@@ -82,7 +82,7 @@ export default function CompleteProfileStep4() {
     
         const formData = new FormData();
         formData.append('name', finalData.name);
-        formData.append('date_of_birth', finalData.birthDate);
+        formData.append('date_of_birth', finalData.doctorBirthDate);
         formData.append('date_of_experience', finalData.experience);
         formData.append('pmdc_no', finalData.registrationNo);
         formData.append('gender', finalData.gender);
@@ -97,7 +97,7 @@ export default function CompleteProfileStep4() {
     
     const handlePrev = () => {
         sessionStorage.setItem('currentStep', 3);
-        navigate('/complete-profile/three');
+        navigate('/complete-profile/doctor/three');
     };
 
     return (

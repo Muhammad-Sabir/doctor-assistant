@@ -66,7 +66,7 @@ export default function Login() {
                 is_profile_completed: is_profile_completed
             };
             localStorage.setItem('user', JSON.stringify(user));
-            navigate(role === 'doctor' && !is_profile_completed ? '/complete-profile' : `/${role}`);
+            navigate(!is_profile_completed ? `/complete-profile/${role}` : `/${role}`);
         }
 
         if (isError && error.status === 400 && error.message === "Account is not verified.") {

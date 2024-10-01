@@ -23,14 +23,28 @@ const validationRules = {
         test: (value, password) => value === password,
         message: "Passwords do not match",
     },
+    doctorBirthDate: {
+        test: (value) => {
+            if (!isDateSelected(value)) {
+                validationRules.doctorBirthDate.message = "Please select date of birth.";
+                return false;
+            }
+            if (!isDateValid(value, 20)) {
+                validationRules.doctorBirthDate.message = "You must be at least 20 years old";
+                return false;
+            }
+            validationRules.doctorBirthDate.message = "";
+            return true;
+        },
+    },
     birthDate: {
         test: (value) => {
             if (!isDateSelected(value)) {
                 validationRules.birthDate.message = "Please select date of birth.";
                 return false;
             }
-            if (!isDateValid(value, 20)) {
-                validationRules.birthDate.message = "You must be at least 20 years old";
+            if (!isDateValid(value, 13)) {
+                validationRules.birthDate.message = "You must be at least 13 years old";
                 return false;
             }
             validationRules.birthDate.message = "";

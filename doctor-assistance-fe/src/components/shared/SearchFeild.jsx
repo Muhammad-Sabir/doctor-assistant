@@ -13,7 +13,6 @@ const SearchField = ({
     setInputError,
     inputErrors,
     labelClassName = '',  
-    inputClassName = '' ,
     id
 }) => {
     const [query, setQuery] = useState('');
@@ -112,7 +111,7 @@ const SearchField = ({
                     placeholder={`Search ${placeholder} to select...`} 
                     value={query}
                     onChange={handleChange}
-                    className={`${inputErrors[id] ? 'border-red-500' : ''} ${inputClassName}`} 
+                    className={`${inputErrors[id] ? 'border-red-500' : ''}`} 
                 />
             </div>
             {isOpen && results.length > 0 && (
@@ -136,7 +135,7 @@ const SearchField = ({
             )}
 
             {selectedItems.length > 0 && (
-                <div className={`mt-2 mb-4 ${inputClassName}`}>
+                <div className={`mt-2 mb-4`}>
                     {selectedItems.map(item => (
                         <span key={item.id} className="m-1 py-1 px-2 bg-accent rounded-md inline-block text-xs font-medium text-primary text-center">
                             {item.name}

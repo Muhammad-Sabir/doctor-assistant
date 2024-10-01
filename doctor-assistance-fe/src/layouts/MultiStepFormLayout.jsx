@@ -16,17 +16,23 @@ export default function MultiStepFormLayout({ children }) {
         window.location.href = '/login';
     };
 
+    const isUserInCorrectPath = (role) => {
+        return location.pathname.includes(`/complete-profile/${role}`);
+    };
+
+    const isUserWithCompleteProfile = (user) => {
+        return user.is_profile_completed;
+    };
+
     useEffect(() => {
         const { isAuthenticated, user } = getAuthStatus();
 
-        const isDoctorWithCompleteProfile = () => {
-            return user.role === 'doctor' && user.is_profile_completed;
-        };
-
         if (!isAuthenticated) {
             navigate('/login');
-        } else if (isDoctorWithCompleteProfile()) {
+        } else if (isUserWithCompleteProfile(user)) {
             navigate(`/${user.role}`);
+        } else if (!isUserInCorrectPath(user.role)) {
+            navigate(`/complete-profile/${user.role}`);
         }
     }, [navigate]);
 

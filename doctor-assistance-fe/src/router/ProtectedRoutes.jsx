@@ -19,8 +19,8 @@ const ProtectedRoute = ({ children, permission }) => {
     }
 
     // Check if profile is completed
-    if (user.role === 'doctor' && !user.is_profile_completed) {
-        return <Navigate to="/complete-profile" />;
+    if (!user.is_profile_completed) {
+        return <Navigate to={`/complete-profile/${user.role}`} />;
     }
 
     // If authenticated and has the required permission, render the protected children component

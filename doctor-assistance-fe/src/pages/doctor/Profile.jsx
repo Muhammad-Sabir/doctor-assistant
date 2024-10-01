@@ -15,7 +15,7 @@ import Loading from '@/components/shared/Loading';
 export default function Profile() {
   const [inputValues, setInputValues] = useState({
     registrationNo: '', experience: '', picture: null,
-    name: '', birthDate: '', gender: 'M',
+    name: '', doctorBirthDate: '', gender: 'M',
     degrees: [], specialities: [], diseases: [], affiliatedHospitals: []
   });
   const [inputErrors, setInputErrors] = useState({});
@@ -41,7 +41,7 @@ export default function Profile() {
     if (isSuccess && data) {
       setInputValues((prev) => ({
         ...prev, registrationNo: data.pmdc_no || '', experience: data.date_of_experience || '',
-        name: data.name || '', birthDate: data.date_of_birth || '', gender: data.gender || 'M',
+        name: data.name || '', doctorBirthDate: data.date_of_birth || '', gender: data.gender || 'M',
         degrees: data.degrees || [], specialities: data.specialities || [],
         diseases: data.diseases || [], affiliatedHospitals: data.hospitals || [],
       }));
@@ -88,7 +88,7 @@ export default function Profile() {
 
     const formData = new FormData();
     formData.append('name', inputValues.name);
-    formData.append('date_of_birth', inputValues.birthDate);
+    formData.append('date_of_birth', inputValues.doctorBirthDate);
     formData.append('date_of_experience', inputValues.experience);
     formData.append('pmdc_no', inputValues.registrationNo);
     formData.append('gender', inputValues.gender);
@@ -117,6 +117,8 @@ export default function Profile() {
     <div className="w-full px-4">
       <h2 className="text-lg font-semibold mb-2 text-primary">Your Profile</h2>
       <p className="text-sm mb-4">You can update your profile information below:</p>
+
+      <hr className="border-t mt-6 mb-5 border-gray-300" />
 
       <form onSubmit={handleSubmit}>
         <PersonalDetails
@@ -149,7 +151,9 @@ export default function Profile() {
           setInputValues={setInputValues}
         />
 
-        <div className='mt-4 flex justify-start'>
+        <hr className="border-t mt-4 mb-7 border-gray-300" />
+
+        <div className='flex justify-start'>
           <Button type="submit">Update</Button>
         </div>
       </form>

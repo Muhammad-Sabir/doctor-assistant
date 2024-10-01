@@ -7,12 +7,11 @@ import { Label } from '@/components/ui/label';
 const ProfessionalDetails = ({ inputValues, handleChange, handleBlur, inputErrors }) => {
     return (
         <div>
-            <hr className="border-t mt-6 border-gray-300" />
-            <p className="text-sm mb-4 mt-6 font-semibold text-primary">Proffessional Details:</p>
+            <hr className="border-t mt-3 border-gray-300" />
+            <p className="text-sm mb-4 mt-5 font-semibold text-primary">Professional Details:</p>
 
-            <div className='md:flex mt-4 gap-5 items-baseline'>
-                
-                <div className="grid gap-2 mb-5 w-80">
+            <div className='grid lg:grid-cols-2 gap-5 mt-5 items-baseline'>
+                <div className="grid gap-2 mb-5">
                     <Label htmlFor="registrationNo" className='text-gray-700 font-normal'>PMDC Registration No</Label>
                     <Input
                         id="registrationNo"
@@ -51,7 +50,6 @@ const ProfessionalDetails = ({ inputValues, handleChange, handleBlur, inputError
                         </div>
                     )}
                 </div>
-
             </div>
         </div>
     );
