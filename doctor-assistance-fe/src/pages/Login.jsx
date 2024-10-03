@@ -63,7 +63,8 @@ export default function Login() {
                 access_token: access,
                 refresh_token: refresh,
                 role: role,
-                is_profile_completed: is_profile_completed
+                is_profile_completed: is_profile_completed,
+                username: loginDetails.username
             };
             localStorage.setItem('user', JSON.stringify(user));
             navigate(!is_profile_completed ? `/complete-profile/${role}` : `/${role}`);

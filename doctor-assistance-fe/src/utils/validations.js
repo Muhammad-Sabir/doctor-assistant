@@ -51,6 +51,20 @@ const validationRules = {
             return true;
         },
     },
+    dependentbirthDate: {
+        test: (value) => {
+            if (!isDateSelected(value)) {
+                validationRules.dependentbirthDate.message = "Please selectrth.";
+                return false;
+            }
+            if (!isDateInPast(value)) {
+                validationRules.dependentbirthDate.message = "Date of birth cannot be in the future.";
+                return false;
+            }
+            validationRules.dependentbirthDate.message = "";
+            return true;
+        },
+    },
     registrationNo: {
         test: (value) => /^[A-Z0-9]{5,}$/i.test(value),
         message: "PMDC Registration No. must be valid",
@@ -66,10 +80,6 @@ const validationRules = {
             return true;
         },
         message: "Image must be a JPEG, PNG, or WEBP and less than 2MB",
-    },
-    gender: {
-        test: (value) => value === 'M' || value === 'F',
-        message: "Please select your gender",
     },
     experience: {
         test: (value) => {
@@ -114,4 +124,10 @@ const isDateSelected = (value) => value !== "none" && value !== "";
 const isDateValid = (value, minYears) => {
     const diff = new Date().getFullYear() - new Date(value).getFullYear();
     return diff > minYears || (diff === minYears && new Date().getMonth() >= new Date(value).getMonth());
+};
+
+const isDateInPast = (value) => {
+    const today = new Date();
+    const selectedDate = new Date(value);
+    return selectedDate <= today;
 };

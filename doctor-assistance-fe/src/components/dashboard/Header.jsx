@@ -14,19 +14,20 @@ const currentDate = new Date().toLocaleDateString('en-GB', {
 });
 
 export default function Header() {
-
     const { user } = getAuthStatus();
     const role = user?.role;
 
-    const { data } = role === 'doctor' 
-        ? useFetchQuery({
-            url: 'doctors/me',
-            queryKey: ['doctorProfile'],
-            fetchFunction: fetchWithAuth,
-          })
-        : { data: {} };
+    const { data } = useFetchQuery({
+        url: role === 'doctor' ? 'doctors/me' : role === 'patient' ? 'patients/' : '',
+        queryKey: [role === 'doctor' ? 'doctorProfile' : 'patientProfile'],
+        fetchFunction: fetchWithAuth,
+    });
 
-    const userName = (role === 'doctor' && data?.name) || (role === 'patient' ? role : 'Loading...');
+    const userName = role === 'doctor' 
+        ? data?.name || 'Loading...' 
+        : role === 'patient' 
+        ? data?.results[0]?.name || 'Loading...' 
+        : 'Loading...';
 
     return (
         <header className="flex h-14 items-center gap-4 px-4 lg:h-[60px] lg:px-6 bg-white border-b shadow-sm sticky top-0 left-0 z-50">

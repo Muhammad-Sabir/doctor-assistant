@@ -1,71 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
+import banner from "@/assets/images/webp/profileBanner.webp";
+import userIcon from "@/assets/images/webp/userIcon.webp";
 
 import { useFetchQuery } from '@/hooks/useFetchQuery';
-import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
-import { validateField, hasNoFieldErrors } from '@/utils/validations';
+import { getAuthStatus } from '@/utils/auth';
+
 import PatientPersonalDetails from '@/components/profile/PatientPersonalDetails';
+import DependentPatientsDetails from '@/components/profile/DependentPatientsDetails';
+import ProfileTabs from '@/components/shared/ProfileTabs';
 import Loading from '@/components/shared/Loading';
+import PatientAllergiesDetail from '@/components/profile/PatientAllergiesDetail';
 
 export default function Profile() {
-  const [inputValues, setInputValues] = useState({name: '', birthDate: '', gender: 'M'});
-  const [inputErrors, setInputErrors] = useState({});
+  const { user } = getAuthStatus();
+  const [activeTab, setActiveTab] = useState("personal");
 
-  const { data, isFetching, isSuccess, isError, error } = useFetchQuery({
+  const { data, isFetching, isError, error } = useFetchQuery({
     url: 'patients/',
-    queryKey: ['doctorProfile'],
+    queryKey: ['patientProfile'],
     fetchFunction: fetchWithAuth,
   });
 
-  const patientId = data?.results?.[0]?.id;
+  const patientTabs = [
+    { label: "Personal Details", key: "personal" },
+    { label: "Dependent Patients Details", key: "dependentPatients" },
+    { label: "Allergies Details", key: "allergies" },
+  ];
 
-  const updateProfileMutation = useCreateUpdateMutation({
-    url: `patients/${patientId}/`,
-    method: 'PUT',
-    headers: {'Content-Type': 'application/json'},
-    fetchFunction: fetchWithAuth,
-    onSuccessMessage: 'Profile Successfully Updated',
-    onErrorMessage: 'Profile Update Failed',
-    onSuccess: () => {
-      window.location.reload();
-    }
-  });
-
-  useEffect(() => {
-    if (isSuccess && data) {
-      const patient = data.results[0];
-      console.log(patient)
-      setInputValues((prev) => ({
-        ...prev, name: patient.name || '', birthDate: patient.date_of_birth || '', gender: patient.gender || '',
-      }));
-    }
-  }, [isSuccess, data]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setInputValues((prev) => ({ ...prev, [name]: value }));
+  const tabComponents = {
+    personal: <PatientPersonalDetails patientData ={data} />,
+    dependentPatients: <DependentPatientsDetails patientData={data} />,
+    allergies: <PatientAllergiesDetail patientData={data} />
   };
 
-  const handleBlur = (e) => {
-    const { id, value } = e.target;
-    const errors = validateField(id, value, inputErrors);
-    setInputErrors(errors);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!hasNoFieldErrors(inputErrors)) {
-      console.log(inputErrors);
-      return;
-    }
-
-    const { name, birthDate, gender } = inputValues;
-    updateProfileMutation.mutate(JSON.stringify({ name, date_of_birth: birthDate, gender}))
-  };
-
-  
   if (isFetching) {
     return (
       <Loading />
@@ -77,26 +46,32 @@ export default function Profile() {
   }
 
   return (
-    <div className="w-full px-4">
-      <h2 className="text-lg font-semibold mb-2 text-primary">Your Profile</h2>
-      <p className="text-sm mb-4">You can update your profile information below:</p>
+    <section className="relative pt-40 pb-24 mx-1">
+      <img src={banner} alt="cover-image"
+        className="w-full absolute top-0 left-0 z-0 h-[10rem] object-cover"
+      />
 
-      <hr className="border-t mt-6 mb-5 border-gray-300" />
-
-      <form onSubmit={handleSubmit}>
-        <PatientPersonalDetails
-          inputValues={inputValues}
-          handleChange={handleChange}
-          handleBlur={handleBlur}
-          inputErrors={inputErrors}
-        />
-        
-        <hr className="border-t mt-4 mb-7 border-gray-300" />
-
-        <div className='flex justify-start'>
-          <Button type="submit">Update</Button>
+      <div className="w-full max-w-7xl mx-auto px-6 md:px-8 -mt-28 bg-white">
+        <div className="flex items-center justify-center sm:justify-start relative z-10 mb-5 mt-10 lg:mt-0">
+          <img src={userIcon} alt="user-image"
+            className="bg-white h-[120px] lg:h-[152px] w-[120px] lg:w-[152px] object-cover border border-gray-300 rounded-full"
+          />
         </div>
-      </form>
-    </div>
+
+        <div className="flex items-center justify-center flex-col sm:flex-row max-sm:gap-5 sm:justify-between mb-5">
+          <div>
+            <h3 className="font-manrope font-bold text-xl text-primary mb-1 max-sm:text-center">{data?.results[0].name}</h3>
+            <p className="font-normal text-gray-500 max-sm:text-center text-sm">
+            <span className='leading-6'>{user?.username}</span> <br className="hidden sm:block" />
+              Patient ID: {data?.results[0].id} 
+            </p>
+          </div>
+        </div>
+
+        <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={patientTabs} />
+
+        {tabComponents[activeTab]}
+      </div>
+    </section>
   );
 }

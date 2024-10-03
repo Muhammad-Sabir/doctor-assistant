@@ -101,7 +101,6 @@ export default function CompleteProfile() {
               id="M"
               name="gender"
               value="M"
-              onBlur={handleBlur}
               onChange={handleChange}
               checked={inputValues.gender === 'M'}
             />
@@ -112,25 +111,18 @@ export default function CompleteProfile() {
               id="F"
               name="gender"
               value="F"
-              onBlur={handleBlur}
               onChange={handleChange}
               className='ml-3'
               checked={inputValues.gender === 'F'}
             />
             <Label htmlFor="F" className='ml-2 -mt-2 font-normal'>Female</Label>
           </div>
-          {inputErrors.gender && (
-            <div aria-live="assertive" className="flex text-red-500 text-sm">
-              <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.gender}
-            </div>
-          )}
         </div>
 
         <div className="flex justify-end">
           <Button type="submit" >
             Submit
           </Button>
-
         </div>
       </form>
     </>
