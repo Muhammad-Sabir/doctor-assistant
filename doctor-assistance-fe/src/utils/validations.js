@@ -23,17 +23,45 @@ const validationRules = {
         test: (value, password) => value === password,
         message: "Passwords do not match",
     },
+    doctorBirthDate: {
+        test: (value) => {
+            if (!isDateSelected(value)) {
+                validationRules.doctorBirthDate.message = "Please select date of birth.";
+                return false;
+            }
+            if (!isDateValid(value, 20)) {
+                validationRules.doctorBirthDate.message = "You must be at least 20 years old";
+                return false;
+            }
+            validationRules.doctorBirthDate.message = "";
+            return true;
+        },
+    },
     birthDate: {
         test: (value) => {
             if (!isDateSelected(value)) {
                 validationRules.birthDate.message = "Please select date of birth.";
                 return false;
             }
-            if (!isDateValid(value, 20)) {
-                validationRules.birthDate.message = "You must be at least 20 years old";
+            if (!isDateValid(value, 13)) {
+                validationRules.birthDate.message = "You must be at least 13 years old";
                 return false;
             }
             validationRules.birthDate.message = "";
+            return true;
+        },
+    },
+    dependentbirthDate: {
+        test: (value) => {
+            if (!isDateSelected(value)) {
+                validationRules.dependentbirthDate.message = "Please selectrth.";
+                return false;
+            }
+            if (!isDateInPast(value)) {
+                validationRules.dependentbirthDate.message = "Date of birth cannot be in the future.";
+                return false;
+            }
+            validationRules.dependentbirthDate.message = "";
             return true;
         },
     },
@@ -52,10 +80,6 @@ const validationRules = {
             return true;
         },
         message: "Image must be a JPEG, PNG, or WEBP and less than 2MB",
-    },
-    gender: {
-        test: (value) => value === 'M' || value === 'F',
-        message: "Please select your gender",
     },
     experience: {
         test: (value) => {
@@ -100,4 +124,10 @@ const isDateSelected = (value) => value !== "none" && value !== "";
 const isDateValid = (value, minYears) => {
     const diff = new Date().getFullYear() - new Date(value).getFullYear();
     return diff > minYears || (diff === minYears && new Date().getMonth() >= new Date(value).getMonth());
+};
+
+const isDateInPast = (value) => {
+    const today = new Date();
+    const selectedDate = new Date(value);
+    return selectedDate <= today;
 };

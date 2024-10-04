@@ -11,7 +11,7 @@ import StepIndicator from '@/components/shared/StepIndicator';
 
 export default function CompleteProfileStep1() {
     const navigate = useNavigate();
-    const [inputValues, setInputValues] = useState({ name: '', birthDate: '', gender: 'M' });
+    const [inputValues, setInputValues] = useState({ name: '', doctorBirthDate: '', gender: 'M' });
     const [inputErrors, setInputErrors] = useState({});
 
     useEffect(() => {
@@ -68,21 +68,21 @@ export default function CompleteProfileStep1() {
                     )}
                 </div>
                 <div className="grid gap-2 mb-5">
-                    <Label htmlFor="birthDate">Date of Birth</Label>
+                    <Label htmlFor="doctorBirthDate">Date of Birth</Label>
                     <Input
-                        id="birthDate"
-                        name="birthDate"
+                        id="doctorBirthDate"
+                        name="doctorBirthDate"
                         type="date"
                         placeholder="Enter your age..."
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={inputValues.birthDate}
-                        className={`w-full border rounded-md p-2 ${inputErrors.birthDate ? 'border-red-500' : 'border-gray-300'}`}
+                        value={inputValues.doctorBirthDate}
+                        className={`w-full border rounded-md p-2 ${inputErrors.doctorBirthDate ? 'border-red-500' : 'border-gray-300'}`}
                         required
                     />
-                    {inputErrors.birthDate && (
+                    {inputErrors.doctorBirthDate && (
                         <div aria-live="assertive" className="flex text-red-500 text-sm">
-                            <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.birthDate}
+                            <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.doctorBirthDate}
                         </div>
                     )}
                 </div>
@@ -94,7 +94,6 @@ export default function CompleteProfileStep1() {
                             id="M"
                             name="gender"
                             value="M"
-                            onBlur={handleBlur}
                             onChange={handleChange}
                             checked={inputValues.gender === 'M'}
                         />
@@ -105,18 +104,12 @@ export default function CompleteProfileStep1() {
                             id="F"
                             name="gender"
                             value="F"
-                            onBlur={handleBlur}
                             onChange={handleChange}
                             className='ml-3'
                             checked={inputValues.gender === 'F'}
                         />
                         <Label htmlFor="F" className='ml-2 -mt-2 font-normal'>Female</Label>
                     </div>
-                    {inputErrors.gender && (
-                        <div aria-live="assertive" className="flex text-red-500 text-sm">
-                            <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.gender}
-                        </div>
-                    )}
                 </div>
 
                 <div className="flex justify-end">

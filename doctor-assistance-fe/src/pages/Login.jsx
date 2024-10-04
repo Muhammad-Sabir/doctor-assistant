@@ -63,10 +63,11 @@ export default function Login() {
                 access_token: access,
                 refresh_token: refresh,
                 role: role,
-                is_profile_completed: is_profile_completed
+                is_profile_completed: is_profile_completed,
+                username: loginDetails.username
             };
             localStorage.setItem('user', JSON.stringify(user));
-            navigate(role === 'doctor' && !is_profile_completed ? '/complete-profile' : `/${role}`);
+            navigate(!is_profile_completed ? `/complete-profile/${role}` : `/${role}`);
         }
 
         if (isError && error.status === 400 && error.message === "Account is not verified.") {

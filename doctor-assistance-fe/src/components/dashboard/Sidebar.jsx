@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import logoIcon from '@/assets/images/svg/logo-icon.svg';
 import { getAuthStatus } from '@/utils/auth';
@@ -8,19 +8,25 @@ import { menuItems, accountLinks } from '@/components/shared/MenuData';
 export default function Sidebar() {
   const { user } = getAuthStatus();
   const role = user?.role;
+  const location = useLocation(); 
 
-  const [activeItem, setActiveItem] = useState("Dashboard");
+  const [activeItem, setActiveItem] = useState("");
   const items = menuItems[role] || [];
+
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const currentActiveItem = [...items, ...accountLinks].find(item => currentPath.includes(item.url));
+    setActiveItem(currentActiveItem ? currentActiveItem.name : "Home");
+
+  }, [location.pathname, items]);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
     window.location.href = '/login';
   };
 
-  const handleMenuItemClick = async (itemName) => {
-    const isLogoutItem = () => itemName === "Logout";
-
-    if (isLogoutItem()) {
+  const handleMenuItemClick = (itemName) => {
+    if (itemName === "Logout") {
       handleLogout();
     } else {
       setActiveItem(itemName);

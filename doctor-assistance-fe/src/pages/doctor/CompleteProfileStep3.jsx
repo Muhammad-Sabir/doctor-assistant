@@ -4,79 +4,79 @@ import { FaArrowLeft } from "react-icons/fa";
 
 import { Button } from '@/components/ui/button';
 
-import StepIndicator from '@/components/shared/StepIndicator';
 import SearchField from '@/components/shared/SearchFeild';
 import { hasNoFieldErrors } from '@/utils/validations';
+import StepIndicator from '@/components/shared/StepIndicator';
 
-export default function CompleteProfileStep2() {
+export default function CompleteProfileStep3() {
     const navigate = useNavigate();
-    const [inputValues, setInputValues] = useState({ degrees: [], specialities: [] });
+    const [inputValues, setInputValues] = useState({ diseases: [], affiliatedHospitals: [] });
     const [inputErrors, setInputErrors] = useState({});
 
     useEffect(() => {
-        const educationDetails = sessionStorage.getItem('profileData');
-        if (educationDetails) {
-            const storedData = JSON.parse(educationDetails);
-            console.log(storedData)
+        const workDetails = sessionStorage.getItem('profileData');
+        if (workDetails) {
+            const storedData = JSON.parse(workDetails);
             setInputValues({
-                degrees: storedData.degrees || [],
-                specialities: storedData.specialities|| []
+                diseases: storedData.diseases || [],
+                affiliatedHospitals: storedData.hospitals || []
             });
         }
     }, []);
 
-    const handlePrev = () => {
-        sessionStorage.setItem('currentStep', 1);
-        navigate('/complete-profile/');
-    }
-
-    const handleSubmit = (e) => {
+    const handleNext = (e) => {
         e.preventDefault();
-        console.log(inputValues)
-        
         if (!hasNoFieldErrors(inputErrors)) {
             console.log(inputErrors);
             return;
         }
         console.log(inputValues);
+
+
         const currentProfileData = JSON.parse(sessionStorage.getItem('profileData')) || {};
         const updatedProfileData = {
             ...currentProfileData,
-            degrees: inputValues.degrees,
-            specialities: inputValues.specialities
+            diseases: inputValues.diseases,
+            hospitals: inputValues.affiliatedHospitals
         };
         sessionStorage.setItem('profileData', JSON.stringify(updatedProfileData));
-        sessionStorage.setItem('currentStep', 3);
-        navigate('/complete-profile/three');
+        sessionStorage.setItem('currentStep', 4);
+        navigate('/complete-profile/doctor/four');
     };
+
+    const handlePrev = () => {
+        sessionStorage.setItem('currentStep', 2);
+        navigate('/complete-profile/doctor/two');
+    }
 
     return (
         <>
         <StepIndicator/>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleNext}>
             <SearchField
-                placeholder="Degrees"
-                onSelect={(selectedDegrees) => setInputValues(prev => ({
+                placeholder="Affiliated Hospitals"
+                onSelect={(selectedHospitals) => setInputValues(prev => ({
                     ...prev,
-                    degrees: selectedDegrees
+                    affiliatedHospitals: selectedHospitals
                 }))}
-                inputValues={inputValues.degrees}
+                inputValues={inputValues.affiliatedHospitals}
                 setInputError={setInputErrors}
                 inputErrors={inputErrors}
-                id="degrees"
+                id="hospitals"
             />
 
             <SearchField
-                placeholder="Specialities"
-                onSelect={(selectedSpecialities) => setInputValues(prev => ({
+                placeholder="Diseases"
+                onSelect={(selectedDiseases) => setInputValues(prev => ({
                     ...prev,
-                    specialities: selectedSpecialities
+                    diseases: selectedDiseases
                 }))}
-                inputValues={inputValues.specialities}
+                inputValues={inputValues.diseases}
                 setInputError={setInputErrors}
                 inputErrors={inputErrors}
-                id="specialities"
+                id="diseases"
             />
+
             <div className="flex justify-end">
                 <div
                     onClick={handlePrev}
@@ -84,13 +84,13 @@ export default function CompleteProfileStep2() {
                 >
                     <FaArrowLeft className='mr-1 mt-1' size={10} /> Back
                 </div>
+
                 <Button type="submit">
                     Next Step
                 </Button>
             </div>
         </form>
         </>
-        
+       
     );
 }
-

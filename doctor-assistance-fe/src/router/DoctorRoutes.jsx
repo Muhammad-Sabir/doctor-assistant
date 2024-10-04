@@ -11,9 +11,9 @@ export default function DoctorRoutes() {
         <ProtectedRoute permission='doctor'>
             <DashboardLayout>
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
                     <Route path="profile" element={<Profile />} />
-                    <Route path="*" element={<Navigate to="/doctor" replace />}/>
+                    <Route path="*" element={<Navigate to="/doctor/home" replace />}/>
                 </Routes>
             </DashboardLayout>
         </ProtectedRoute>

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -10,24 +10,29 @@ import { getAuthStatus } from '@/utils/auth';
 import { menuItems, accountLinks } from '@/components/shared/MenuData';
 
 export default function MobileMenu() {
-
     const { user } = getAuthStatus();
     const role = user?.role;
+    const location = useLocation();
 
     const items = menuItems[role] || [];
 
     const [isOpen, setIsOpen] = useState(false);
-    const [activeItem, setActiveItem] = useState("Home");
+    const [activeItem, setActiveItem] = useState("");
+
+    useEffect(() => {
+        const currentPath = location.pathname;
+        const currentItem = [...items, ...accountLinks].find(item => currentPath.includes(item.url));
+        setActiveItem(currentItem ? currentItem.name : "Home");
+
+    }, [location, items]);
 
     const handleLogout = () => {
         localStorage.removeItem('user');
         window.location.href = '/login';
     };
 
-    const handleMenuItemClick = async (itemName) => {
-        const isLogoutItem = () => itemName === "Logout";
-
-        if (isLogoutItem()) {
+    const handleMenuItemClick = (itemName) => {
+        if (itemName === "Logout") {
             handleLogout();
         } else {
             setActiveItem(itemName);

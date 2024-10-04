@@ -11,9 +11,9 @@ export default function PatientRoutes() {
         <ProtectedRoute permission='patient'>
             <DashboardLayout>
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
                     <Route path="profile" element={<Profile />} />
-                    <Route path="*" element={<Navigate to="/patient" replace />}/>
+                    <Route path="*" element={<Navigate to="/patient/home" replace />}/>
                 </Routes>
             </DashboardLayout>
         </ProtectedRoute>
