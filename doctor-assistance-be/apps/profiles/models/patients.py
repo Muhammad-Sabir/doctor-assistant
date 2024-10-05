@@ -15,7 +15,7 @@ class PatientProfile(TimeStampedModel):
         on_delete=models.CASCADE, 
         related_name="patient", 
         null=True, 
-        blank=True
+        blank=True,
     )
     name = models.CharField(max_length=255)
     date_of_birth = models.DateField()
