@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import AddDependentDialog from '@/components/dialogs/AddDependentDialog';
 import UpdateDependentDialog from '@/components/dialogs/UpdateDependentDialog';
+import DeleteItemDialog from '@/components/dialogs/DeleteItemDialog';
 
 export default function DependentPatientsDetails({ patientData }) {
     const [dependentDetails, setDependentDetails] = useState([]);
@@ -52,6 +53,7 @@ export default function DependentPatientsDetails({ patientData }) {
                                 <UpdateDependentDialog
                                     selectedDependent={dependent}
                                 />
+                                <DeleteItemDialog deleteUrl={`dependents/${dependent.id}`} itemName={"Dependent"}/>
                             </div>
                         </div>
                     ))}

@@ -1,3 +1,5 @@
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { getErrorMessage } from "@/utils/errors";
 import { fetchWithAuth } from "@/utils/fetchApis";
 
@@ -11,9 +13,8 @@ export const useDeleteMutation = ({
 }) => {
     return useMutation({
         mutationFn: async () => {
+            console.log(`Sending request to ${url}`);
             try {
-                const fullUrl = typeof url === 'function' ? url(body) : url;
-                console.log(`Sending request to ${fullUrl} with body:`, body);
                 const response = await fetchWithAuth(url, {
                     method: 'DELETE',
                     headers: {
@@ -30,7 +31,11 @@ export const useDeleteMutation = ({
         },
         onSuccess: (data) => {
             toast.dismiss(`${url}-loading`);
-            toast.success(onSuccessMessage);
+            toast.success(onSuccessMessage, {
+                style: {
+                    backgroundColor: '#ffffff'
+                }
+            });
             onSuccess(data);
         },
         onError: (error) => {

@@ -5,6 +5,15 @@ const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
 export const fetchApi = async (url, options = {}) => {
 
     const response = await fetch(`${baseUrl}/api/${url}`, options);
+
+    if (response.status === 204) {
+        return {
+            data: null,  
+            status: response.status,
+            statusText: response.statusText,
+        };
+    }
+
     const data = await response.json();
 
     if (!response.ok) {
@@ -14,7 +23,7 @@ export const fetchApi = async (url, options = {}) => {
         error.response = data;
         throw error;
     }
-
+    
     return {
         data,
         status: response.status,

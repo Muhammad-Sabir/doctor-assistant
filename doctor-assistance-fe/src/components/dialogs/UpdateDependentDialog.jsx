@@ -60,7 +60,7 @@ const UpdateDependentDialog = ({ selectedDependent }) => {
         <Dialog>
             <DialogTrigger asChild>
                 <span onClick={() => setDependent(selectedDependent)}>
-                    <AiTwotoneEdit size={17} className='mt-1 ml-3 text-primary' />
+                    <AiTwotoneEdit size={17} className='mt-1 ml-1 text-primary' />
                 </span>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
