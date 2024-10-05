@@ -19,28 +19,16 @@ const Router = createBrowserRouter([
         element: <HomePage />,
     },
     {
-        path: 'signup',
-        element: <AuthLayout children={<Signup/>}/>, 
-    },
-    {
-        path: 'login',
-        element: <AuthLayout children={<Login/>}/>,
-    },
-    {
-        path: 'reset-password/:reset_uid/:reset_token',
-        element: <AuthLayout children={<ResetPassword/>}/>,
-    },
-    {
-        path: 'forgot-password',
-        element: <AuthLayout children={<ForgetPassword/>}/>,
-    },
-    {
-        path: 'verify-email',
-        element: <AuthLayout children={<VerifyEmail/>}/>,
-    },
-    {
-        path: 'verify-account/:verify_uid/:verify_token',
-        element: <AuthLayout children={<EmailVerificationMessage/>}/>,
+        path: '/',
+        element: <AuthLayout />, 
+        children: [
+            { path: 'signup', element: <Signup /> },
+            { path: 'login', element: <Login /> },
+            { path: 'reset-password/:reset_uid/:reset_token', element: <ResetPassword /> },
+            { path: 'forgot-password', element: <ForgetPassword /> },
+            { path: 'verify-email', element: <VerifyEmail /> },
+            { path: 'verify-account/:verify_uid/:verify_token', element: <EmailVerificationMessage /> },
+        ]
     },
     {
         path: '/complete-profile/*',

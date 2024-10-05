@@ -1,7 +1,8 @@
 import Sidebar from '@/components/dashboard/Sidebar.jsx'
 import Header from '@/components/dashboard/Header.jsx'
+import { Outlet } from 'react-router-dom';
 
-export default function DashboardLayout({ children }) {
+export default function DashboardLayout() {
   return (
     <div className="flex min-h-screen">
       <div className="hidden md:block">
@@ -10,7 +11,7 @@ export default function DashboardLayout({ children }) {
       <div className="flex flex-col flex-1 md:ml-[218px] lg:ml-[234px]">
         <Header />
         <main className="flex-1 overflow-auto p-4">
-          {children}
+          <Outlet/>
         </main>
       </div>
     </div>

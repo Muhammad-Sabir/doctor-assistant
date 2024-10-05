@@ -9,14 +9,14 @@ import DashboardLayout from '@/layouts/DashboardLayout';
 export default function PatientRoutes() {
     return (
         <ProtectedRoute permission='patient'>
-            <DashboardLayout>
-                <Routes>
+            <Routes>
+                <Route element={<DashboardLayout />}>
                     <Route path="/home" element={<Home />} />
-                    <Route path="profile" element={<Profile />} />
-                    <Route path="*" element={<Navigate to="/patient/home" replace />}/>
-                </Routes>
-            </DashboardLayout>
+                    <Route path="/profile" element={<Profile />} />
+                </Route>
+
+                <Route path="*" element={<Navigate to="/patient/home" replace />} />
+            </Routes>
         </ProtectedRoute>
     );
 }
-

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 
@@ -7,7 +7,7 @@ import logo from '@/assets/images/svg/webLogo.svg';
 import authImage from "@/assets/images/webp/authImage.webp";
 import { getAuthStatus } from '@/utils/auth';
 
-export default function MultiStepFormLayout({ children }) {
+export default function MultiStepFormLayout() {
 
     const navigate = useNavigate();
 
@@ -58,7 +58,7 @@ export default function MultiStepFormLayout({ children }) {
                             </p>
                         </div>
 
-                        {children}
+                        <Outlet/>
                         <div className="text-center text-sm">
                             <p>
                                 Thinking of logging out?
