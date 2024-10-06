@@ -16,7 +16,7 @@ class SOAPNotes(TimeStampedModel):
     description = models.TextField(blank=True, null=True)
 
 
-class Perscription(TimeStampedModel):
-    consultation = models.ForeignKey(Consultation, on_delete=models.CASCADE, related_name='perscriptions')
+class Prescription(TimeStampedModel):
+    consultation = models.ForeignKey(Consultation, on_delete=models.CASCADE, related_name='prescriptions')
     medicine_name = models.CharField(max_length=255)
     instruction = models.TextField(blank=True, null=True)

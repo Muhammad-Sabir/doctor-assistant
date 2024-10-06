@@ -4,13 +4,13 @@ from rest_framework.routers import DefaultRouter
 from apps.consultations.views import (
     ConsultationsViewSet,
     SOAPNotesViewSet,
-    PerscriptionViewSet,
+    PrescriptionViewSet,
 )
 
 router = DefaultRouter()
 router.register('consultations', ConsultationsViewSet, basename='consultations')
 router.register('soap-notes', SOAPNotesViewSet, basename='soap-note')
-router.register('perscriptions', PerscriptionViewSet, basename='perscription')
+router.register('prescriptions', PrescriptionViewSet, basename='prescription')
 
 urlpatterns = [
     path('', include(router.urls)),

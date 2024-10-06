@@ -3,11 +3,11 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 
 from apps.profiles.permissions import IsDoctor, IsDoctorOrOwner
-from apps.consultations.models import Consultation, SOAPNotes, Perscription
+from apps.consultations.models import Consultation, SOAPNotes, Prescription
 from apps.consultations.serializers import (
     ConsultationSerializer,
     SOAPNotesSerializer,
-    PerscriptionSerializer
+    PrescriptionSerializer
 )
 
 
@@ -39,9 +39,9 @@ class SOAPNotesViewSet(ModelViewSet):
             .filter(consultation__doctor=user.doctor)
 
 
-class PerscriptionViewSet(ModelViewSet):
-    queryset = Perscription.objects.all()
-    serializer_class = PerscriptionSerializer
+class PrescriptionViewSet(ModelViewSet):
+    queryset = Prescription.objects.all()
+    serializer_class = PrescriptionSerializer
     
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:
@@ -52,7 +52,7 @@ class PerscriptionViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.role == 'doctor':
-            return Perscription.objects.select_related('consultation')\
+            return Prescription.objects.select_related('consultation')\
                 .only('consultation', 'medicine_name', 'instruction', 'created_at', 'updated_at')\
                 .filter(consultation__doctor=user.doctor)
         
@@ -63,7 +63,7 @@ class PerscriptionViewSet(ModelViewSet):
             Q(patient=patient) | Q(patient__in=patient.dependents.all())
         ).order_by('patient', 'updated_at').distinct('patient').values_list('id', flat=True)
 
-        return Perscription.objects.filter(
+        return Prescription.objects.filter(
             consultation__id__in=latest_consultations
         )
    
