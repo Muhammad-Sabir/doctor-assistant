@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 import { useDeleteMutation } from '@/hooks/useDeleteMutation';
 
-const DeleteItemDialog = ({deleteUrl, itemName}) => {
+const DeleteItemDialog = ({deleteUrl, itemName, iconSize}) => {
 
     const deleteMutation = useDeleteMutation({
         url: `${deleteUrl}`,
@@ -27,7 +27,7 @@ const DeleteItemDialog = ({deleteUrl, itemName}) => {
         <Dialog>
             <DialogTrigger asChild>
                 <span >
-                    <MdOutlineDelete size={17} color='red' className='mt-1 ml-2 text-primary' />
+                    <MdOutlineDelete size={`${iconSize}`} color='red' className='mt-0.5 ml-2 text-primary' />
                 </span>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">

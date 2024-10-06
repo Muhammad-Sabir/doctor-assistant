@@ -53,7 +53,7 @@ export default function DependentPatientsDetails({ patientData }) {
                                 <UpdateDependentDialog
                                     selectedDependent={dependent}
                                 />
-                                <DeleteItemDialog deleteUrl={`dependents/${dependent.id}`} itemName={"Dependent"}/>
+                                <DeleteItemDialog deleteUrl={`dependents/${dependent.id}`} itemName={"Dependent"} iconSize={16}/>
                             </div>
                         </div>
                     ))}

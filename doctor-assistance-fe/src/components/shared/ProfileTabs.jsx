@@ -21,7 +21,7 @@ export default function ProfileTabs({ activeTab, setActiveTab, tabs }) {
     };
 
     return (
-        <div className="border-b border-gray-300 mt-7 flex max-sm:flex-wrap max-sm:justify-center items-center gap-3 md:gap-5 lg:gap-7 mb-5">
+        <div className="border-b border-gray-300 mt-1 flex max-sm:flex-wrap max-sm:justify-center items-center gap-3 md:gap-5 lg:gap-7 mb-5">
             {tabs.map(tab => (
                 <div
                     key={tab.key}

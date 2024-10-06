@@ -8,16 +8,22 @@ import { menuItems, accountLinks } from '@/components/shared/MenuData';
 export default function Sidebar() {
   const { user } = getAuthStatus();
   const role = user?.role;
+
+  if (!user || !role) {
+    return <div>Loading...</div>;
+  }
+
   const location = useLocation(); 
 
   const [activeItem, setActiveItem] = useState("");
   const items = menuItems[role] || [];
 
   useEffect(() => {
-    const currentPath = location.pathname;
-    const currentActiveItem = [...items, ...accountLinks].find(item => currentPath.includes(item.url));
-    setActiveItem(currentActiveItem ? currentActiveItem.name : "Home");
-
+    if (items.length > 0) {
+      const currentPath = location.pathname;
+      const currentActiveItem = [...items, ...accountLinks].find(item => currentPath.includes(item.url));
+      setActiveItem(currentActiveItem ? currentActiveItem.name : "Home");
+    }
   }, [location.pathname, items]);
 
   const handleLogout = () => {

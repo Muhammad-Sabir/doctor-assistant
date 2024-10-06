@@ -130,3 +130,7 @@ input[type=file]::file-selector-button {
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-400
 }
+
+svg {
+  cursor: pointer;
+}
