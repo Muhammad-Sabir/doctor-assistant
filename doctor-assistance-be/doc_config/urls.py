@@ -12,5 +12,6 @@ urlpatterns = [
     path('api/', include('apps.profiles.urls')),
     path('api/', include('apps.reviews.urls')),
     path('api/', include('apps.appointments.urls')),
+    path('api/', include('apps.consultations.urls')),
     path('__debug__/', include(debug_toolbar.urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
