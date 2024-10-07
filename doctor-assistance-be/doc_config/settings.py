@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.facilities',
     'apps.profiles',
     'apps.reviews',
+    'apps.appointments',
 ]
 
 MIDDLEWARE = [
