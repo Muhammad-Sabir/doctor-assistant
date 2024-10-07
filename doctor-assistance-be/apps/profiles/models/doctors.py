@@ -29,7 +29,7 @@ class Disease(models.Model):
 
 
 class DoctorProfile(BaseFileUpload):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='doctor')
     name = models.CharField(max_length=255)
     date_of_birth = models.DateField(blank=True, null=True)
     date_of_experience = models.DateField(blank=True)

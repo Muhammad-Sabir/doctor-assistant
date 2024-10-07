@@ -44,7 +44,7 @@ class Command(BaseCommand):
     def create_degrees(self, data):
         return {
             Degree.objects.get_or_create(name=degree.strip())[0]
-            for degree in data['degree'].dropna().str.split(',').explode().unique() if degree
+            for degree in data['degrees'].dropna().str.split(',').explode().unique() if degree
         }
 
     def get_hospitals(self):
