@@ -1,8 +1,10 @@
 from django.db import models
+from django.db.models import Avg, Count
 from django.contrib.auth import get_user_model
 
 from apps.core.models import BaseFileUpload
 from apps.facilities.models import Hospital
+from apps.profiles.managers import DoctorProfileManager
 
 User = get_user_model()
 
@@ -41,5 +43,7 @@ class DoctorProfile(BaseFileUpload):
     degrees = models.ManyToManyField('Degree', related_name='doctors')
     diseases = models.ManyToManyField('Disease', related_name='doctors')
 
+    objects = DoctorProfileManager()
+    
     def __str__(self):
         return self.name
