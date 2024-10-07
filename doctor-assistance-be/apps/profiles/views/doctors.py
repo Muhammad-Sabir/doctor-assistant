@@ -2,6 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.core.mixins import FileUploadMixin
 from apps.core.viewsets import BaseReadOnlyViewSet
@@ -12,7 +13,12 @@ from apps.profiles.serializers import (
     DegreeSerializer,
     DiseaseSerializer,
 )
-from apps.profiles.filters import SpecialityFilter, DegreeFilter, DiseaseFilter
+from apps.profiles.filters import (
+    SpecialityFilter, 
+    DegreeFilter, 
+    DiseaseFilter,
+    DoctorProfileFilter
+)
 from apps.profiles.permissions import IsDoctorOrOwner
 
 
@@ -35,11 +41,20 @@ class DiseaseViewSet(BaseReadOnlyViewSet):
 
 
 class DoctorProfileViewSet(FileUploadMixin, ModelViewSet):
-    queryset = DoctorProfile.objects.all()
     serializer_class = DoctorProfileSerializer
     permission_classes = [IsDoctorOrOwner]
     parser_classes = [MultiPartParser, FormParser]
-
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = DoctorProfileFilter
+    
+    def get_queryset(self):
+        return DoctorProfile.objects.with_reviews_data().prefetch_related(
+            'specialities', 
+            'degrees', 
+            'diseases',
+            'hospitals',
+        )
+        
     @action(detail=False, methods=['get', 'put', 'patch'], url_path='me')
     def me(self, request):
         doctor_profile = self.get_queryset().get(user=request.user)
