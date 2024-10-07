@@ -5,15 +5,10 @@ class IsPatient(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == 'patient'
 
-class isDoctor(BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated
 
-    def has_object_permission(self, request, view, obj):
-        if request.method in SAFE_METHODS:
-            return True
-        
-        return request.user.role == 'doctor'
+class IsDoctor(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == 'doctor'
 
 
 class IsDoctorOrOwner(BasePermission):
@@ -27,7 +22,11 @@ class IsDoctorOrOwner(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         
-        return obj.user == request.user and request.user.role == 'doctor'
+        return (
+            ((hasattr(obj, 'user') and obj.user == request.user)
+            or (hasattr(obj, 'doctor') and obj.doctor == request.user.doctor))
+            and request.user.role == 'doctor'
+        )
 
 
 class IsPatientOrOwner(BasePermission):

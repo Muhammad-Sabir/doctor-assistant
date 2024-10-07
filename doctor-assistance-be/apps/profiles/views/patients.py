@@ -1,5 +1,6 @@
 from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
 from rest_framework.exceptions import ValidationError
 
 from apps.core.viewsets import BaseReadOnlyViewSet
@@ -10,7 +11,7 @@ from apps.profiles.serializers import (
     PatientAllergySerializer,
     AllergySerializer
 )
-from apps.profiles.permissions import IsPatientOrOwner, isDoctor
+from apps.profiles.permissions import IsPatientOrOwner, IsDoctor
 from apps.profiles.filters import AllergyFilter
 
 
@@ -52,7 +53,12 @@ class DependentProfileViewSet(ModelViewSet):
 
 class PatientAllergyViewSet(ModelViewSet):
     serializer_class = PatientAllergySerializer
-    permission_classes = [isDoctor]
+
+    def get_permissions(self):
+        if self.request.method in SAFE_METHODS:
+            return [IsAuthenticated()]
+        
+        return [IsDoctor()]
 
     def get_queryset(self):
         if self.request.user.role == 'doctor':
