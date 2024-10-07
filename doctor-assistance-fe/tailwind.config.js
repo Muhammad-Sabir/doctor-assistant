@@ -10,6 +10,10 @@ export default {
   		screens: {
   			xs: '356px'
   		},
+		width: {
+			'100': '30rem', 
+			'94':'22rem'
+		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

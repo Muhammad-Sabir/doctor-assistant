@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import { Input } from '@/components/ui/input';
 
 import Notifications from '@/components/dashboard/Notifications';
 import UserProfileMenu from '@/components/dashboard/UserProfileMenu';
@@ -30,13 +32,41 @@ export default function Header() {
             ? data?.results[0]?.name || 'Loading...'
             : 'Loading...';
 
+    const [title, setTitle] = useState(
+        'Fever and Flu Symptoms with lot of wide issues like constipation, diarrhea, etc.'
+    );
+
+    const [isEditing, setIsEditing] = useState(false);
+
+    const handleTitleChange = (e) => {
+        setTitle(e.target.value);
+    };
+
+    const toggleEditing = () => {
+        setIsEditing((prev) => !prev);
+    };
+    
     return (
         <header className="flex h-14 items-center gap-4 px-4 lg:h-[60px] lg:px-6 bg-white border-b shadow-sm sticky top-0 left-0 z-50">
             <MobileOverlay />
-            <div className="w-full flex-1">
-                <div className="relative">
-                    <p className="text-md font-semibold text-primary">Consultation Title: Fever and Flu Symptoms</p>
-                </div>
+            <div className="w-[10%] flex-1">
+                {isEditing ? (
+                    <Input
+                        type="text"
+                        value={title}
+                        onChange={handleTitleChange}
+                        onBlur={toggleEditing}
+                        className="text-md font-semibold text-primary w-40 truncate block sm:w-94 lg:w-100 focus-visible:outline-0 focus-visible:ring-0 focus-visible:border-0"
+                        autoFocus
+                    />
+                ) : (
+                    <p
+                        className="text-md font-semibold text-primary w-40 truncate block sm:w-94 lg:w-100"
+                        onClick={toggleEditing}
+                    >
+                        Title: {title}
+                    </p>
+                )}
             </div>
             <p className="hidden sm:block text-sm font-medium text-gray-500">{currentDate}</p>
             <Notifications />

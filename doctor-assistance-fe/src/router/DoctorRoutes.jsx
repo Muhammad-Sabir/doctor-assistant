@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import ProtectedRoute from '@/router/ProtectedRoutes';
 import Home from '@/pages/doctor/Home';
@@ -10,20 +10,18 @@ import Consultation from '@/pages/doctor/Consultation';
 
 export default function DoctorRoutes() {
     return (
-        <ProtectedRoute permission="doctor">
-            <Routes>
+        <Routes>
+            <Route element={<ProtectedRoute permission="doctor" />}>
                 <Route element={<DashboardLayout />}>
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="*" element={<Navigate to="/doctor/home" replace />} />
+                    <Route path="home" element={<Home />} />
+                    <Route path="profile" element={<Profile />} />
+                    <Route path="*" element={<Navigate to="home" replace />} />
                 </Route>
 
                 <Route element={<ConsultationLayout />}>
-                    <Route path="consultation/:id" element={<Consultation/>} />
+                    <Route path="consultation/:id" element={<Consultation />} />
                 </Route>
-
-                <Route path="*" element={<Navigate to="/doctor/home" replace />} />
-            </Routes>
-        </ProtectedRoute>
+            </Route>
+        </Routes>
     );
 }

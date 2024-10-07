@@ -15,6 +15,7 @@ import logoIcon from '@/assets/images/svg/logo-icon.svg';
 import { getAuthStatus } from '@/utils/auth';
 import { accountLinks } from '@/components/shared/MenuData';
 import DeleteItemDialog from '@/components/dialogs/DeleteItemDialog';
+import AddAllergyDialog from '@/components/dialogs/AddAllergyDialog';
 
 export default function MobileOverlay() {
     const { user } = getAuthStatus();
@@ -120,9 +121,7 @@ export default function MobileOverlay() {
                                             </span>
                                         ))}
                                     </div>
-                                    <span className='mt-6 cursor-pointer flex text-xs font-medium text-primary underline justify-end items-center'>
-                                        <RiAddLine className='mr-2' />Add Allergies
-                                    </span>
+                                    <AddAllergyDialog/>
                                 </div>
                             </AccordionContent>
                         </AccordionItem>

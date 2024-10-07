@@ -2,13 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { IoMedicalOutline } from "react-icons/io5";
 import { CgUserList } from "react-icons/cg";
-import { RiAddLine } from "react-icons/ri";
 import { FaCircle } from "react-icons/fa";
 import { RxFilePlus } from "react-icons/rx";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 import DeleteItemDialog from '@/components/dialogs/DeleteItemDialog';
+import AddAllergyDialog from '@/components/dialogs/AddAllergyDialog';
 import logoIcon from '@/assets/images/svg/logo-icon.svg';
 import { getAuthStatus } from '@/utils/auth';
 
@@ -77,9 +77,7 @@ export default function Sidebar() {
                                             </span>
                                         ))}
                                     </div>
-                                    <span className='mt-6 cursor-pointer flex text-xs font-medium text-primary underline justify-end items-center'>
-                                        <RiAddLine className='mr-2' />Add Allergies
-                                    </span>
+                                    <AddAllergyDialog/>
                                 </div>
                             </AccordionContent>
                         </AccordionItem>

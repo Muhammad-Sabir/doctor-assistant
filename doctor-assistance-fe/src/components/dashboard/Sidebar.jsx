@@ -9,10 +9,6 @@ export default function Sidebar() {
   const { user } = getAuthStatus();
   const role = user?.role;
 
-  if (!user || !role) {
-    return <div>Loading...</div>;
-  }
-
   const location = useLocation(); 
 
   const [activeItem, setActiveItem] = useState("");

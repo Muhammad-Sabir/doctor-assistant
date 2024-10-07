@@ -12,8 +12,9 @@ const SearchField = ({
     inputValues,
     setInputError,
     inputErrors,
-    labelClassName = '',  
-    id
+    labelClassName = '',
+    id,
+    singleSelect = false
 }) => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
@@ -47,11 +48,16 @@ const SearchField = ({
     };
 
     const handleSelect = (item) => {
-        const isAlreadySelected = selectedItems.some(selected => selected.id === item.id);
-        if (!isAlreadySelected) {
-            const updatedItems = [...selectedItems, item];
-            setSelectedItems(updatedItems);
-            onSelect(updatedItems);
+        if (singleSelect) {
+            setSelectedItems([item]);
+            onSelect([item]);
+        } else {
+            const isAlreadySelected = selectedItems.some(selected => selected.id === item.id);
+            if (!isAlreadySelected) {
+                const updatedItems = [...selectedItems, item];
+                setSelectedItems(updatedItems);
+                onSelect(updatedItems);
+            }
         }
         setQuery('');
         setIsOpen(false);
@@ -64,7 +70,6 @@ const SearchField = ({
     };
 
     useEffect(() => {
-        console.log(inputValues)
         setSelectedItems(inputValues);
     }, [inputValues]);
 
@@ -72,8 +77,7 @@ const SearchField = ({
         return ref.current && !ref.current.contains(target);
     };
 
-    useEffect(() => {      
-
+    useEffect(() => {
         const handleClickOutside = (event) => {
             if (isClickOutside(ref, event.target)) {
                 setIsOpen(false);
@@ -108,14 +112,14 @@ const SearchField = ({
                 <Label className={labelClassName}>{placeholder}</Label>
                 <Input
                     type="text"
-                    placeholder={`Search ${placeholder} to select...`} 
+                    placeholder={`Search ${placeholder} to select...`}
                     value={query}
                     onChange={handleChange}
-                    className={`${inputErrors[id] ? 'border-red-500' : ''}`} 
+                    className={`${inputErrors[id] ? 'border-red-500' : ''}`}
                 />
             </div>
             {isOpen && results.length > 0 && (
-                <ul className="absolute bg-white border border-gray-300 mt-1 rounded shadow-lg max-h-60 overflow-auto z-10">
+                <ul className="absolute w-full bg-white border border-gray-300 mt-1 rounded shadow-lg max-h-60 overflow-auto z-10">
                     {results.map((item) => (
                         <li
                             key={item.id}
