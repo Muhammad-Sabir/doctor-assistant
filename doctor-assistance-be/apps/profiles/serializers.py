@@ -40,17 +40,20 @@ class DoctorProfileSerializer(BaseSerializer):
     diseases = DiseaseSerializer(many=True, read_only=True)
     hospitals = HospitalSerializer(many=True, read_only=True)
 
+    total_reviews = serializers.IntegerField(read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
+
     related_fields = {
             'specialities': Speciality,
             'degrees': Degree,
             'diseases': Disease,
             'hospitals': Hospital
     }
-
+    
     class Meta(BaseSerializer.Meta):
         model = DoctorProfile
-        read_only_fields = ['user']
-
+        read_only_fields = ['user', 'total_reviews', 'average_rating']
+        
 
     def create(self, validated_data):
         doctor_profile = DoctorProfile.objects.create(**validated_data)
