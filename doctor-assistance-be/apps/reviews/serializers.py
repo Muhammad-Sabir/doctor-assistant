@@ -8,6 +8,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
+        read_only_fields = ['patient']
         
     def get_fields(self):
         fields = super().get_fields()
