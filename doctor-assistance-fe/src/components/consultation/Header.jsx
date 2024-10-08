@@ -56,12 +56,12 @@ export default function Header() {
                         value={title}
                         onChange={handleTitleChange}
                         onBlur={toggleEditing}
-                        className="text-md font-semibold text-primary w-40 truncate block sm:w-94 lg:w-100 focus-visible:outline-0 focus-visible:ring-0 focus-visible:border-0"
+                        className="text-md font-semibold text-primary w-40 truncate block sm:w-94 lg:w-102 focus-visible:outline-0 focus-visible:ring-0 focus-visible:border-0"
                         autoFocus
                     />
                 ) : (
                     <p
-                        className="text-md font-semibold text-primary w-40 truncate block sm:w-94 lg:w-100"
+                        className="text-md font-semibold text-primary w-40 truncate block sm:w-94 lg:w-102"
                         onClick={toggleEditing}
                     >
                         Title: {title}
