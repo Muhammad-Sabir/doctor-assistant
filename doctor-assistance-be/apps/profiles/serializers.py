@@ -12,7 +12,7 @@ from apps.profiles.models import (
 )
 from apps.facilities.models import Hospital
 from apps.facilities.serializers import HospitalSerializer
-
+from apps.reviews.serializers import ReviewSerializer
 
 class BaseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,7 +42,8 @@ class DoctorProfileSerializer(BaseSerializer):
 
     total_reviews = serializers.IntegerField(read_only=True)
     average_rating = serializers.FloatField(read_only=True)
-
+    reviews = serializers.SerializerMethodField(read_only=True)
+    
     related_fields = {
             'specialities': Speciality,
             'degrees': Degree,
@@ -65,7 +66,15 @@ class DoctorProfileSerializer(BaseSerializer):
         update_or_create_related_fields(instance, self.initial_data, self.related_fields)
         return instance
 
-
+    def get_reviews(self, obj):
+        request = self.context.get('request')
+        if request:
+            reviews = obj.reviews.all()
+            if reviews.exists():
+                return ReviewSerializer(reviews, many=True, context={'request': request}).data
+        return [] 
+    
+    
 class DependentProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientProfile
