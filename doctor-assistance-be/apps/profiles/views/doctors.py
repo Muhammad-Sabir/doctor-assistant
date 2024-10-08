@@ -48,13 +48,18 @@ class DoctorProfileViewSet(FileUploadMixin, ModelViewSet):
     filterset_class = DoctorProfileFilter
     
     def get_queryset(self):
-        return DoctorProfile.objects.with_reviews_data().prefetch_related(
+        queryset = DoctorProfile.objects.with_reviews_data().prefetch_related(
             'specialities', 
             'degrees', 
             'diseases',
             'hospitals',
         )
         
+        if self.action in ['retrieve', 'me']:
+            queryset = queryset.prefetch_related('reviews')
+        
+        return queryset
+
     @action(detail=False, methods=['get', 'put', 'patch'], url_path='me')
     def me(self, request):
         doctor_profile = self.get_queryset().get(user=request.user)
