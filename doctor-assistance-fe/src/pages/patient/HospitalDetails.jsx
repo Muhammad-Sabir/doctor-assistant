@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
@@ -46,13 +47,13 @@ export default function HospitalDetails() {
     }
 
     return (
-        <section className="relative pt-40 mx-1">
-            <img src={banner} alt="cover-image" className="w-full absolute top-0 left-0 z-0 h-[10rem] object-cover"/>
+        <section className="relative pt-40 pb-6 mx-1">
+            <img src={banner} alt="cover-image" className="w-full absolute top-0 left-0 z-0 h-[10rem] object-cover" />
 
             <div className="w-full max-w-7xl mx-auto px-6 md:px-8 -mt-28 bg-white">
                 <div className="flex items-center justify-center sm:justify-start relative z-10 mb-5 mt-10 lg:mt-0">
                     <img src={hospitalData.logo_url} alt={hospitalData.name}
-                        className="bg-white h-[120px] lg:h-[152px] w-[120px] lg:w-[152px] object-cover border border-gray-300 rounded-full"/>
+                        className="bg-white h-[120px] lg:h-[152px] w-[120px] lg:w-[152px] object-cover border border-gray-300 rounded-full" />
                 </div>
 
                 <div className="flex items-center justify-center flex-col sm:flex-row max-sm:gap-5 sm:justify-between mb-5">
@@ -76,9 +77,9 @@ export default function HospitalDetails() {
                                 ))}
                             </div>
 
-                            <div className="flex justify-center gap-3 mt-8">
-                                <Button onClick={handlePrevPage} disabled={!prevPage}>Previous</Button>
-                                <Button onClick={handleNextPage} disabled={!nextPage}>Next</Button>
+                            <div className="flex justify-center gap-3.5 mt-8">
+                                <Button variant='outline' onClick={handlePrevPage} disabled={!prevPage}><FaAnglesLeft className='mr-1' />Prev </Button>
+                                <Button variant='outline' onClick={handleNextPage} disabled={!nextPage}>Next <FaAnglesRight className='ml-1 mt-0.5' /></Button>
                             </div>
                         </>
                     ) : (

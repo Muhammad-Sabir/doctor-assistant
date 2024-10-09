@@ -62,8 +62,8 @@ export default function DoctorDetail() {
                     </div>
 
                     <div className="flex gap-2">
-                        <Button variant='secondary'>Visit Clinic</Button>
-                        <Button >Consult Online</Button>
+                        <Button variant='secondary'>Consult Online</Button>
+                        <Button className='ml-2'>Visit Clinic</Button>
                     </div>
                 </div>
 

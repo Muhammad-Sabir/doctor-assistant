@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -78,7 +79,7 @@ export default function DoctorSearchResults() {
   if (isError) return <p className='text-primary'>Error fetching doctor profile: {error.message}</p>;
 
   return (
-    <div className="px-2 pb-4">
+    <div className="px-2 pb-6">
       <div className="mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           <div className="flex flex-col">
@@ -129,9 +130,9 @@ export default function DoctorSearchResults() {
               <DoctorCard key={doctor.id} doctor={doctor} />
             ))}
           </div>
-          <div className="flex justify-center gap-3 mt-8">
-            <Button onClick={handlePrevPage} disabled={!prevPage}>Previous</Button>
-            <Button onClick={handleNextPage} disabled={!nextPage}>Next</Button>
+          <div className="flex justify-center gap-3.5 mt-8">
+            <Button variant='outline' onClick={handlePrevPage} disabled={!prevPage}><FaAnglesLeft className='mr-1'/>Prev </Button>
+            <Button variant='outline' onClick={handleNextPage} disabled={!nextPage}>Next <FaAnglesRight className='ml-1 mt-0.5'/></Button>
           </div>
         </>
       ) : (
