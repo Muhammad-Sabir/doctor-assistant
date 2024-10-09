@@ -20,17 +20,15 @@ export default function Header() {
     const { user } = getAuthStatus();
     const role = user?.role;
 
-    const { data } = useFetchQuery({
-        url: role === 'doctor' ? 'doctors/me' : role === 'patient' ? 'patients/' : '',
-        queryKey: [role === 'doctor' ? 'doctorProfile' : 'patientProfile'],
-        fetchFunction: fetchWithAuth,
-    });
+    const { data } = role === 'doctor'
+        ? useFetchQuery({
+            url: 'doctors/me',
+            queryKey: ['doctorName'],
+            fetchFunction: fetchWithAuth,
+        })
+        : { data: null};
 
-    const userName = role === 'doctor'
-        ? data?.name || 'Loading...'
-        : role === 'patient'
-            ? data?.results[0]?.name || 'Loading...'
-            : 'Loading...';
+    const userName = data?.name || 'Loading...';
 
     const [title, setTitle] = useState(
         'Fever and Flu Symptoms with lot of wide issues like constipation, diarrhea, etc.'
