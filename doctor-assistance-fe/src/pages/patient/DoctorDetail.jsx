@@ -13,6 +13,7 @@ import Loading from '@/components/shared/Loading';
 import banner from "@/assets/images/webp/profileBanner.webp";
 import HospitalCard from '@/components/shared/HospitalCard';
 import ListGrid from '@/components/shared/ListGrid';
+import AddReview from '@/components/dialogs/AddReview';
 
 export default function DoctorDetail() {
     const { id } = useParams();
@@ -103,7 +104,7 @@ export default function DoctorDetail() {
                 <div className="mt-4">
                     <div className='flex justify-between mt-2'>
                         <h2 className="text-md font-semibold text-primary mb-4">Reviews</h2>
-                        <Button className='-mt-1'>Add Review</Button>
+                        <AddReview doctorId={data.id} doctorName={data.name}/>
                     </div>
                     {data.reviews.length > 0 ? (
                         <div className="grid gap-4 lg:grid-cols-2 mt-2">
