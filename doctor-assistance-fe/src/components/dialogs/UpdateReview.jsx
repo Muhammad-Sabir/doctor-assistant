@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa';
-import { BiSolidError } from "react-icons/bi";
+import { BiSolidError } from 'react-icons/bi';
+import { AiTwotoneEdit } from "react-icons/ai";
 
 import { Label } from '@/components/ui/label';
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 
-export default function AddReview({ doctorId, doctorName }) {
+export default function UpdateReview({ doctorName, review }) {
     const [inputErrors, setInputErrors] = useState({});
     const [inputValues, setInputValues] = useState({ comment: '', rating: 0 });
     const [hoverRating, setHoverRating] = useState(0);
 
     const addReviewMutation = useCreateUpdateMutation({
-        url: `reviews/`,
-        method: 'POST',
+        url: `reviews/${review.id}/`,
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         fetchFunction: fetchWithAuth,
-        onSuccessMessage: 'Review Successfully Added',
-        onErrorMessage: 'Failed to Add Review',
+        onSuccessMessage: 'Review Successfully Updated',
+        onErrorMessage: 'Failed to Update Review',
         onSuccess: () => {
             setTimeout(() => {
                 window.location.reload();
@@ -29,10 +30,9 @@ export default function AddReview({ doctorId, doctorName }) {
         },
     });
 
-    const resetForm = () => {
-        setInputValues({ comment: '', rating: 0 });
-        setInputErrors({});
-    };
+    useEffect(() => {
+        setInputValues({ comment: review.comment, rating: review.rating });
+    }, [review]);
 
     const handleStarClick = (ratingValue) => {
         setInputValues((prevValues) => {
@@ -42,7 +42,6 @@ export default function AddReview({ doctorId, doctorName }) {
             return { ...prevValues, rating: newRating };
         });
     };
-
 
     const handleBlur = (e) => {
         const { id, value } = e.target;
@@ -58,19 +57,21 @@ export default function AddReview({ doctorId, doctorName }) {
         }
 
         const { rating, comment } = inputValues;
-        addReviewMutation.mutate(JSON.stringify({ doctor: doctorId, comment, rating }));
+        addReviewMutation.mutate(JSON.stringify({ doctor: review.doctorId, comment, rating })); // Use review.doctorId
     };
 
     return (
-        <Dialog onOpenChange={(open) => !open && resetForm()}>
+        <Dialog>
             <DialogTrigger asChild>
-                <Button className="-mt-1">Add Review</Button>
+            <span> 
+                <AiTwotoneEdit size={16} className='mt-0.5 ml-1 text-gray-500'/>
+            </span>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Add Review</DialogTitle>
+                    <DialogTitle>Update Review</DialogTitle>
                     <DialogDescription>
-                        Add Review For {doctorName}.
+                        Update Review for {doctorName}.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-2">
@@ -78,12 +79,15 @@ export default function AddReview({ doctorId, doctorName }) {
                         <p className='text-gray-700 text-sm font-normal'>Rating</p>
                         <div className="flex items-center">
                             {[1, 2, 3, 4, 5].map((star) => (
-                                <FaStar key={star} size={24}
+                                <FaStar
+                                    key={star}
+                                    size={24}
                                     className={`cursor-pointer mx-1 ${inputValues.rating >= star || hoverRating >= star
                                         ? 'text-yellow-500' : 'text-gray-300'}`}
                                     onClick={() => handleStarClick(star)}
                                     onMouseEnter={() => setHoverRating(star)} 
-                                    onMouseLeave={() => setHoverRating(0)} />
+                                    onMouseLeave={() => setHoverRating(0)} 
+                                />
                             ))}
                         </div>
                         {inputErrors.rating && (
@@ -94,7 +98,7 @@ export default function AddReview({ doctorId, doctorName }) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <Label htmlFor="comment" className='text-gray-700 font-normal'>Comment</Label>
+                        <Label htmlFor="comment" className="text-gray-700 font-normal">Comment</Label>
                         <textarea
                             id="comment"
                             value={inputValues.comment}
@@ -112,7 +116,7 @@ export default function AddReview({ doctorId, doctorName }) {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="button" onClick={handleSubmit}>Add</Button>
+                    <Button type="button" onClick={handleSubmit}>Save Changes</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
