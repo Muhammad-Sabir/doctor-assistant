@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import SearchField from '../shared/SearchFeild';
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { RiAddLine } from "react-icons/ri";
 
-export default function AddAllergyDialog() {
+export default function AddAllergy() {
     const [inputErrors, setInputErrors] = useState({});
     const [inputValues, setInputValues] = useState({ allergies: [] });
     const [isDialogOpen, setIsDialogOpen] = useState(false);

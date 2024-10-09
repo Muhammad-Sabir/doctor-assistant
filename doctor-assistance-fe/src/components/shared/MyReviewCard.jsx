@@ -3,7 +3,7 @@ import { FaStar } from 'react-icons/fa';
 
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { fetchWithAuth } from '@/utils/fetchApis';
-import DeleteItemDialog from '@/components/dialogs/DeleteItemDialog';
+import DeleteItem from '@/components/dialogs/DeleteItem';
 import UpdateReview from '@/components/dialogs/UpdateReview';
 
 export default function MyReviewCard({ review }) {
@@ -32,7 +32,7 @@ export default function MyReviewCard({ review }) {
                     {new Date(review.created_at).toLocaleDateString()}
                 </p>
                 <span className='flex items-center text-xs text-gray-600 -mt-1' >
-                    <DeleteItemDialog deleteUrl={`reviews/${review.id}/`} itemName={"Review"} iconSize={16}/>
+                    <DeleteItem deleteUrl={`reviews/${review.id}/`} itemName={"Review"} iconSize={16}/>
                     <UpdateReview doctorName={doctorName} review={review}/>
                 </span>
             </div>

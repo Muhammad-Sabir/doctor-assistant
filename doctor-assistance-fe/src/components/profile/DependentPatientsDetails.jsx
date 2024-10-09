@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import AddDependentDialog from '@/components/dialogs/AddDependentDialog';
-import UpdateDependentDialog from '@/components/dialogs/UpdateDependentDialog';
-import DeleteItemDialog from '@/components/dialogs/DeleteItemDialog';
+import UpdateDependent from '@/components/dialogs/UpdateDependent';
+import DeleteItem from '@/components/dialogs/DeleteItem';
+import AddDependent from '@/components/dialogs/AddDependent';
 
 export default function DependentPatientsDetails({ patientData }) {
     const [dependentDetails, setDependentDetails] = useState([]);
@@ -16,7 +16,7 @@ export default function DependentPatientsDetails({ patientData }) {
 
     return (
         <div className="w-full">
-            <AddDependentDialog />
+            <AddDependent />
 
             <h2 className="text-sm font-medium text-primary mb-4">Your Dependent Patients:</h2>
 
@@ -50,10 +50,10 @@ export default function DependentPatientsDetails({ patientData }) {
                             </div>
 
                             <div className="flex justify-end sm:justify-start items-center">
-                                <UpdateDependentDialog
+                                <UpdateDependent
                                     selectedDependent={dependent}
                                 />
-                                <DeleteItemDialog deleteUrl={`dependents/${dependent.id}`} itemName={"Dependent"} iconSize={16}/>
+                                <DeleteItem deleteUrl={`dependents/${dependent.id}`} itemName={"Dependent"} iconSize={16}/>
                             </div>
                         </div>
                     ))}

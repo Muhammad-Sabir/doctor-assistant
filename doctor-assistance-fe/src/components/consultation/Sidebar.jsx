@@ -7,8 +7,8 @@ import { RxFilePlus } from "react-icons/rx";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-import DeleteItemDialog from '@/components/dialogs/DeleteItemDialog';
-import AddAllergyDialog from '@/components/dialogs/AddAllergyDialog';
+import DeleteItem from '@/components/dialogs/DeleteItem';
+import AddAllergy from '@/components/dialogs/AddAllergy';
 import logoIcon from '@/assets/images/svg/logo-icon.svg';
 import { getAuthStatus } from '@/utils/auth';
 
@@ -73,11 +73,11 @@ export default function Sidebar() {
                                         {allergies.map(allergy => (
                                             <span key={allergy.id} className="flex m-1 py-1 px-2 bg-accent rounded-md text-xs font-medium text-primary max-w-fit">
                                                 {allergy.name}
-                                                <DeleteItemDialog deleteUrl={`/allergies/${allergy.id}`} itemName={'Allergy'} iconSize={13} />
+                                                <DeleteItem deleteUrl={`/allergies/${allergy.id}`} itemName={'Allergy'} iconSize={13} />
                                             </span>
                                         ))}
                                     </div>
-                                    <AddAllergyDialog/>
+                                    <AddAllergy/>
                                 </div>
                             </AccordionContent>
                         </AccordionItem>

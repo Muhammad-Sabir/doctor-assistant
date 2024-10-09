@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 import { useDeleteMutation } from '@/hooks/useDeleteMutation';
 
-const DeleteItemDialog = ({deleteUrl, itemName, iconSize}) => {
+const DeleteItem = ({deleteUrl, itemName, iconSize}) => {
 
     const deleteMutation = useDeleteMutation({
         url: `${deleteUrl}`,
@@ -46,4 +46,4 @@ const DeleteItemDialog = ({deleteUrl, itemName, iconSize}) => {
     );
 };
 
-export default DeleteItemDialog;
+export default DeleteItem;

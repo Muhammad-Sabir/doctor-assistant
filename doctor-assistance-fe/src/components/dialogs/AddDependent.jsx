@@ -10,7 +10,7 @@ import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 
-export default function AddDependentDialog() {
+export default function AddDependent() {
     const [inputErrors, setInputErrors] = useState({});
     const [inputValues, setInputValues] = useState({ name: '', birthDate: '', gender: 'M' });
 

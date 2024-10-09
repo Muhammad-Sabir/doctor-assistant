@@ -11,7 +11,7 @@ import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
 
-const UpdateDependentDialog = ({ selectedDependent }) => {
+const UpdateDependent = ({ selectedDependent }) => {
     const [inputErrors, setInputErrors] = useState({});
     const [dependent, setDependent] = useState(selectedDependent);
 
@@ -141,4 +141,4 @@ const UpdateDependentDialog = ({ selectedDependent }) => {
     );
 };
 
-export default UpdateDependentDialog;
+export default UpdateDependent;
