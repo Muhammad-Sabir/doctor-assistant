@@ -5,9 +5,12 @@ import { FaStar } from 'react-icons/fa6';
 import { Button } from '@/components/ui/button';
 
 const DoctorCard = ({ doctor }) => {
+
+    const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
+    
     const getDoctorImageUrl = (file_url) => {
         if (file_url?.startsWith('/media')) {
-            return `http://localhost:8000${file_url}`;
+            return `${baseUrl}${file_url}`;
         }
         return file_url;
     };
