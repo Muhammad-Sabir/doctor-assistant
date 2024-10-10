@@ -27,9 +27,11 @@ export default function DoctorDetail() {
     if (isFetching) return <Loading />;
     if (isError) return <div className="text-red-500">Error: {error.message}</div>;
 
+    const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
+
     const getDoctorImageUrl = (file_url) => {
         if (file_url?.startsWith('/media')) {
-            return `http://localhost:8000${file_url}`;
+            return `${baseUrl}${file_url}`;
         }
         return file_url;
     };
