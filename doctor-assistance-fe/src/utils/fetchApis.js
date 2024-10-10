@@ -1,3 +1,5 @@
+import { toast } from 'sonner';
+
 import { getAuthStatus } from '@/utils/auth';
 
 const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
@@ -8,7 +10,7 @@ export const fetchApi = async (url, options = {}) => {
 
     if (response.status === 204) {
         return {
-            data: null,  
+            data: null,
             status: response.status,
             statusText: response.statusText,
         };
@@ -23,7 +25,7 @@ export const fetchApi = async (url, options = {}) => {
         error.response = data;
         throw error;
     }
-    
+
     return {
         data,
         status: response.status,
@@ -81,6 +83,9 @@ export const fetchWithAuth = async (url, options = {}) => {
                 }
             } catch (refreshError) {
                 console.log('Error after refeshing token:', refreshError);
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+                toast.error(`Oops! Your session has expired. Please log in again to continue.`);
                 throw refreshError;
             }
         } else {
