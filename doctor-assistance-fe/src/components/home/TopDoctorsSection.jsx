@@ -15,10 +15,7 @@ export default function TopDoctorsSection() {
         fetchFunction: fetchApi,
     });
 
-    if (isFetching) return <Loading />;
-    if (isError) return <div>Error: {error.message}</div>;
-
-    const topDoctors = data.results.sort((a, b) => b.average_rating - a.average_rating).slice(0, 5);
+    const topDoctors = data?.results.sort((a, b) => b.average_rating - a.average_rating).slice(0, 5);
 
     const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
 
@@ -78,7 +75,9 @@ export default function TopDoctorsSection() {
                 </div>
 
                 <div className="w-full">
-                    <Slider {...settings}>
+                    {isFetching ? (<Loading />
+                    ) : isError ? (<div className="text-center text-red-600">Error: {error.message}</div>
+                    ) : (<Slider {...settings}>
                         {topDoctors.map((doctor, index) => (
                             <div key={index} className="border border-gray-300 rounded-2xl p-6 transition-all duration-500 hover:border-primary ml-2">
                                 <div className="flex flex-row gap-4">
@@ -104,6 +103,7 @@ export default function TopDoctorsSection() {
                             </div>
                         ))}
                     </Slider>
+                    )}
                 </div>
 
             </div>
