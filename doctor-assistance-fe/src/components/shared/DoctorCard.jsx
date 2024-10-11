@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa6';
 
-import { Button } from '@/components/ui/button';
+import BookAppointment from '@/components/dialogs/BookAppointment';
 
 const DoctorCard = ({ doctor }) => {
 
     const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
-    
+
     const getDoctorImageUrl = (file_url) => {
         if (file_url?.startsWith('/media')) {
             return `${baseUrl}${file_url}`;
@@ -16,9 +16,8 @@ const DoctorCard = ({ doctor }) => {
     };
 
     return (
-        <Link to={`/patient/doctor/${doctor.id}`} className="block relative">
-            <div className="border border-gray-300 rounded-lg px-4 py-5 hover:shadow-md hover:border-primary transition-shadow duration-500 w-full max-w-[90vw] sm:max-w-[350px] mx-auto relative">
-
+        <div className="block border border-gray-300 rounded-lg px-4 py-5 hover:shadow-md hover:border-primary transition-shadow duration-500 w-full max-w-[90vw] sm:max-w-[350px] mx-auto relative">
+            <Link to={`/patient/doctor/${doctor.id}`} >
                 <div className="text-xs font-medium absolute top-3 right-3 flex items-center bg-orange-100 rounded-md px-2 py-1">
                     <FaStar className="text-yellow-500" />
                     <span className="ml-1 text-primary font-semibold">{doctor.average_rating}</span>
@@ -34,7 +33,7 @@ const DoctorCard = ({ doctor }) => {
                 </div>
 
                 <div className="text-center">
-                <div className="flex justify-center w-full">
+                    <div className="flex justify-center w-full">
                         <h4 className="text-center text-md font-semibold text-primary w-90 sm:w-60 truncate block">{doctor.name}</h4>
                     </div>
                     <div className="flex justify-center w-full">
@@ -61,13 +60,13 @@ const DoctorCard = ({ doctor }) => {
                         </p>
                     </div>
                 </div>
+            </Link>
 
-                <div className="flex mt-5 justify-center">
-                    <Button variant='secondary'>Consult Online</Button>
-                    <Button className='ml-3'>Visit Clinic</Button>
-                </div>
+            <div className="flex mt-5 justify-center">
+                <BookAppointment doctorId={doctor.id} doctorName={doctor.name} />
             </div>
-        </Link>
+
+        </div>
     );
 };
 
