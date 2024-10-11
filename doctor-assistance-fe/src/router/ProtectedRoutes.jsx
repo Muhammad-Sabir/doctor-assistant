@@ -1,9 +1,9 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
 import { getAuthStatus } from '@/utils/auth'; 
 
-const ProtectedRoute = ({ children, permission }) => {
+const ProtectedRoute = ({ permission }) => {
 
     const { isAuthenticated, user } = getAuthStatus();
     
@@ -24,7 +24,7 @@ const ProtectedRoute = ({ children, permission }) => {
     }
 
     // If authenticated and has the required permission, render the protected children component
-    return children;
+    return <Outlet/>;
 };
 
 export default ProtectedRoute;

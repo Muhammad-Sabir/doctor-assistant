@@ -35,7 +35,7 @@ export default function Header() {
             <div className="w-full flex-1">
                 <form>
                     <div className="relative">
-                        <p className="text-md font-semibold">Hello, {userName}</p>
+                        <p className="text-md font-semibold text-primary">Hello, {userName}</p>
                     </div>
                 </form>
             </div>

@@ -11,7 +11,7 @@ import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
 
-const UpdateDependentDialog = ({ selectedDependent }) => {
+const UpdateDependent = ({ selectedDependent }) => {
     const [inputErrors, setInputErrors] = useState({});
     const [dependent, setDependent] = useState(selectedDependent);
 
@@ -60,7 +60,7 @@ const UpdateDependentDialog = ({ selectedDependent }) => {
         <Dialog>
             <DialogTrigger asChild>
                 <span onClick={() => setDependent(selectedDependent)}>
-                    <AiTwotoneEdit size={17} className='mt-1 ml-3 text-primary' />
+                    <AiTwotoneEdit size={16} className='mt-0.5 ml-1 text-primary' />
                 </span>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -141,4 +141,4 @@ const UpdateDependentDialog = ({ selectedDependent }) => {
     );
 };
 
-export default UpdateDependentDialog;
+export default UpdateDependent;

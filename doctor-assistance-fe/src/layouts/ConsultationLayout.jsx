@@ -1,8 +1,9 @@
-import Sidebar from '@/components/dashboard/Sidebar.jsx'
-import Header from '@/components/dashboard/Header.jsx'
-import { Outlet } from 'react-router-dom';
+import React from 'react'
+import { Outlet } from 'react-router-dom'
+import Sidebar from '@/components/consultation/Sidebar'
+import Header from '@/components/consultation/Header'
 
-export default function DashboardLayout() {
+export default function ConsultationLayout() {
   return (
     <div className="flex min-h-screen">
       <div className="hidden md:block">
@@ -11,9 +12,9 @@ export default function DashboardLayout() {
       <div className="flex flex-col flex-1 md:ml-[218px] lg:ml-[234px]">
         <Header />
         <main className="flex-1 overflow-auto p-4">
-          <Outlet/>
+          <Outlet />
         </main>
       </div>
     </div>
-  );
+  )
 }

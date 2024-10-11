@@ -99,6 +99,14 @@ const validationRules = {
         test: (value) => value.trim() !== "",
         message: "Designation is required",
     },
+    rating: {
+        test: (value) => value >= 1 && value <= 5,
+        message: "Rating must be between 1 and 5",
+    },
+    comment: {
+        test: (value) => value.trim().length >= 10,
+        message: "Comment must be at least 10 characters long",
+    },
 }
 
 export const validateField = (id, value, inputErrors, password = '') => {

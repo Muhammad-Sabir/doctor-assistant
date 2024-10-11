@@ -130,3 +130,14 @@ input[type=file]::file-selector-button {
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-400
 }
+
+svg {
+  cursor: pointer;
+}
+
+textarea{
+  @apply border resize-none rounded-md p-2
+  flex border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors 
+  file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground
+  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50
+}

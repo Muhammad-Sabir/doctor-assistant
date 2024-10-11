@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import authImage from "@/assets/images/webp/authImage.webp";
 import { getAuthStatus } from '@/utils/auth';
 
-export default function AuthLayout({ children }) {
+export default function AuthLayout() {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,7 +26,7 @@ export default function AuthLayout({ children }) {
             </div>
             <div className="flex items-center justify-center py-12">
                 <div className="mx-auto grid w-[350px] gap-6">
-                    {children}
+                    <Outlet/>
                 </div>
             </div>
         </div>

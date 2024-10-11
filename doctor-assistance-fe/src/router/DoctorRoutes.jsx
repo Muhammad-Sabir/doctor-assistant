@@ -1,22 +1,27 @@
 import React from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import ProtectedRoute from '@/router/ProtectedRoutes';
 import Home from '@/pages/doctor/Home';
 import Profile from '@/pages/doctor/Profile';
 import DashboardLayout from '@/layouts/DashboardLayout';
+import ConsultationLayout from '@/layouts/ConsultationLayout';
+import Consultation from '@/pages/doctor/Consultation';
 
 export default function DoctorRoutes() {
     return (
-        <ProtectedRoute permission='doctor'>
-            <DashboardLayout>
-                <Routes>
-                    <Route path="/home" element={<Home />} />
+        <Routes>
+            <Route element={<ProtectedRoute permission="doctor" />}>
+                <Route element={<DashboardLayout />}>
+                    <Route path="home" element={<Home />} />
                     <Route path="profile" element={<Profile />} />
-                    <Route path="*" element={<Navigate to="/doctor/home" replace />}/>
-                </Routes>
-            </DashboardLayout>
-        </ProtectedRoute>
+                    <Route path="*" element={<Navigate to="home" replace />} />
+                </Route>
+
+                <Route element={<ConsultationLayout />}>
+                    <Route path="consultation/:id" element={<Consultation />} />
+                </Route>
+            </Route>
+        </Routes>
     );
 }
-

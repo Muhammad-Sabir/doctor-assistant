@@ -12,7 +12,6 @@ export const useFetchQuery = ({
             try {
                 console.log("sending request to url:", url);
                 const response = await fetchFunction(url);
-                console.log(response.data)
                 return response.data;
             } catch (error) {
                 console.error('Error fetching data:', error);

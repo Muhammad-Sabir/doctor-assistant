@@ -1,4 +1,7 @@
-import { Home, Users, LineChart, Settings, LogOut, MessageCircle, FileIcon } from 'lucide-react';
+import { Home, Users, LineChart, Settings, LogOut, FileIcon } from 'lucide-react';
+import { RiUserSearchLine } from "react-icons/ri";
+import { LiaFileMedicalAltSolid } from "react-icons/lia";
+import { FaRegComments } from "react-icons/fa6";
 
 export const menuItems = {
     doctor: [
@@ -9,9 +12,9 @@ export const menuItems = {
     ],
     patient: [
         { icon: <Home className="h-5 w-5" />, url: "/patient/home", name: "Home" },
-        { icon: <MessageCircle className="h-5 w-5" />, url: "/patient/chat", name: "Chat" },
-        { icon: <Users className="h-5 w-5" />, url: "/patient/my-patients", name: "My Patients" },
-        { icon: <LineChart className="h-5 w-5" />, url: "/patient/analytics", name: "Analytics" },
+        { icon: <RiUserSearchLine className="h-5 w-5" />, url: "/patient/doctors", name: "Doctors" },
+        { icon: <FaRegComments className="h-5 w-5" />, url: "/patient/reviews", name: "My Reviews" },
+        { icon: <LiaFileMedicalAltSolid className="h-5 w-5" />, url: "/patient/consultations", name: "Consultations" },
     ],
 };
 
