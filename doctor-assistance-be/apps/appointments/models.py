@@ -12,6 +12,11 @@ class AppointmentStatus(models.TextChoices):
         REJECTED = 'rejected', 'Rejected'
 
 
+class AppointmentMode(models.TextChoices):
+        ONLINE = 'online', 'Online'
+        PHYSICAL = 'physical', 'Physical'
+
+
 class Appointment(TimeStampedModel):
     doctor = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE, related_name='appointments')
     patient = models.ForeignKey(PatientProfile, on_delete=models.CASCADE, related_name='appointments')
@@ -22,4 +27,9 @@ class Appointment(TimeStampedModel):
         max_length=8,
         choices=AppointmentStatus.choices,
         default=AppointmentStatus.PENDING,
+    )
+    appointment_mode = models.CharField(
+        max_length=8,
+        choices=AppointmentMode.choices,
+        default=AppointmentMode.ONLINE,
     )
