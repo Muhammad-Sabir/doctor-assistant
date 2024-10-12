@@ -115,6 +115,10 @@ const validationRules = {
         test: (value) => value.trim().length >= 10,
         message: "Message must be at least 10 characters long",
     },
+    cancellation_reason: {
+        test: (value) => !value || value.trim().length >= 10,
+        message: "Message must be at least 10 characters long",
+    },
     date_of_appointment: {
         test: (value) => {
             if (!isDateSelected(value)) {

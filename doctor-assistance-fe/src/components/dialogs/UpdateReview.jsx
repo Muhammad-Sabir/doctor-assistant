@@ -16,7 +16,7 @@ export default function UpdateReview({ doctorName, review }) {
     const [inputValues, setInputValues] = useState({ comment: '', rating: 0 });
     const [hoverRating, setHoverRating] = useState(0);
 
-    const addReviewMutation = useCreateUpdateMutation({
+    const updateReviewMutation = useCreateUpdateMutation({
         url: `reviews/${review.id}/`,
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -62,7 +62,7 @@ export default function UpdateReview({ doctorName, review }) {
         }
 
         const { rating, comment } = inputValues;
-        addReviewMutation.mutate(JSON.stringify({ doctor: review.doctorId, comment, rating })); 
+        updateReviewMutation.mutate(JSON.stringify({ doctor: review.doctorId, comment, rating })); 
     };
 
     return (

@@ -8,7 +8,7 @@ export const menuItems = {
     doctor: [
         { icon: <Home className="h-5 w-5" />, url: "/doctor/home", name: "Home" },
         { icon: <Users className="h-5 w-5" />, url: "/doctor/my-patients", name: "My Patients" },
-        { icon: <FileIcon className="h-5 w-5" />, url: "/doctor/my-consultations", name: "Consultations" },
+        {icon: <LuCalendarClock className="h-5 w-5" />, url: "/doctor/appointments", name: "Appointments" },
         { icon: <LineChart className="h-5 w-5" />, url: "/doctor/analytics", name: "Analytics" },
     ],
     patient: [

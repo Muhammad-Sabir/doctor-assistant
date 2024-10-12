@@ -7,6 +7,7 @@ import Profile from '@/pages/doctor/Profile';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import ConsultationLayout from '@/layouts/ConsultationLayout';
 import Consultation from '@/pages/doctor/Consultation';
+import Appointments from '@/pages/doctor/Appointments';
 
 export default function DoctorRoutes() {
     return (
@@ -15,6 +16,7 @@ export default function DoctorRoutes() {
                 <Route element={<DashboardLayout />}>
                     <Route path="home" element={<Home />} />
                     <Route path="profile" element={<Profile />} />
+                    <Route path="appointments" element={<Appointments />} />
                     <Route path="*" element={<Navigate to="home" replace />} />
                 </Route>
 
