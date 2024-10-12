@@ -117,7 +117,7 @@ export default function Appointments() {
             </div>
           </>
         ) : (
-          <p>No {activeTab} appointments found on this page.</p>
+          <p className="text-gray-600 text-sm">No {activeTab} appointments found on this page.</p>
         )}
       </div>
     </div >

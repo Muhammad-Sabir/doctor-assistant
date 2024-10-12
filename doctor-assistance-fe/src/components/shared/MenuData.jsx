@@ -2,6 +2,7 @@ import { Home, Users, LineChart, Settings, LogOut, FileIcon } from 'lucide-react
 import { RiUserSearchLine } from "react-icons/ri";
 import { FaRegComments } from "react-icons/fa6";
 import { LuCalendarClock } from "react-icons/lu";
+import { TbReportMedical } from "react-icons/tb";
 
 export const menuItems = {
     doctor: [
@@ -15,6 +16,7 @@ export const menuItems = {
         { icon: <RiUserSearchLine className="h-5 w-5" />, url: "/patient/doctors", name: "Doctors" },
         { icon: <FaRegComments className="h-5 w-5" />, url: "/patient/reviews", name: "My Reviews" },
         { icon: <LuCalendarClock className="h-5 w-5" />, url: "/patient/appointments", name: "Appointments" },
+        { icon: <TbReportMedical className="h-5 w-5" />, url: "/patient/prescription", name: "Prescription" },
     ],
 };
 
