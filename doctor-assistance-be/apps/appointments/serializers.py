@@ -24,7 +24,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
             fields['patient'].read_only = True
             fields['message'].read_only = True
             fields['doctor'].read_only = True
-            fields['appoitment_mode'].read_only=True
+            fields['appointment_mode'].read_only=True
 
         return fields
 
