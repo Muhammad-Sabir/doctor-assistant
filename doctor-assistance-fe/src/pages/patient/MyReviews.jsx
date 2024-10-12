@@ -28,7 +28,7 @@ export default function MyReviews() {
   const handleNextPage = () => {
     setCurrentPage((prev) => prev + 1);
   };
-
+  
   const handlePreviousPage = () => {
     setCurrentPage((prev) => prev - 1);
   };
@@ -46,17 +46,11 @@ export default function MyReviews() {
               <MyReviewCard key={review.id} review={review} />
             ))}
           </div>
-
-          {data.length > 4 && (
-            <div className="flex justify-center gap-3.5 mt-8">
-              <Button variant='outline' onClick={handlePreviousPage} disabled={currentPage === 1}>
-                <FaAnglesLeft className='mr-1' />Prev
-              </Button>
-              <Button variant='outline' onClick={handleNextPage} disabled={currentPage === totalPages}>
-                Next <FaAnglesRight className='ml-1 mt-0.5' />
-              </Button>
-            </div>
-          )}
+          
+          <div className="flex justify-center gap-3.5 mt-8">
+            <Button variant='outline' onClick={handlePreviousPage} disabled={currentPage === 1} ><FaAnglesLeft className='mr-1'/>Prev </Button>
+            <Button variant='outline' onClick={handleNextPage} disabled={currentPage === totalPages} >Next <FaAnglesRight className='ml-1 mt-0.5'/></Button>
+          </div>
         </>
       ) : (
         <p className="text-gray-600 text-sm">No reviews by you yet.</p>

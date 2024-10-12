@@ -45,7 +45,7 @@ const HospitalSearchBar = () => {
   };
 
   return (
-    <div className="mt-1">
+    <div className="mt-1 px-2">
       <div className="border-gray-300 border rounded-lg px-1 py-1 flex items-center justify-between">
         <div className="text-primary font-semibold">
           <Select onValueChange={setSearchBy} value={searchBy}>

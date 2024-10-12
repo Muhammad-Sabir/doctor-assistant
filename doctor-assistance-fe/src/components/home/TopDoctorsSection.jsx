@@ -77,12 +77,14 @@ export default function TopDoctorsSection() {
                     ) : topDoctors && topDoctors.length > 0 ? (
                         <Slider {...settings}>
                             {topDoctors.map((doctor, index) => (
-                                <div key={index} className="border border-gray-300 rounded-2xl p-6 transition-all duration-500 hover:border-primary ml-2">
+                                <div key={index} className="border border-gray-300 rounded-md p-6 transition-all duration-500 hover:border-primary ml-2">
                                     <div className="flex flex-row gap-4">
                                         <img className="rounded-full object-cover w-28 h-28" src={getDoctorImageUrl(doctor.file_url)} alt={doctor.name} />
                                         <div className="flex-col justify-start items-start">
-                                            <h4 className="text-primary text-sm font-medium leading-8">{doctor.name}</h4>
-                                            <p className="font-normal text-sm leading-6 text-gray-500 w-90 sm:w-52 truncate block mx-auto">
+                                            <p className="w-72 sm:w-52 truncate block mx-auto">
+                                                <h4 className="text-primary text-sm font-medium leading-8">{doctor.name}</h4>
+                                            </p>
+                                            <p className="font-normal text-sm leading-6 text-gray-500 w-72 sm:w-52 truncate block mx-auto">
                                                 Specialities<span className='mx-1 inline'>-</span>{doctor.specialities.length > 0 ? doctor.specialities.map(s => s.name).join(', ') : 'N/A'}
                                             </p>
                                             <h6 className="text-green-600 text-sm leading-relaxed">

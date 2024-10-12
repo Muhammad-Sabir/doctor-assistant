@@ -83,8 +83,8 @@ export default function BookAppointment({ doctorId, doctorName }) {
                 </DialogHeader>
 
                 <div className="grid gap-4 py-2">
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="patientId">Patient ID</Label>
+                    <div className="grid gap-2">
+                        <Label htmlFor="patientId" className='text-gray-700 text-sm font-normal'>Patient ID</Label>
                         <Input
                             type="text"
                             id="patientId"
@@ -102,8 +102,8 @@ export default function BookAppointment({ doctorId, doctorName }) {
                         )}
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="message">Message</Label>
+                    <div className="grid gap-2">
+                        <Label htmlFor="message" className='text-gray-700 text-sm font-normal'>Message</Label>
                         <textarea
                             id="message"
                             rows="4"
@@ -121,8 +121,8 @@ export default function BookAppointment({ doctorId, doctorName }) {
                         )}
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="date_of_appointment">Date of Appointment</Label>
+                    <div className="grid gap-2">
+                        <Label htmlFor="date_of_appointment" className='text-gray-700 text-sm font-normal'>Date of Appointment</Label>
                         <Input
                             type="date"
                             id="date_of_appointment"
