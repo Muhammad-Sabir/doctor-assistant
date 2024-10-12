@@ -1,15 +1,19 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.profiles.permissions import IsPatient
 from apps.appointments.permissions import IsDoctorOrPatientOfAppointment
 from apps.appointments.models import Appointment
 from apps.appointments.serializers import AppointmentSerializer
+from apps.appointments.filters import AppointmentFilter
 
 
 class AppointmentViewSet(ModelViewSet):
     serializer_class = AppointmentSerializer
     queryset = Appointment.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = AppointmentFilter
 
     def get_permissions(self):
         if self.request.method == 'POST':
