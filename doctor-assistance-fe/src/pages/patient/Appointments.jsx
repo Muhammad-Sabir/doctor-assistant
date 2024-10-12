@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import ProfileTabs from '@/components/shared/ProfileTabs';
-import AppoitmentCard from '@/components/shared/AppoitmentCard';
+import AppoitmentCard from '@/components/shared/AppointmentCard';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import Loading from '@/components/shared/Loading';
@@ -117,7 +117,7 @@ export default function Appointments() {
             </div>
           </>
         ) : (
-          <p className="text-gray-600 text-sm">No {activeTab} appointments found on this page.</p>
+          <p className="text-gray-600 text-sm">No {activeTab} appointments found.</p>
         )}
       </div>
     </div >
