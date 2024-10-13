@@ -14,9 +14,6 @@ export default function DoctorsList() {
         fetchFunction: fetchWithAuth,
     });
 
-    if (isFetching) return <Loading />;
-    if (isError) return <div>Error: {error.message}</div>;
-
     const topDoctors = data.results.sort((a, b) => b.average_rating - a.average_rating).slice(0, 5);
 
     return (
@@ -24,17 +21,17 @@ export default function DoctorsList() {
             <DoctorSearchBar />
             <h2 className="text-md font-medium text-primary mb-4 mt-6">Top Medical Specialists:</h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 mx-auto max-w-screen-lg">
-                {topDoctors.length > 0 ? (
-                    topDoctors.map((doctor) => (
+            {isFetching ? (<Loading />
+            ) : isError ? (<p className='text-primary'>Error fetching reviews: {error.message}</p>
+            ) : topDoctors && topDoctors.length > 0  ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 mx-auto max-w-screen-lg">
+                    {topDoctors.map((doctor) => (
                         <DoctorCard key={doctor.id} doctor={doctor} />
-                    ))
-                ) : (
-                    <p className="text-gray-600 text-sm">
-                        No top rated doctors yet.
-                    </p>
-                )}
-            </div>
+                    ))}
+                </div>
+            ) : (
+                <p className="text-gray-600 text-sm">No top rated doctors yet.</p>
+            )}
         </div>
     );
 }

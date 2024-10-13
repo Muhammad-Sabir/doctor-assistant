@@ -62,14 +62,6 @@ export default function Appointments() {
     matchesDoctor(appointment) && matchesMode(appointment)
   );
 
-  if (isFetching) {
-    return <Loading />;
-  }
-
-  if (isError) {
-    return <p className='text-primary'>Error fetching patient profile: {error.message}</p>;
-  }
-
   return (
     <div className='px-2 pb-4'>
       <h2 className="text-md font-medium text-primary mb-2">My Appointments:</h2>
@@ -99,25 +91,31 @@ export default function Appointments() {
         </select>
       </div>
 
-      <div className="appointment-list mt-4">
-        {filteredAppointments.length > 0 ? (
-          <>
-            <div className="grid gap-4 lg:grid-cols-2 mt-2">
-              {filteredAppointments.map(appointment => (
-                <AppoitmentCard key={appointment.id} appointment={appointment} />
-              ))}
-            </div>
-            <div className="flex justify-center gap-4 my-6">
-              <Button variant='outline' onClick={handlePrevPage} disabled={!prevPage}>
-                <FaAnglesLeft className='mr-1' />Prev
-              </Button>
-              <Button variant='outline' onClick={handleNextPage} disabled={!nextPage}>
-                Next <FaAnglesRight className='ml-1 mt-0.5' />
-              </Button>
-            </div>
-          </>
+      <div className="mt-4">
+        {isFetching ? (<Loading />
+        ) : isError ? (<p className='text-primary'>Error fetching appointments: {error.message}</p>
         ) : (
-          <p className="text-gray-600 text-sm">No {activeTab} appointments found.</p>
+          <>
+            {filteredAppointments.length > 0 ? (
+              <>
+                <div className="grid gap-4 lg:grid-cols-2 mt-2">
+                  {filteredAppointments.map(appointment => (
+                    <AppoitmentCard key={appointment.id} appointment={appointment} />
+                  ))}
+                </div>
+                <div className="flex justify-center gap-4 my-6">
+                  <Button variant='outline' onClick={handlePrevPage} disabled={!prevPage}>
+                    <FaAnglesLeft className='mr-1' />Prev
+                  </Button>
+                  <Button variant='outline' onClick={handleNextPage} disabled={!nextPage}>
+                    Next <FaAnglesRight className='ml-1 mt-0.5' />
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <p className="text-gray-600 text-sm">No {activeTab} appointments found.</p>
+            )}
+          </>
         )}
       </div>
     </div >

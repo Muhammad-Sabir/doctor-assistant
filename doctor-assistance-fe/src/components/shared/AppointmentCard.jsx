@@ -1,11 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { MdOutlineArrowForwardIos } from 'react-icons/md';
 
 import { getAuthStatus } from '@/utils/auth';
-import { Button } from '@/components/ui/button'
 
 import RejectAppointment from '@/components/dialogs/RejectAppointment';
 import ApproveAppointment from '@/components/dialogs/ApproveAppointment';
@@ -63,14 +60,6 @@ export default function AppointmentCard({ appointment }) {
                     </div>
                 )}
             </div>
-
-            {user.role === 'doctor' && appointment.status === 'approved' && (
-                <Button className="mt-4 bg-primary text-white max-w-fit">
-                    <Link className="flex" to={`/doctor/consultation/${appointment.id}`}>
-                        Start Consultation <MdOutlineArrowForwardIos className="mt-1 ml-1" />
-                    </Link>
-                </Button>
-            )}
         </div>
     );
 }
