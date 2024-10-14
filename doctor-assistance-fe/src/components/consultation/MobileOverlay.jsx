@@ -86,7 +86,7 @@ export default function MobileOverlay() {
 
                 <div>
                     <Accordion type="single" collapsible className="w-full">
-                        
+
                         <AccordionItem value="item-1">
                             <AccordionTrigger>
                                 <h2 className='flex items-center gap-3 py-1 text-muted-foreground transition-all'>
@@ -121,7 +121,9 @@ export default function MobileOverlay() {
                                             </span>
                                         ))}
                                     </div>
-                                    <AddAllergy/>
+                                    <AddAllergy triggerElement={<span className='mt-6 cursor-pointer flex text-xs font-medium text-primary underline justify-start items-center'>
+                                        <RiAddLine className='mr-2' />Add Allergies
+                                    </span>} />
                                 </div>
                             </AccordionContent>
                         </AccordionItem>

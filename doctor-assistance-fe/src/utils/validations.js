@@ -135,6 +135,10 @@ const validationRules = {
             return true;
         },
     },
+    consultation_title: {
+        test: (value) => !value || value.trim().length >= 15,
+        message: "Title must be at least 15 characters long",
+    },
 }
 
 export const validateField = (id, value, inputErrors, password = '') => {

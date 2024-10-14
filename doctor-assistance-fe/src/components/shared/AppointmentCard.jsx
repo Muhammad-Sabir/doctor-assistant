@@ -3,7 +3,7 @@ import { FaCalendarAlt } from 'react-icons/fa';
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 import { getAuthStatus } from '@/utils/auth';
-
+import { formatDate } from '@/utils/date';
 import RejectAppointment from '@/components/dialogs/RejectAppointment';
 import ApproveAppointment from '@/components/dialogs/ApproveAppointment';
 import DeleteItem from '@/components/dialogs/DeleteItem';
@@ -13,18 +13,12 @@ export default function AppointmentCard({ appointment }) {
 
     const { user } = getAuthStatus();
 
-    const appointmentDate = new Date(appointment.date_of_appointment);
-    const formattedDate = appointmentDate.toLocaleDateString('en-US', {
-        weekday: 'short', day: '2-digit',
-        month: 'short', year: 'numeric',
-    });
-
     return (
         <div className="flex flex-col p-4 bg-white border border-gray-300 rounded-lg hover:shadow-md hover:border-primary transition-shadow">
 
             <div className="flex items-center gap-2">
                 <FaCalendarAlt className="text-gray-500" />
-                <p className="text-sm text-gray-500">{formattedDate}</p>
+                <p className="text-sm text-gray-500">{formatDate(appointment.date_of_appointment)}</p>
             </div>
 
             <h4 className="text-sm font-medium text-primary mb-1 mt-2">{appointment.message}</h4>

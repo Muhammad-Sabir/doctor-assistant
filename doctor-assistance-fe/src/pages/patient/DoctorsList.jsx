@@ -14,7 +14,7 @@ export default function DoctorsList() {
         fetchFunction: fetchWithAuth,
     });
 
-    const topDoctors = data.results.sort((a, b) => b.average_rating - a.average_rating).slice(0, 5);
+    const topDoctors = data?.results?.sort((a, b) => b.average_rating - a.average_rating).slice(0, 5);
 
     return (
         <div className="mx-1 pb-2">

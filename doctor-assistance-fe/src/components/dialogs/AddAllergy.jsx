@@ -1,17 +1,38 @@
 import React, { useState } from 'react';
-import SearchField from '../shared/SearchFeild';
+
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { RiAddLine } from "react-icons/ri";
 
-export default function AddAllergy() {
+import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
+import { fetchWithAuth } from '@/utils/fetchApis';
+import SearchField from '@/components/shared/SearchFeild';
+
+export default function AddAllergy({ triggerElement, patientId }) {
     const [inputErrors, setInputErrors] = useState({});
     const [inputValues, setInputValues] = useState({ allergies: [] });
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+    const addAllergyMutation = useCreateUpdateMutation({
+        url: `patient-allergies/`,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        fetchFunction: fetchWithAuth,
+        onSuccessMessage: 'Allergy Successfully Added',
+        onErrorMessage: 'Failed to Add Allergy',
+        onSuccess: () => {
+            setTimeout(() => {
+                window.location.reload();
+            }, 300);
+        }
+    });
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(inputValues);
+        addAllergyMutation.mutate(JSON.stringify({
+            allergy: { name: inputValues.allergies[0].name },
+            patient: patientId
+        }))
     };
 
     const handleDialogOpenChange = () => {
@@ -23,12 +44,12 @@ export default function AddAllergy() {
         });
     };
 
+
+
     return (
         <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
             <DialogTrigger asChild>
-                <span className='mt-6 cursor-pointer flex text-xs font-medium text-primary underline justify-start items-center'>
-                    <RiAddLine className='mr-2' />Add Allergies
-                </span>
+                {triggerElement}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

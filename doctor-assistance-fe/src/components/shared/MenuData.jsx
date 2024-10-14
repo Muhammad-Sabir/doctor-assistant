@@ -1,16 +1,14 @@
-import { Home, Users, LineChart, Settings, LogOut } from 'lucide-react';
+import { Home, Users, Settings, LogOut } from 'lucide-react';
 import { RiUserSearchLine } from "react-icons/ri";
 import { FaRegComments } from "react-icons/fa6";
 import { LuCalendarClock } from "react-icons/lu";
 import { TbReportMedical } from "react-icons/tb";
-import { FaRocketchat } from "react-icons/fa6";
-import { BsChatText } from "react-icons/bs";
 import { TbBrandHipchat } from "react-icons/tb";
 
 export const menuItems = {
     doctor: [
         { icon: <Home className="h-5 w-5" />, url: "/doctor/home", name: "Home" },
-        { icon: <Users className="h-5 w-5" />, url: "/doctor/my-patients", name: "My Patients" },
+        { icon: <Users className="h-5 w-5" />, url: "/doctor/patients", name: "My Patients" },
         {icon: <LuCalendarClock className="h-5 w-5" />, url: "/doctor/appointments", name: "Appointments" },
         { icon: <TbBrandHipchat className="h-5 w-5" />, url: "/doctor/chats", name: "Chats" },
     ],

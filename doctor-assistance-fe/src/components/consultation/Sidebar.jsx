@@ -4,6 +4,7 @@ import { IoMedicalOutline } from "react-icons/io5";
 import { CgUserList } from "react-icons/cg";
 import { FaCircle } from "react-icons/fa";
 import { RxFilePlus } from "react-icons/rx";
+import { RiAddLine } from "react-icons/ri";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -77,7 +78,9 @@ export default function Sidebar() {
                                             </span>
                                         ))}
                                     </div>
-                                    <AddAllergy/>
+                                    <AddAllergy triggerElement={<span className='mt-6 cursor-pointer flex text-xs font-medium text-primary underline justify-start items-center'>
+                                        <RiAddLine className='mr-2' />Add Allergies
+                                    </span>} />
                                 </div>
                             </AccordionContent>
                         </AccordionItem>
