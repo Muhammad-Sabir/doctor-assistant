@@ -1,6 +1,7 @@
 from django.db.models import Max, Q
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.profiles.permissions import IsDoctor, IsDoctorOrOwner
 from apps.consultations.models import Consultation, SOAPNotes, Prescription
@@ -9,10 +10,12 @@ from apps.consultations.serializers import (
     SOAPNotesSerializer,
     PrescriptionSerializer
 )
-
+from apps.consultations.filters import ConsultationFilter
 
 class ConsultationsViewSet(ModelViewSet):
     serializer_class = ConsultationSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ConsultationFilter
 
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:

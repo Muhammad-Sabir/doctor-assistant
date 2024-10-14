@@ -6,9 +6,9 @@ from apps.profiles.models import (
     Degree, 
     Disease,
     Allergy,
-    PatientAllergy
+    PatientAllergy,
+    DoctorProfile
 )
-
 
 class PatientAllergyFilter(FilterSet):
     patient_id = CharFilter(field_name='patient', lookup_expr='exact')
