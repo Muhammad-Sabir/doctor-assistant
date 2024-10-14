@@ -2,6 +2,7 @@ from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
 from rest_framework.exceptions import ValidationError
+from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.core.viewsets import BaseReadOnlyViewSet
 from apps.profiles.models import PatientProfile, PatientAllergy, Allergy
@@ -12,7 +13,7 @@ from apps.profiles.serializers import (
     AllergySerializer
 )
 from apps.profiles.permissions import IsPatientOrOwner, IsDoctor
-from apps.profiles.filters import AllergyFilter
+from apps.profiles.filters import AllergyFilter, PatientAllergyFilter
 
 
 class PrimaryPatientViewSet(ModelViewSet):
@@ -53,6 +54,8 @@ class DependentProfileViewSet(ModelViewSet):
 
 class PatientAllergyViewSet(ModelViewSet):
     serializer_class = PatientAllergySerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = PatientAllergyFilter
 
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:

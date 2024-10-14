@@ -1,7 +1,21 @@
 from django_filters import FilterSet, CharFilter, NumberFilter, RangeFilter
 from django.db.models import Q
 
-from apps.profiles.models import Speciality, Degree, Disease, Allergy, DoctorProfile
+from apps.profiles.models import (
+    Speciality, 
+    Degree, 
+    Disease,
+    Allergy,
+    PatientAllergy
+)
+
+
+class PatientAllergyFilter(FilterSet):
+    patient_id = CharFilter(field_name='patient', lookup_expr='exact')
+    
+    class Meta:
+        model = PatientAllergy
+        fields = ['patient_id']
 
 
 class BaseFilter(FilterSet):
