@@ -26,7 +26,7 @@ export default function DoctorRoutes() {
                 </Route>
 
                 <Route element={<ConsultationLayout />}>
-                    <Route path="consultation/:id/:consultationId" element={<Consultation />} />
+                    <Route path="consultation/:patientId/:consultationId" element={<Consultation />} />
                 </Route>
             </Route>
         </Routes>
