@@ -50,7 +50,7 @@ export default function DoctorDetail() {
                         <h3 className="font-manrope font-bold text-xl text-primary mb-1 max-sm:text-center">{data.name}</h3>
                         <div className="font-normal text-gray-500 max-sm:text-center text-sm">
                             <div className='lg:flex gap-3'>
-                                <p className="text-sm text-gray-600 flex">
+                                <p className="text-sm text-gray-600 flex justify-center sm:justify-start">
                                     <FaRegCalendarAlt className='mr-1 mt-1' />
                                     {data.date_of_experience ? `${new Date().getFullYear() - new Date(data.date_of_experience).getFullYear()} years of experience` : 'N/A'}
                                 </p>

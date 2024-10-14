@@ -6,12 +6,7 @@ import UserProfileMenu from '@/components/dashboard/UserProfileMenu';
 import { getAuthStatus } from '@/utils/auth';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { fetchWithAuth } from '@/utils/fetchApis';
-
-const currentDate = new Date().toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-});
+import { formatDate } from '@/utils/date';
 
 export default function Header() {
     const { user } = getAuthStatus();
@@ -39,7 +34,7 @@ export default function Header() {
                     </div>
                 </form>
             </div>
-            <p className="hidden sm:block text-sm font-medium text-gray-500">{currentDate}</p>
+            <p className="hidden sm:block text-sm font-medium text-gray-500">{formatDate(new Date())}</p>
             <Notifications />
             <UserProfileMenu userName={userName} />
         </header>

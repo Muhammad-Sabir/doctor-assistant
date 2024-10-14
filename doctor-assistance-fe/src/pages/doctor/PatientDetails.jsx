@@ -45,12 +45,12 @@ export default function PatientDetail() {
                         <h3 className="font-manrope font-bold text-xl text-primary mb-1 max-sm:text-center">{patientData.name}</h3>
                         <div className="font-normal text-gray-500 max-sm:text-center text-sm">
                             <div className='lg:flex gap-3'>
-                                <p className="text-sm text-gray-600 flex">
+                                <p className="text-sm text-gray-600 flex justify-center sm:justify-start">
                                     <FaRegCalendarAlt className='mr-1 mt-0.5' />
                                     {calculateAge(patientData.date_of_birth)} years old
                                 </p>
                                 <div className="flex items-center mt-2 lg:mt-0 justify-center sm:justify-normal">
-                                    <span className="ml-1 flex">
+                                    <span className="flex">
                                         {patientData.gender === 'F' ? (
                                             <><BsGenderFemale className='mr-1 mt-1 text-pink-700' /> Female </>
                                         ) : (
