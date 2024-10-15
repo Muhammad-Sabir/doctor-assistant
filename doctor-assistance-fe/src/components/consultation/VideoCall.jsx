@@ -1,9 +1,14 @@
-import React from 'react'
+import React from 'react';
+import VideoSection from '@/components/consultation/VideoSection';
+import ChatSection from '@/components/consultation/ChatSection';
 
-export default function VideoCall() {
+function VideoCall() {
   return (
-    <div>
-      This is the video call area
+    <div className="flex flex-col lg:flex-row h-[76vh]">
+      <VideoSection />
+      <ChatSection/>
     </div>
-  )
+  );
 }
+
+export default VideoCall;
