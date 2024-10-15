@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaPlay, FaStop, FaPause, FaPaperPlane } from 'react-icons/fa';
+import { FaPaperPlane } from 'react-icons/fa';
 import { IoCopyOutline, IoCopy } from 'react-icons/io5';
+import { IoPlayOutline } from "react-icons/io5";
+import { PiPauseLight } from "react-icons/pi";
+import { PiStop } from "react-icons/pi";
 
 import { Button } from '@/components/ui/button';
-
-import Waveform from '@/components/shared/Waveform';
+import Pulse from '../shared/Pulse';
 
 export default function TranscriptionPage() {
   const [additionalInfo, setAdditionalInfo] = useState('');
@@ -54,6 +56,7 @@ export default function TranscriptionPage() {
   const handleStop = () => {
     setIsTranscribing(false);
     setIsPaused(false);
+    setElapsedTime(0);
   };
 
   const togglePauseResume = () => {
@@ -97,7 +100,7 @@ export default function TranscriptionPage() {
       <div className="w-full h-5 text-sm my-2 flex items-center justify-center relative">
         {isTranscribing && !isPaused ? (
           <div className="flex items-center gap-2">
-            <Waveform />
+            <Pulse/>
             <span className="text-gray-500">Listening...</span>
           </div>
         ) : (
@@ -118,27 +121,27 @@ export default function TranscriptionPage() {
         </button>
       </div>
 
-      <div className="px-2 py-2 bg-white flex justify-end gap-3">
+      <div className="px-2 pt-2 bg-white flex justify-end gap-3">
         {!isTranscribing ? (
           <Button onClick={handleStart} className="flex items-center gap-2">
-            <FaPlay /> Start
+            <IoPlayOutline /> Start
           </Button>
         ) : (
           <div className="flex items-center gap-3">
             <Button onClick={handleStop} className="bg-red-600 hover:bg-red-600/90 flex items-center gap-2">
-              <FaStop /> Stop
+              <PiStop /> Stop
             </Button>
             <Button
               onClick={togglePauseResume}
               className={`flex items-center gap-2 ${isPaused ? 'bg-green-500 hover:bg-green-500/90' : 'bg-yellow-500 hover:bg-yellow-500/90'} text-white px-4 py-2 rounded-lg`}
             >
-              {isPaused ? <FaPlay /> : <FaPause />} {isPaused ? 'Resume' : 'Pause'}
+              {isPaused ? <IoPlayOutline/> : <PiPauseLight />} {isPaused ? 'Resume' : 'Pause'}
             </Button>
           </div>
         )}
 
         <Button onClick={handleCopy} variant='outline'>
-          {isCopied ? <IoCopy size={16}/> : <IoCopyOutline size={16} />}
+          {isCopied ? <IoCopy /> : <IoCopyOutline />}
         </Button>
       </div>
     </div>
