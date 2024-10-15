@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TbUserCircle } from 'react-icons/tb';
-import { Input } from '@/components/ui/input';
 import { FaPaperPlane } from 'react-icons/fa';
+
+import { Input } from '@/components/ui/input';
 
 export default function ChatSection() {
     const [messages, setMessages] = useState([
