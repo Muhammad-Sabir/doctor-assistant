@@ -1,13 +1,14 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Notifications from '@/components/dashboard/Notifications';
-import UserProfileMenu from '@/components/dashboard/UserProfileMenu';
-import MobileOverlay from '@/components/consultation/MobileOverlay';
+
 import { getAuthStatus } from '@/utils/auth';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { fetchWithAuth } from '@/utils/fetchApis';
-import EditableTitle from './EditableTitle';
 import { formatDate } from '@/utils/date';
+import EditableTitle from '@/components/consultation/EditableTitle';
+import Notifications from '@/components/dashboard/Notifications';
+import UserProfileMenu from '@/components/dashboard/UserProfileMenu';
+import MobileOverlay from '@/components/consultation/MobileOverlay';
 
 export default function Header() {
     const { consultationId } = useParams();
