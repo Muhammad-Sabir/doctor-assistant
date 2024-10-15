@@ -8,22 +8,22 @@ import { useFetchQuery } from '@/hooks/useFetchQuery';
 
 export default function PatientConsultations({ patientId, truncate = false }) {
 
-    const { data: patientConsultations, isFetching, isError, error } = useFetchQuery({
-        url: `consultations/`,
+    const { data, isFetching, isError, error } = useFetchQuery({
+        url: `consultations?patient_id=${patientId}`,
         queryKey: ['patientConsultations'],
         fetchFunction: fetchWithAuth,
     });
+
+    const patientConsultations = data?.results || [];
 
     if (isFetching) return <div className="text-gray-500 text-sm">Loading...</div>;
 
     if (isError) return <div className="text-red-500">Error: {error.message}</div>;
 
-    const filteredConsultations = patientConsultations?.results?.filter(consultation => consultation.patient === Number(patientId));
-
     return (
         <>
-            {filteredConsultations && filteredConsultations.length > 0 ? (
-                filteredConsultations.map(consultation => (
+            {patientConsultations && patientConsultations.length > 0 ? (
+                patientConsultations.map(consultation => (
                     <Link key={consultation.id} to={`/doctor/consultation/${patientId}/${consultation.id}`}>
                         <div className="p-4 bg-white border border-gray-300 rounded-lg hover:shadow-md hover:border-primary transition-shadow">
                             <h3 className={`font-semibold text-sm text-primary mb-2 ${truncate ? 'block w-32 truncate' : ''}`}>

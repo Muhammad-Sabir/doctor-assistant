@@ -7,6 +7,7 @@ import { PiStop } from "react-icons/pi";
 
 import { Button } from '@/components/ui/button';
 import Pulse from '../shared/Pulse';
+import { TbUserCircle } from 'react-icons/tb';
 
 export default function TranscriptionPage() {
   const [additionalInfo, setAdditionalInfo] = useState('');
@@ -88,9 +89,12 @@ export default function TranscriptionPage() {
       <div className="flex-grow overflow-y-auto bg-gray-50">
         {chatMessages.map((msg, index) => (
           <div key={index} className={`flex ${msg.sender === 'Doctor' ? 'justify-end' : 'justify-start'} mb-10`}>
-            <div className={`${msg.sender === 'Doctor' ? 'bg-gray-200' : 'bg-blue-100'} max-w-lg px-4 py-2 rounded-md shadow-md relative`}>
-              <p className="text-sm text-gray-800 break-words">{msg.sender}: {msg.text}</p>
-              <p className={`text-xs text-gray-500 absolute -bottom-6 ${msg.sender === 'Doctor' ? 'right-2' : 'left-2'}`}>{msg.time}</p>
+            <div className={`flex items-center ${msg.sender === 'Doctor' ? 'flex-row-reverse' : ''} gap-3`}>
+              <TbUserCircle size={30} className="text-gray-400" />
+              <div className={`${msg.sender === 'Doctor' ? 'bg-blue-100' : 'bg-gray-200'} max-w-lg px-4 py-2 rounded-md shadow-md relative`}>
+                <p className="text-sm text-gray-800 break-words">{msg.sender}: {msg.text}</p>
+                <p className={`text-xs text-gray-500 absolute -bottom-6 ${msg.sender === 'Doctor' ? 'right-2' : 'left-2'}`}>{msg.time}</p>
+              </div>
             </div>
           </div>
         ))}
@@ -100,7 +104,7 @@ export default function TranscriptionPage() {
       <div className="w-full h-5 text-sm my-2 flex items-center justify-center relative">
         {isTranscribing && !isPaused ? (
           <div className="flex items-center gap-2">
-            <Pulse/>
+            <Pulse />
             <span className="text-gray-500">Listening...</span>
           </div>
         ) : (
@@ -112,7 +116,7 @@ export default function TranscriptionPage() {
         <textarea
           className="w-full"
           rows="2"
-          placeholder="Add additional notes..."
+          placeholder="Add additional Info..."
           value={additionalInfo}
           onChange={(e) => setAdditionalInfo(e.target.value)}
         />
@@ -135,7 +139,7 @@ export default function TranscriptionPage() {
               onClick={togglePauseResume}
               className={`flex items-center gap-2 ${isPaused ? 'bg-green-500 hover:bg-green-500/90' : 'bg-yellow-500 hover:bg-yellow-500/90'} text-white px-4 py-2 rounded-lg`}
             >
-              {isPaused ? <IoPlayOutline/> : <PiPauseLight />} {isPaused ? 'Resume' : 'Pause'}
+              {isPaused ? <IoPlayOutline /> : <PiPauseLight />} {isPaused ? 'Resume' : 'Pause'}
             </Button>
           </div>
         )}
