@@ -43,3 +43,9 @@ export const dummychatHistory = {
         { id: 2, user: "You", message: "What time should we meet?" }
     ]
 };
+
+
+export const dummyTranscript = [
+    { id: 1, text: "I've been feeling pain in my lower back.", sender: 'Patient', time: '00:05' },
+    { id: 2, text: "You should rest and take medication.", sender: 'Doctor', time: '00:10' },
+]
