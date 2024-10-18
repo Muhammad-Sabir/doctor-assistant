@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -7,12 +8,15 @@ import RingingIcon from '@/components/shared/RingingIcon';
 
 export default function IncomingCall() {
 
+    const navigate = useNavigate();
+
     const handleDecline = (e) => {
         console.log('Call Declined')
     };
 
     const handleAccept = (e) => {
         console.log('Call Accepted')
+        navigate('/patient/consultation/video-call')
     };
 
     return (
