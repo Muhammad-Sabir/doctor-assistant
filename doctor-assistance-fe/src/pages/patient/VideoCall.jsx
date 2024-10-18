@@ -1,12 +1,12 @@
 import React from 'react';
 
 import ChatSection from '@/components/consultation/ChatSection';
-import DoctorVideoSection from './DoctorVideoSection';
+import PatientVideoSection from '@/components/consultation/PatientVideoSection';
 
 function VideoCall() {
   return (
-    <div className="flex flex-col lg:flex-row h-[76vh]">
-      <DoctorVideoSection />
+    <div className="px-2 flex flex-col lg:flex-row h-[84vh]">
+      <PatientVideoSection />
       <ChatSection/>
     </div>
   );

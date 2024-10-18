@@ -13,6 +13,7 @@ import MyReviews from '@/pages/patient/MyReviews';
 import Appointments from '@/pages/patient/Appointments';
 import Prescription from '@/pages/patient/Prescription';
 import Chats from '@/pages/patient/Chats';
+import VideoCall from '@/pages/patient/VideoCall';
 
 export default function PatientRoutes() {
     return (
@@ -29,6 +30,7 @@ export default function PatientRoutes() {
                     <Route path="appointments" element={<Appointments />} />
                     <Route path="prescription" element={<Prescription />} />
                     <Route path="chats" element={<Chats />} />
+                    <Route path="/consultation/video-call" element={<VideoCall />} />
                     <Route path="*" element={<Navigate to="/patient/home" replace />} />
                 </Route>
             </Route>

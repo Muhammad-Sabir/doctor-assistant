@@ -4,7 +4,7 @@ import { CiMicrophoneOn, CiMicrophoneOff } from "react-icons/ci";
 import { FiPhone, FiPhoneOff } from "react-icons/fi";
 import { MdOutlineVideoCameraFront } from "react-icons/md";
 
-export default function VideoSection() {
+export default function PatientVideoSection() {
     const [isMuted, setIsMuted] = useState(false);
     const [isVideoOn, setIsVideoOn] = useState(true);
     const [isCallActive, setIsCallActive] = useState(false);
@@ -19,7 +19,7 @@ export default function VideoSection() {
                 {!isCallActive ? (
                     <div className="h-full flex flex-col items-center gap-3 justify-center text-gray-500">
                         <MdOutlineVideoCameraFront size={100} />
-                        <p>Press call button to start video call</p>
+                        <p>Press Join button to join the video call</p>
                     </div>
                 ) : (
                     <div className="h-full flex flex-col items-center gap-3 justify-center text-gray-500">
@@ -40,7 +40,7 @@ export default function VideoSection() {
                     <button onClick={toggleCall} className={`p-3 ${isCallActive ? 'bg-red-500' : 'bg-green-500'} rounded-full shadow-md hover:opacity-90 focus:outline-none`}>
                         {isCallActive ? <FiPhoneOff className="text-xl text-white" /> : <FiPhone className="text-xl text-white" />}
                     </button>
-                    <p className="mt-2 text-sm text-center">{isCallActive ? 'End' : 'Call'}</p>
+                    <p className="mt-2 text-sm text-center">{isCallActive ? 'End' : 'Join'}</p>
                 </div>
 
                 <div className="flex flex-col items-center">
