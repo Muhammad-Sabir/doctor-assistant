@@ -22,7 +22,7 @@ export default function IncomingCall() {
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] [&>button]:hidden">
                 <DialogHeader>
                     <DialogTitle>
                         <span>
