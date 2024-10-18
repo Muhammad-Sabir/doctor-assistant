@@ -16,7 +16,7 @@ export default function UpdateReview({ doctorName, review }) {
     const [inputValues, setInputValues] = useState({ comment: '', rating: 0 });
     const [hoverRating, setHoverRating] = useState(0);
 
-    const addReviewMutation = useCreateUpdateMutation({
+    const updateReviewMutation = useCreateUpdateMutation({
         url: `reviews/${review.id}/`,
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -49,6 +49,11 @@ export default function UpdateReview({ doctorName, review }) {
         setInputErrors(errors);
     };
 
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setInputValues((prev) => ({ ...prev, [id]: value }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -57,7 +62,7 @@ export default function UpdateReview({ doctorName, review }) {
         }
 
         const { rating, comment } = inputValues;
-        addReviewMutation.mutate(JSON.stringify({ doctor: review.doctorId, comment, rating })); // Use review.doctorId
+        updateReviewMutation.mutate(JSON.stringify({ doctor: review.doctorId, comment, rating })); 
     };
 
     return (
@@ -102,7 +107,7 @@ export default function UpdateReview({ doctorName, review }) {
                         <textarea
                             id="comment"
                             value={inputValues.comment}
-                            onChange={(e) => setInputValues({ ...inputValues, comment: e.target.value })}
+                            onChange={handleChange}
                             onBlur={handleBlur}
                             className={`${inputErrors.comment ? 'border-red-500' : ''}`}
                             rows="4"

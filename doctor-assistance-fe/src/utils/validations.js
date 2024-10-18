@@ -18,7 +18,7 @@ const validationRules = {
     phoneNo: {
         test: (value) => /^(?:\+92|0)?\d{10}$/.test(value),
         message: "Phone number must be in the format '+923039916210' or '03039916210'.",
-    },    
+    },
     confirmPassword: {
         test: (value, password) => value === password,
         message: "Passwords do not match",
@@ -87,7 +87,7 @@ const validationRules = {
                 validationRules.experience.message = "Please select date of experience.";
                 return false;
             }
-            if (!isDateValid(value,1)) {
+            if (!isDateValid(value, 1)) {
                 validationRules.experience.message = "At least 1 year experience required.";
                 return false;
             }
@@ -107,6 +107,38 @@ const validationRules = {
         test: (value) => value.trim().length >= 10,
         message: "Comment must be at least 10 characters long",
     },
+    patientId: {
+        test: (value) => value.trim() !== "",
+        message: "Patient ID is required",
+    },
+    message: {
+        test: (value) => value.trim().length >= 10,
+        message: "Message must be at least 10 characters long",
+    },
+    cancellation_reason: {
+        test: (value) => !value || value.trim().length >= 10,
+        message: "Message must be at least 10 characters long",
+    },
+    date_of_appointment: {
+        test: (value) => {
+            if (!isDateSelected(value)) {
+                validationRules.date_of_appointment.message = "Please select date of appointment.";
+                return false;
+            }
+        
+            const today = new Date().toISOString().split("T")[0];
+            if (new Date(value) < new Date(today)) {
+                validationRules.date_of_appointment.message = "Date cannot be in the past";
+                return false;
+            }
+            validationRules.date_of_appointment.message = "";
+            return true;
+        },
+    },
+    consultation_title: {
+        test: (value) => !value || value.trim().length >= 15,
+        message: "Title must be at least 15 characters long",
+    },
 }
 
 export const validateField = (id, value, inputErrors, password = '') => {
@@ -119,7 +151,7 @@ export const validateField = (id, value, inputErrors, password = '') => {
             delete errors[id];
         }
     }
-    
+
     return errors;
 };
 

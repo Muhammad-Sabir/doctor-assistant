@@ -28,18 +28,18 @@ export default function MyReviews() {
   const handleNextPage = () => {
     setCurrentPage((prev) => prev + 1);
   };
-  
+
   const handlePreviousPage = () => {
     setCurrentPage((prev) => prev - 1);
   };
 
-  if (isFetching) return <Loading />;
-  if (isError) return <div className="text-red-500">Error: {error.message}</div>;
-
   return (
     <div className='px-2 pb-4'>
       <h2 className="text-md font-medium text-primary mb-4">My Review History:</h2>
-      {data && data.length > 0 ? (
+
+      {isFetching ? ( <Loading />
+      ) : isError ? ( <p className='text-primary'>Error fetching reviews: {error.message}</p>
+      ) : data && data.length > 0 ? (
         <>
           <div className="grid gap-4 lg:grid-cols-2 mt-2">
             {currentReviews.map((review) => (
@@ -48,8 +48,12 @@ export default function MyReviews() {
           </div>
           
           <div className="flex justify-center gap-3.5 mt-8">
-            <Button variant='outline' onClick={handlePreviousPage} disabled={currentPage === 1} ><FaAnglesLeft className='mr-1'/>Prev </Button>
-            <Button variant='outline' onClick={handleNextPage} disabled={currentPage === totalPages} >Next <FaAnglesRight className='ml-1 mt-0.5'/></Button>
+            <Button variant='outline' onClick={handlePreviousPage} disabled={currentPage === 1} >
+              <FaAnglesLeft className='mr-1' />Prev
+            </Button>
+            <Button variant='outline' onClick={handleNextPage} disabled={currentPage === totalPages} >
+              Next <FaAnglesRight className='ml-1 mt-0.5' />
+            </Button>
           </div>
         </>
       ) : (

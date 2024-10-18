@@ -5,8 +5,6 @@ import { LiaStethoscopeSolid } from "react-icons/lia";
 import { PiGraduationCapLight } from "react-icons/pi";
 import { FiCheckCircle } from "react-icons/fi";
 
-import { Button } from '@/components/ui/button';
-
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import Loading from '@/components/shared/Loading';
@@ -14,6 +12,7 @@ import banner from "@/assets/images/webp/profileBanner.webp";
 import HospitalCard from '@/components/shared/HospitalCard';
 import ListGrid from '@/components/shared/ListGrid';
 import AddReview from '@/components/dialogs/AddReview';
+import BookAppointment from '@/components/dialogs/BookAppointment';
 
 export default function DoctorDetail() {
     const { id } = useParams();
@@ -51,7 +50,7 @@ export default function DoctorDetail() {
                         <h3 className="font-manrope font-bold text-xl text-primary mb-1 max-sm:text-center">{data.name}</h3>
                         <div className="font-normal text-gray-500 max-sm:text-center text-sm">
                             <div className='lg:flex gap-3'>
-                                <p className="text-sm text-gray-600 flex">
+                                <p className="text-sm text-gray-600 flex justify-center sm:justify-start">
                                     <FaRegCalendarAlt className='mr-1 mt-1' />
                                     {data.date_of_experience ? `${new Date().getFullYear() - new Date(data.date_of_experience).getFullYear()} years of experience` : 'N/A'}
                                 </p>
@@ -65,8 +64,7 @@ export default function DoctorDetail() {
                     </div>
 
                     <div className="flex gap-2">
-                        <Button variant='secondary'>Consult Online</Button>
-                        <Button className='ml-2'>Visit Clinic</Button>
+                        <BookAppointment doctorId={data.id} doctorName={data.name} />
                     </div>
                 </div>
 
@@ -93,7 +91,7 @@ export default function DoctorDetail() {
                 <hr className="border-t border-gray-300 mt-8" />
                 <div className="mt-4">
                     <h2 className="text-md font-semibold text-primary">Degrees</h2>
-                    <ListGrid data={data.degrees} icon={PiGraduationCapLight} color="text-purple-600"/>
+                    <ListGrid data={data.degrees} icon={PiGraduationCapLight} color="text-purple-600" />
                 </div>
 
                 <hr className="border-t border-gray-300 mt-8" />
@@ -106,7 +104,7 @@ export default function DoctorDetail() {
                 <div className="mt-4">
                     <div className='flex justify-between mt-2'>
                         <h2 className="text-md font-semibold text-primary mb-4">Reviews</h2>
-                        <AddReview doctorId={data.id} doctorName={data.name}/>
+                        <AddReview doctorId={data.id} doctorName={data.name} />
                     </div>
                     {data.reviews.length > 0 ? (
                         <div className="grid gap-4 lg:grid-cols-2 mt-2">

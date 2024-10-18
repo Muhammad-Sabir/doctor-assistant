@@ -6,11 +6,13 @@ import Home from '@/pages/patient/Home';
 import Profile from '@/pages/patient/Profile';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import DoctorsList from '@/pages/patient/DoctorsList';
-import Consultations from '@/pages/patient/Consultations';
 import DoctorDetail from '@/pages/patient/DoctorDetail';
 import HopsitalDetails from '@/pages/patient/HospitalDetails';
 import DoctorSearchResults from '@/pages/patient/DoctorSearchResults';
 import MyReviews from '@/pages/patient/MyReviews';
+import Appointments from '@/pages/patient/Appointments';
+import Prescription from '@/pages/patient/Prescription';
+import Chats from '@/pages/patient/Chats';
 
 export default function PatientRoutes() {
     return (
@@ -21,10 +23,12 @@ export default function PatientRoutes() {
                     <Route path="profile" element={<Profile />} />
                     <Route path="doctors" element={<DoctorsList />} />
                     <Route path="doctor/:id" element={<DoctorDetail />} />
-                    <Route path="consultations" element={<Consultations />} />
-                    <Route path="reviews" element={<MyReviews />} />
                     <Route path="doctors/search-results" element={<DoctorSearchResults />} />
                     <Route path="hospital/:id" element={<HopsitalDetails />} />
+                    <Route path="reviews" element={<MyReviews />} />
+                    <Route path="appointments" element={<Appointments />} />
+                    <Route path="prescription" element={<Prescription />} />
+                    <Route path="chats" element={<Chats />} />
                     <Route path="*" element={<Navigate to="/patient/home" replace />} />
                 </Route>
             </Route>
