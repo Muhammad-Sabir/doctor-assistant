@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useParams } from 'react-router-dom';
 
 import ProfileTabs from '@/components/shared/ProfileTabs';
 import Transcript from '@/components/consultation/Transcript';
@@ -9,6 +10,7 @@ import VideoCall from '@/components/consultation/VideoCall';
 export default function Consultation() {
 
   const [activeTab, setActiveTab] = useState("consultationTranscript");
+  const { consultationId } = useParams();
 
   const consultationTabs = [
     { label: "Video Call", key: "videoCall" },
@@ -19,7 +21,7 @@ export default function Consultation() {
 
   const tabComponents = {
     videoCall: <VideoCall/>,
-    consultationTranscript: <Transcript/>,
+    consultationTranscript: <Transcript consultationId={consultationId} />,
     consultationNotes: <Notes/>,
     consultationPrescriptions: <Prescriptions/>
   };

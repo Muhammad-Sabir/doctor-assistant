@@ -20,11 +20,15 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
 
-CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='', cast=Csv())
+# CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='', cast=Csv())
+CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = "accounts.User"
 
+ASGI_APPLICATION = "doc_config.asgi.application"
+
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +48,7 @@ INSTALLED_APPS = [
     'apps.reviews',
     'apps.appointments',
     'apps.consultations',
+    'apps.communications'
 ]
 
 MIDDLEWARE = [
@@ -104,6 +109,11 @@ REST_FRAMEWORK = {
     )
 }
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 AUTHENTICATION_BACKENDS = [
     'apps.accounts.backends.EmailOrPhoneNumberBackend', 
