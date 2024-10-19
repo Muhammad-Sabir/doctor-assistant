@@ -111,7 +111,7 @@ export default function UpdateMedication({medication}) {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="button" onClick={handleSubmit}>Add</Button>
+                    <Button type="button" onClick={handleSubmit}>Update</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

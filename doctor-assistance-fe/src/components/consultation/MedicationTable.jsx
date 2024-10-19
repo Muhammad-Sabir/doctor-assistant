@@ -11,7 +11,7 @@ export default function MedicationTable({ medications }) {
     return (
         <div className="w-full">
             {medications.length > 0 ? (
-                <div className='mx-2 mt-1 mb-5 mr-10 sm:mr-24'>
+                <div className={`${user.role === 'doctor' ? 'mx-2' :'' } mt-1 mb-5 mr-5 sm:mr-24`}>
 
                     <div className={`w-[100%] hidden sm:grid ${user.role === 'doctor' ? 'grid-cols-4' : 'grid-cols-3'} py-2 gap-3 border-b border-gray-300`}>
                         <div className="text-sm font-medium text-gray-500">Name</div>
