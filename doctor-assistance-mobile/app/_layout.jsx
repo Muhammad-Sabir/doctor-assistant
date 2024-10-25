@@ -6,11 +6,14 @@ import "@/global.css";
 
 const MainLayout = () => {
     return (
-        <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="signIn" options={{ headerShown: false }} />
-            <Stack.Screen name="signUp" options={{ headerShown: false }} />
-            <Stack.Screen name="(patient)/index" options={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: 'white' } }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="signIn" />
+            <Stack.Screen name="signUp" />
+            <Stack.Screen name="forgetPassword" />
+            <Stack.Screen name="resetPassword" />
+            <Stack.Screen name="verifyEmail" />
+            <Stack.Screen name="(patient)/index" />
         </Stack>
     );
 };

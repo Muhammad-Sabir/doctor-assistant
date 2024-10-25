@@ -1,39 +1,38 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, Pressable} from 'react-native';
-import { Link } from 'expo-router';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-import GoogleLogo from '@/assets/images/SVG/GoogleLogo';
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 
-const SignIn = () => {
+const ResetPassword = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [inputErrors, setInputErrors] = useState({});
-    const [user, setUser] = useState({
-        username: "",
-        password: ""
+    const [formData, setFormData] = useState({
+        password: "",
+        confirmPassword: ""
     });
 
     const handleChange = (id, value) => {
-        setUser(prev => ({
+        setFormData(prev => ({
             ...prev,
             [id]: value
         }));
     };
 
     const handleBlur = (id, value) => {
-        const errors = validateField(id, value, inputErrors);
+        const errors = validateField(id, value, inputErrors, formData.password);
         setInputErrors(errors);
     };
 
-    const handleLoginIn = (e) => {
+    const handleSubmit = (e) => {
+        console.log(formData)
         e.preventDefault();
-        if (!hasNoFieldErrors(inputErrors)) {
-            return;
+    
+        if (hasNoFieldErrors(inputErrors)) {
+            console.log(formData);
         }
-        console.log(user);
     };
 
     return (
@@ -48,40 +47,22 @@ const SignIn = () => {
                 </View>
 
                 <View className="gap-3">
-                    <Text className="text-2xl font-bold text-primary">Login</Text>
-                    <Text className="text-balance text-gray-500 -mt-2">Enter your credentials to login</Text>
+                    <Text className="text-2xl font-bold text-primary">Reset Your Password</Text>
+                    <Text className="text-balance text-gray-500 -mt-2">Enter your new password and confirm it below.</Text>
 
                     <View className="gap-4 mt-4">
                         <View className="gap-3">
-                            <Text className="text-black">Username</Text>
-                            <TextInput
-                                className={`w-full py-2 px-4 rounded-md border ${inputErrors.username ? 'border-red-500' : 'border-gray-300'}`}
-                                placeholder="Enter your Email or Phone No"
-                                value={user.username}
-                                onChangeText={(value) => handleChange("username", value)}
-                                onBlur={() => handleBlur("username", user.username)}
-                            />
-                            {inputErrors.username && (
-                                <View className="flex flex-row items-center text-red-500 text-sm -mt-2">
-                                    <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
-                                    <Text className='text-sm text-red-500'>{inputErrors.username} </Text>
-                                </View>
-                            )}
-                        </View>
-
-                        <View className="gap-3">
                             <View className="flex-row justify-between items-center">
                                 <Text className="text-black">Password</Text>
-                                <Link className="text-sm text-gray-500" href='/forgetPassword'>Forget Password?</Link>
                             </View>
                             <View className="relative">
                                 <TextInput
                                     className={`w-full py-2 px-4 rounded-md border ${inputErrors.password ? 'border-red-500' : 'border-gray-300'}`}
                                     placeholder="Enter your password"
                                     secureTextEntry={!passwordVisible}
-                                    value={user.password}
+                                    value={formData.password}
                                     onChangeText={(value) => handleChange("password", value)}
-                                    onBlur={() => handleBlur("password", user.password)}
+                                    onBlur={() => handleBlur("password", formData.password)}
                                 />
                                 {inputErrors.password && (
                                     <View className="flex flex-row items-center text-red-500 text-sm mt-1">
@@ -97,35 +78,47 @@ const SignIn = () => {
                                 </Pressable>
                             </View>
                         </View>
+
+                        <View className="gap-3">
+                            <View className="flex-row justify-between items-center">
+                                <Text className="text-black">Confirm Password</Text>
+                            </View>
+                            <View className="relative">
+                                <TextInput
+                                    className={`w-full py-2 px-4 rounded-md border ${inputErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`}
+                                    placeholder="Confirm your password"
+                                    secureTextEntry={!passwordVisible}
+                                    value={formData.confirmPassword}
+                                    onChangeText={(value) => handleChange("confirmPassword", value)}
+                                    onBlur={() => handleBlur("confirmPassword", formData.confirmPassword)}
+                                />
+                                {inputErrors.confirmPassword && (
+                                    <View className="flex flex-row items-center text-red-500 text-sm mt-1">
+                                        <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
+                                        <Text className='text-sm text-red-500'>{inputErrors.confirmPassword} </Text>
+                                    </View>
+                                )}
+                                <Pressable
+                                    onPress={() => setPasswordVisible(!passwordVisible)}
+                                    className="absolute right-2 top-2"
+                                >
+                                    <Feather name={passwordVisible ? "eye-off" : "eye"} size={15} color="gray" className='mr-2 mt-2' />
+                                </Pressable>
+                            </View>
+                        </View>
+
                     </View>
 
                     <Pressable
                         className="mt-7 w-full bg-primary border border-gray-300 justify-center items-center h-14 rounded-md p-3"
-                        onPress={handleLoginIn}
+                        onPress={handleSubmit}
                     >
-                        <Text className="text-white font-bold">Login</Text>
+                        <Text className="text-white font-bold">Submit</Text>
                     </Pressable>
-                </View>
-
-                <View className="gap-0.5">
-                    <View className="flex-row items-center justify-center my-5">
-                        <View className="flex-1 h-px bg-gray-500"></View>
-                        <Text className="px-3 text-xs text-gray-500 font-semibold">OR</Text>
-                        <View className="flex-1 h-px bg-gray-500"></View>
-                    </View>
-                    <Pressable className="flex flex-row items-center justify-center w-full border border-gray-300 h-14 rounded-md p-3">
-                        <GoogleLogo className="w-6 h-6" />
-                        <Text className="ml-4">Login with Google</Text>
-                    </Pressable>
-                </View>
-
-                <View className="mt-8 mb-8 flex-row justify-center items-center gap-2">
-                    <Text className="text-center text-gray-500">Don't have an account?</Text>
-                    <Link className='text-center text-[#045883] font-semibold ' href='/signUp'>Sign Up</Link>
                 </View>
             </View>
         </CustomKeyboardView>
     );
 };
 
-export default SignIn;
+export default ResetPassword;

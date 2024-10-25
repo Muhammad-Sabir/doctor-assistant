@@ -1,15 +1,148 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, TextInput, Pressable, ScrollView } from 'react-native';
+import { Link } from 'expo-router';
+import Feather from '@expo/vector-icons/Feather';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+
+import GoogleLogo from '@/assets/images/SVG/GoogleLogo';
+import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
+import { validateField, hasNoFieldErrors } from '@/utils/validations';
 
 const SignUp = () => {
-  return (
-    <View className="flex-1 justify-center items-center bg-gray-100 p-4">
-      <Text className="text-3xl font-bold mb-4 text-gray-800">Sign Up</Text>
-      <Text className="text-lg text-gray-600 text-center mb-8">
-        Welcome! Please sign up to start.
-      </Text>
-    </View>
-  );
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [inputErrors, setInputErrors] = useState({});
+    const [userDetails, setUserDetails] = useState({
+        email: "",
+        password: "",
+        phoneNo: "",
+    });
+
+    const handleChange = (id, value) => {
+        setUserDetails(prev => ({
+            ...prev,
+            [id]: value
+        }));
+    };
+
+    const handleBlur = (id, value) => {
+        const errors = validateField(id, value, inputErrors);
+        setInputErrors(errors);
+    };
+
+    const handleSignup = (e) => {
+        e.preventDefault();
+        if (!hasNoFieldErrors(inputErrors)) {
+            return;
+        }
+        console.log(userDetails);
+    };
+
+    return (
+        <CustomKeyboardView>
+            <View className="flex-1 px-5 bg-white">
+                <View className="items-center">
+                    <Image
+                        source={require("../assets/images/image.png")}
+                        resizeMode='contain'
+                        className="h-[33vh] aspect-square mt-8"
+                    />
+                </View>
+
+                <View className="gap-3">
+                    <Text className="text-2xl font-bold text-primary">Signup</Text>
+                    <Text className="text-balance text-gray-500 -mt-2">Enter your information to create an account</Text>
+
+                    <View className="gap-4 mt-4">
+                        <View className="gap-3">
+                            <Text className="text-black">Email</Text>
+                            <TextInput
+                                className={`w-full py-2 px-4 rounded-md border ${inputErrors.email ? 'border-red-500' : 'border-gray-300'}`}
+                                placeholder="Enter your Email"
+                                value={userDetails.email}
+                                onChangeText={(value) => handleChange("email", value)}
+                                onBlur={() => handleBlur("email", userDetails.email)}
+                            />
+                            {inputErrors.email && (
+                                <View className="flex flex-row items-center text-red-500 text-sm -mt-2">
+                                    <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
+                                    <Text className='text-sm text-red-500'>{inputErrors.email} </Text>
+                                </View>
+                            )}
+                        </View>
+
+                        <View className="gap-3">
+                            <View className="flex-row justify-between items-center">
+                                <Text className="text-black">Password</Text>
+                            </View>
+                            <View className="relative">
+                                <TextInput
+                                    className={`w-full py-2 px-4 rounded-md border ${inputErrors.password ? 'border-red-500' : 'border-gray-300'}`}
+                                    placeholder="Enter your password"
+                                    secureTextEntry={!passwordVisible}
+                                    value={userDetails.password}
+                                    onChangeText={(value) => handleChange("password", value)}
+                                    onBlur={() => handleBlur("password", userDetails.password)}
+                                />
+                                {inputErrors.password && (
+                                    <View className="flex flex-row items-center text-red-500 text-sm mt-1">
+                                        <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
+                                        <Text className='text-sm text-red-500'>{inputErrors.password} </Text>
+                                    </View>
+                                )}
+                                <Pressable
+                                    onPress={() => setPasswordVisible(!passwordVisible)}
+                                    className="absolute right-2 top-2"
+                                >
+                                    <Feather name={passwordVisible ? "eye-off" : "eye"} size={15} color="gray" className='mr-2 mt-2' />
+                                </Pressable>
+                            </View>
+                        </View>
+
+                        <View className="gap-3">
+                            <Text className="text-black">Phone No</Text>
+                            <TextInput
+                                className={`w-full py-2 px-4 rounded-md border ${inputErrors.phoneNo ? 'border-red-500' : 'border-gray-300'}`}
+                                placeholder="Enter your Phone No"
+                                value={userDetails.phoneNo}
+                                onChangeText={(value) => handleChange("phoneNo", value)}
+                                onBlur={() => handleBlur("phoneNo", userDetails.phoneNo)}
+                            />
+                            {inputErrors.phoneNo && (
+                                <View className="flex flex-row items-center text-red-500 text-sm -mt-2">
+                                    <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
+                                    <Text className='text-sm text-red-500'>{inputErrors.phoneNo} </Text>
+                                </View>
+                            )}
+                        </View>
+                    </View>
+
+                    <Pressable
+                        className="mt-7 w-full bg-primary border border-gray-300 justify-center items-center h-14 rounded-md p-3"
+                        onPress={handleSignup}
+                    >
+                        <Text className="text-white font-bold">SignUp</Text>
+                    </Pressable>
+                </View>
+
+                <View className="gap-0.5">
+                    <View className="flex-row items-center justify-center my-5">
+                        <View className="flex-1 h-px bg-gray-500"></View>
+                        <Text className="px-3 text-xs text-gray-500 font-semibold">OR</Text>
+                        <View className="flex-1 h-px bg-gray-500"></View>
+                    </View>
+                    <Pressable className="flex flex-row items-center justify-center w-full border border-gray-300 h-14 rounded-md p-3">
+                        <GoogleLogo className="w-6 h-6" />
+                        <Text className="ml-4">Signup with Google</Text>
+                    </Pressable>
+                </View>
+
+                <View className="mt-8 mb-8 flex-row justify-center items-center gap-2">
+                    <Text className="text-center text-gray-500">Already have an account?</Text>
+                    <Link className='text-center text-[#045883] font-semibold ' href='/signIn'>Login</Link>
+                </View>
+            </View>
+        </CustomKeyboardView>
+    );
 };
 
 export default SignUp;
