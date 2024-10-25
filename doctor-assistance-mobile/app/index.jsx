@@ -1,7 +1,8 @@
-import { Text, View, ImageBackground } from 'react-native'
-import Button from "@/components/ui/Button"
 import React from 'react'
 import { useRouter } from 'expo-router'
+import { Text, View, ImageBackground } from 'react-native'
+
+import Button from "@/components/ui/Button"
 
 const Welcome = () => {
 
