@@ -27,7 +27,7 @@ const DeleteItem = ({deleteUrl, itemName, iconSize}) => {
         <Dialog>
             <DialogTrigger asChild>
                 <span >
-                    <MdOutlineDelete size={`${iconSize}`} color='red' className='mt-0.5 ml-2 text-primary' />
+                    <MdOutlineDelete size={`${iconSize}`} color='red' className='actionButton mt-0.5 ml-2 text-primary' />
                 </span>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">

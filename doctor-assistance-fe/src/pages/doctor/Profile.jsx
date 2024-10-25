@@ -135,7 +135,7 @@ export default function Profile() {
 
       <div className="w-full max-w-7xl mx-auto px-6 md:px-8 -mt-28 bg-white">
         <div className="flex items-center justify-center sm:justify-start relative z-10 mb-5 mt-10 lg:mt-0">
-          <img src={data?.file_url ? `${baseUrl}/${data.file_url}` : userIcon} alt="user-image"
+          <img src={data?.file_url ? `${baseUrl}${data.file_url}` : userIcon} alt="user-image"
             className="bg-white h-[120px] lg:h-[152px] w-[120px] lg:w-[152px] object-cover border border-gray-300 rounded-full"
           />
         </div>

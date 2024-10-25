@@ -102,7 +102,7 @@ export default function TopDoctorsSection() {
                             ))}
                         </Slider>
                     ) : (
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-600 text-center">
                             No top rated doctors yet.
                         </p>
                     )}
