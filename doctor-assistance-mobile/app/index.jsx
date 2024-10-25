@@ -1,7 +1,26 @@
-import { Text, View } from 'react-native'
+import { Text, View, ImageBackground } from 'react-native'
+import Button from "@/components/ui/Button"
+import React from 'react'
+import { useRouter } from 'expo-router'
 
-export default function Welcome(){
+const Welcome = () => {
+
+  const router = useRouter();
+  
   return (
-   <View><Text className='bg-slate-500 text-white'>Doctor Assistance</Text></View>
+    <View className="flex-1">
+      <ImageBackground source={require('../assets/images/welcome.jpg')} resizeMode="cover" className="justify-end flex-1 items-center gap-3 p-5">
+        <Text className="text-white text-2xl font-bold mb-24">Doctor Assistance</Text>
+        <Button className="bg-[#045883] mb-1" onPress={() => router.push("signIn")}>
+          <Text className="color-white text-base">Sign In</Text>
+        </Button>
+        <Button className="border border-white" onPress={() => router.push("signUp")}>
+          <Text className="color-white text-base">Create Account</Text>
+        </Button>
+      </ImageBackground>
+    </View>
   )
 }
+
+export default Welcome
+
