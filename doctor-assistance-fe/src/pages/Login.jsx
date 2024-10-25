@@ -13,6 +13,7 @@ import logo from '@/assets/images/svg/webLogo.svg';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchApi } from '@/utils/fetchApis';
+import { getChatSocket } from '@/utils/chatSocket';
 
 export default function Login() {
     const [activeTab, setActiveTab] = useState('patient');
@@ -67,6 +68,7 @@ export default function Login() {
                 username: loginDetails.username
             };
             localStorage.setItem('user', JSON.stringify(user));
+            getChatSocket(user.access_token);
             navigate(!is_profile_completed ? `/complete-profile/${role}` : `/${role}`);
         }
 

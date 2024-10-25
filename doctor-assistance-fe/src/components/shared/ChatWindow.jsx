@@ -4,17 +4,72 @@ import { TbUserCircle } from "react-icons/tb";
 import { PiWechatLogoDuotone } from "react-icons/pi";
 
 import { Input } from '@/components/ui/input';
+import Loading from '@/components/shared/Loading';
 
-import { dummyChats, dummychatHistory } from '@/assets/data/dummyChats';
+import { getAuthStatus } from '@/utils/auth';
+import { getChatSocket } from '@/utils/chatSocket';
+import { formatChatPreviewDate } from '@/utils/date';
 
 export default function ChatWindow() {
     const [selectedChat, setSelectedChat] = useState(null);
     const [currentChatMessages, setCurrentChatMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
-    const [chatHistory, setChatHistory] = useState(dummychatHistory);
-
+    const [contacts, setContacts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    
     const currentChatMessagesEndRef = useRef(null);
+    const socketRef = useRef(getChatSocket(getAuthStatus().user.access_token));
+
+    useEffect(() => {
+        setupInitialSocketEvents();
+    }, []);
+
+    useEffect(() => {
+        scrollToEnd(currentChatMessagesEndRef);
+    }, [currentChatMessages]);
+
+    const setupInitialSocketEvents = () => {
+        const messageData = { source: 'contact_list' };
+        sendMessageToSocket(messageData);
+
+        socketRef.current.onmessage = handleSocketMessage;
+    };
+
+    const handleSocketMessage = (event) => {
+        const response = JSON.parse(event.data);
+        switch (response.source) {
+            case 'message_send':
+                updateChatMessages(response.data);
+                break;
+            case 'message_list':
+                setCurrentChatMessages(response.data.messages);
+                break;
+            case 'contact_list':
+                setContacts(response.data.contacts);
+                setLoading(false); 
+                break;
+            default:
+                break;
+        }
+    };
+
+    const updateChatMessages = (data) => {
+        setCurrentChatMessages((prevMessages) => [...prevMessages, data.message]);
+        setContacts((prevContacts) =>
+            prevContacts.map((contact) =>
+                contact.id === data.sender
+                    ? { ...contact, last_message_preview: data.message.message, last_message_created_at: data.message.created_at }
+                    : contact
+            )
+        );
+    };
+
+    const sendMessageToSocket = (messageData) => {
+        if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+            socketRef.current.send(JSON.stringify(messageData));
+        }
+    };
 
     const scrollToEnd = (ref) => {
         if (ref.current) {
@@ -22,13 +77,10 @@ export default function ChatWindow() {
         }
     };
 
-    useEffect(() => {
-        scrollToEnd(currentChatMessagesEndRef);
-    }, [currentChatMessages]);
-
     const selectChat = (chat) => {
         setSelectedChat(chat);
-        setCurrentChatMessages(chatHistory[chat.id] || []);
+        const messageData = { source: 'message_list', receiver_id: chat.id };
+        sendMessageToSocket(messageData);
     };
 
     const goBackToList = () => {
@@ -37,23 +89,39 @@ export default function ChatWindow() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (newMessage.trim() === "") return;
+        if (!newMessage.trim()) return;
 
-        const updatedcurrentChatMessages = [
-            ...currentChatMessages,
-            { id: currentChatMessages.length + 1, user: "You", message: newMessage },
-        ];
-        setCurrentChatMessages(updatedcurrentChatMessages);
-        setChatHistory((prev) => ({
-            ...prev,
-            [selectedChat.id]: updatedcurrentChatMessages,
-        }));
+        const messageData = {
+            source: 'message_send',
+            receiver_id: selectedChat.id,
+            message: newMessage,
+        };
+
+        const currentDate = new Date().toISOString();
+
+        sendMessageToSocket(messageData);
+
+        setCurrentChatMessages((prevMessages) => [
+            ...prevMessages,
+            { id: prevMessages.length + 1, user: "You", message: newMessage },
+        ]);
+        setContacts((prevContacts) =>
+            prevContacts.map((contact) =>
+                contact.id === selectedChat.id
+                    ? { ...contact, last_message_preview: newMessage, last_message_created_at: currentDate }
+                    : contact
+            )
+        );
         setNewMessage("");
     };
 
-    const filteredChats = dummyChats.filter(chat =>
-        chat.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredContacts = contacts.filter((contact) =>
+        contact.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <div className="mx-2 flex h-[85vh]">
@@ -71,8 +139,8 @@ export default function ChatWindow() {
                 </div>
 
                 <div className="space-y-2">
-                    {filteredChats.length > 0 ? (
-                        filteredChats.map(chat => (
+                    {filteredContacts.length > 0 ? (
+                        filteredContacts.map(chat => (
                             <div key={chat.id} className={`flex items-center p-3 rounded-md cursor-pointer ${selectedChat?.id === chat.id ? 'bg-accent' : 'bg-slate-100'} hover:bg-slate-200`}
                                 onClick={() => selectChat(chat)}>
                                 <div className="flex items-center justify-between w-full">
@@ -81,11 +149,12 @@ export default function ChatWindow() {
                                         <div className="flex flex-col">
                                             <p className="text-primary">{chat.name}</p>
                                             <p className="text-gray-500 text-sm w-40 truncate block">
-                                                {(chatHistory[chat.id]?.slice(-1)[0]?.message) || "No currentChatMessages yet"}
+                                                {/* {(chatHistory[chat.id]?.slice(-1)[0]?.message) || "No currentChatMessages yet"} */}
+                                                {chat.last_message_preview}
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="text-gray-500 text-xs">{chat.date}</div>
+                                    <div className="text-gray-500 text-xs">{formatChatPreviewDate(chat.last_message_created_at)}</div>
                                 </div>
                             </div>
                         ))
