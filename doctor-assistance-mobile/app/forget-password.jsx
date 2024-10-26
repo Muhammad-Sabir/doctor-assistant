@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, Pressable } from 'react-native';
+import { View, Text, TextInput, Pressable } from 'react-native';
 import { Link } from 'expo-router'
-
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
+
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
+import { useAuth } from '@/contexts/AuthContext';
+import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
+import AuthHeaderImage from '@/components/shared/AuthHeaderImage';
 
 const ForgetPassword = () => {
 
+    const { forgotPassword} = useAuth();
     const [inputErrors, setInputErrors] = useState({});
     const [email, setEmail] = useState('');
 
@@ -28,18 +31,13 @@ const ForgetPassword = () => {
             return;
         }
         console.log(email);
+        forgotPassword.mutate(JSON.stringify({ email }));
     };
 
     return (
         <CustomKeyboardView>
-            <View className="flex-1 px-5 bg-white">
-                <View className="items-center">
-                    <Image
-                        source={require("../assets/images/image.png")}
-                        resizeMode='contain'
-                        className="h-[33vh] aspect-square mt-8"
-                    />
-                </View>
+            <View className="flex-1 px-5 bg-white justify-center">
+                <AuthHeaderImage/>
 
                 <View className="gap-3">
                     <Text className="text-2xl font-bold text-primary">Forgot Password?</Text>
@@ -73,7 +71,7 @@ const ForgetPassword = () => {
 
                     <View className="mt-6 mb-8 flex-row justify-center items-center gap-2">
                     <Text className="text-center text-gray-500">Want to Go Back to Login?</Text>
-                    <Link className='text-center text-[#045883] font-semibold ' href='/signIn'>Login</Link>
+                    <Link className='text-center text-[#045883] font-semibold ' href='/login'>Login</Link>
                 </View>
 
                 </View>

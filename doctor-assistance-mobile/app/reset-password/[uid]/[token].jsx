@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, Pressable} from 'react-native';
+import { View, Text, TextInput, Pressable} from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
+import { useAuth } from '@/contexts/AuthContext';
+import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
+import AuthHeaderImage from '@/components/shared/AuthHeaderImage';
 
 const ResetPassword = () => {
+
+    const { uid, token } = useLocalSearchParams();
+
+    const { resetPassword } = useAuth();
+    const { mutate: reset } = resetPassword({ uid, token });
+
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [inputErrors, setInputErrors] = useState({});
     const [formData, setFormData] = useState({
@@ -27,24 +36,19 @@ const ResetPassword = () => {
     };
 
     const handleSubmit = (e) => {
-        console.log(formData)
+
         e.preventDefault();
-    
-        if (hasNoFieldErrors(inputErrors)) {
-            console.log(formData);
+        if (!hasNoFieldErrors(inputErrors)) {
+            return;
         }
+        
+        reset(JSON.stringify({ password: formData.password}));
     };
 
     return (
         <CustomKeyboardView>
-            <View className="flex-1 px-5 bg-white">
-                <View className="items-center">
-                    <Image
-                        source={require("../assets/images/image.png")}
-                        resizeMode='contain'
-                        className="h-[33vh] aspect-square mt-8"
-                    />
-                </View>
+            <View className="flex-1 px-5 bg-white justify-center">
+                <AuthHeaderImage/>
 
                 <View className="gap-3">
                     <Text className="text-2xl font-bold text-primary">Reset Your Password</Text>

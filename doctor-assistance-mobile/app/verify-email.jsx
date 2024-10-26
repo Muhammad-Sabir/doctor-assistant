@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TextInput, Pressable } from 'react-native';
-import { Link } from 'expo-router'
-
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, Pressable } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
+import { useAuth } from '@/contexts/AuthContext';
+import AuthHeaderImage from '@/components/shared/AuthHeaderImage';
 
 const VerifyEmail = () => {
+
+    const { sendVerificationEmail } = useAuth();
 
     const [inputErrors, setInputErrors] = useState({});
     const [email, setEmail] = useState('');
@@ -22,24 +26,30 @@ const VerifyEmail = () => {
         setInputErrors(errors);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit =  async (e) => {
         e.preventDefault();
         if (!hasNoFieldErrors(inputErrors)) {
             return;
         }
+        sendVerificationEmail.mutate(JSON.stringify({ email }));
+        await AsyncStorage.removeItem('userEmail');
         console.log(email);
     };
 
+    useEffect(() => {
+        const fetchEmail = async () => {
+            const storedEmail = await AsyncStorage.getItem('userEmail');
+            if (storedEmail) {
+                setEmail(storedEmail);
+            }
+        };
+        fetchEmail();
+    }, []);
+
     return (
         <CustomKeyboardView>
-            <View className="flex-1 px-5 bg-white">
-                <View className="items-center">
-                    <Image
-                        source={require("../assets/images/image.png")}
-                        resizeMode='contain'
-                        className="h-[33vh] aspect-square mt-8"
-                    />
-                </View>
+            <View className="flex-1 px-5 bg-white justify-center">
+                <AuthHeaderImage/>
 
                 <View className="gap-3">
                     <Text className="text-2xl font-bold text-primary">Verify Your Email</Text>

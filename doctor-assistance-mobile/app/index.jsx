@@ -10,10 +10,10 @@ const Welcome = () => {
     <View className="flex-1">
       <ImageBackground source={require('../assets/images/welcome.jpg')} resizeMode="cover" className="justify-end flex-1 items-center gap-3 p-5">
         <Text className="text-white text-2xl font-bold mb-24">Doctor Assistance</Text>
-        <Pressable className="justify-center items-center w-full h-14 rounded-md p-3 bg-primary mb-1" onPress={() => router.push("signIn")}>
+        <Pressable className="justify-center items-center w-full h-14 rounded-md p-3 bg-primary mb-1" onPress={() => router.push("login")}>
           <Text className="color-white text-base">Sign In</Text>
         </Pressable>
-        <Pressable className="justify-center items-center w-full h-14 rounded-md p-3 border border-white" onPress={() => router.push("signUp")}>
+        <Pressable className="justify-center items-center w-full h-14 rounded-md p-3 border border-white" onPress={() => router.push("register")}>
           <Text className="color-white text-base">Create Account</Text>
         </Pressable>
       </ImageBackground>

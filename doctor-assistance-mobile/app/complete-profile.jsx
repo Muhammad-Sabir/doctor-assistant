@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { View, Text, Alert, BackHandler, Button } from 'react-native';
-import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'expo-router';
 
-const Home = () => {
+import { useAuth } from '@/contexts/AuthContext';
+
+const CompleteProfile = () => {
 
   const { user, logout } = useAuth(); 
   const router =  useRouter();
@@ -31,7 +32,7 @@ const Home = () => {
   return (
     <View className="flex-1 justify-center items-center bg-gray-100 p-4">
       <Text className="text-3xl font-bold mb-4 text-gray-800">Patient</Text>
-      <Text className="text-lg text-gray-600 text-center mb-8">HomePage</Text>
+      <Text className="text-lg text-gray-600 text-center mb-8">Its a Complete Profile</Text>
       
       {user && (
         <View className="bg-white p-4 rounded shadow-md">
@@ -47,4 +48,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default CompleteProfile;
