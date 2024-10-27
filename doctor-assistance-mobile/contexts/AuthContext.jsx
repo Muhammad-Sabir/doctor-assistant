@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }) => {
     const forgotPassword = useCreateUpdateMutation({
         url: 'user/send-reset-password/',
         method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         fetchFunction: fetchApi,
         onSuccessMessage: 'Password reset email sent.',
         onErrorMessage: 'Failed to send reset email',
