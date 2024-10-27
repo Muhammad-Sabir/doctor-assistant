@@ -139,6 +139,18 @@ const validationRules = {
         test: (value) => !value || value.trim().length >= 15,
         message: "Title must be at least 15 characters long",
     },
+    medication_name: {
+        test: (value) => value.trim() !== "",
+        message: "Name is required",
+    },
+    medication_dosage: {
+        test: (value) => value.trim() !== "",
+        message: "Dosage is required",
+    },
+    medication_frequency: {
+        test: (value) => value.trim() !== "",
+        message: "Frequency is required",
+    },
 }
 
 export const validateField = (id, value, inputErrors, password = '') => {

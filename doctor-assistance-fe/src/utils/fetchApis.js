@@ -1,5 +1,3 @@
-import { toast } from 'sonner';
-
 import { getAuthStatus } from '@/utils/auth';
 
 const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
@@ -85,7 +83,6 @@ export const fetchWithAuth = async (url, options = {}) => {
                 console.log('Error after refeshing token:', refreshError);
                 localStorage.removeItem('user');
                 window.location.href = '/login';
-                toast.error(`Oops! Your session has expired. Please log in again to continue.`);
                 throw refreshError;
             }
         } else {
