@@ -2,13 +2,17 @@ import React, { createContext, useContext, useState } from 'react';
 import { useRouter } from 'expo-router';
 
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
-import { fetchApi } from '@/utils/fetchApis';
+import { fetchApi, fetchWithAuth } from '@/utils/fetchApis';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const router = useRouter();
     const [user, setUser] = useState(null);
+
+    const fetchWithUserAuth = (url, options) => {
+        return fetchWithAuth(url, options, user, setUser, router);
+    };
 
     const signupMutation = useCreateUpdateMutation({
         url: 'user/register/',
@@ -97,14 +101,27 @@ export const AuthProvider = ({ children }) => {
         onErrorMessage: 'Failed to send reset email',
     });
 
+    const completeProfile = useCreateUpdateMutation({
+        url: 'patients/',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        fetchFunction: fetchWithUserAuth,
+        onSuccessMessage: 'Profile Successfully Setup',
+        onErrorMessage: 'Profile Setup Failed',
+        onSuccess: () => {
+            setUser(prev => ({ ...prev, is_profile_completed: true }));
+            router.replace('(patient)');
+        }
+    });
+
     const logout = () => {
         setUser(null);
     };
 
     return (
         <AuthContext.Provider value={{
-            user, setUser, signupMutation, loginMutation, logout,
-            verifyAccount, resetPassword, sendVerificationEmail, forgotPassword
+            user, signupMutation, loginMutation, logout, completeProfile,
+            verifyAccount, resetPassword, sendVerificationEmail, forgotPassword, fetchWithUserAuth
         }}>
             {children}
         </AuthContext.Provider>

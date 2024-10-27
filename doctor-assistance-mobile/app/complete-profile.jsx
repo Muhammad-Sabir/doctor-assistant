@@ -8,15 +8,12 @@ import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useAuth } from '@/contexts/AuthContext';
 import AuthHeaderImage from '@/components/shared/AuthHeaderImage';
-import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
-import useFetchWithAuth from '@/hooks/useFetchWithAuth';
 
 const CompleteProfile = () => {
 
   const router = useRouter();
 
-  const { user, logout, setUser } = useAuth();
-  const { fetchWithAuth } = useFetchWithAuth();
+  const { user, logout, completeProfile } = useAuth();
 
   const [inputErrors, setInputErrors] = useState({});
   const [userDetails, setUserDetails] = useState({
@@ -26,19 +23,6 @@ const CompleteProfile = () => {
   });
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  const completeProfileMutation = useCreateUpdateMutation({
-    url: 'patients/',
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    fetchFunction: fetchWithAuth,
-    onSuccessMessage: 'Profile Successfully Setup',
-    onErrorMessage: 'Profile Setup Failed',
-    onSuccess: () => {
-      setUser(prev => ({ ...prev, is_profile_completed: true }));
-      router.replace('(patient)');
-    }
-  });
 
   const handleChange = (id, value) => {
     setUserDetails(prev => ({
@@ -70,7 +54,7 @@ const CompleteProfile = () => {
 
     console.log(userDetails);
     const { name, dob, gender } = userDetails;
-    completeProfileMutation.mutate(JSON.stringify({ name, date_of_birth: dob, gender }));
+    completeProfile.mutate(JSON.stringify({ name, date_of_birth: dob, gender }));
   };
 
   const handleBackPress = () => {
