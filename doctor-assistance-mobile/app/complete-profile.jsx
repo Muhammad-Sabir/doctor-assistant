@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Alert, BackHandler, Pressable } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useRouter } from 'expo-router';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
@@ -10,8 +9,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import AuthHeaderImage from '@/components/shared/AuthHeaderImage';
 
 const CompleteProfile = () => {
-
-  const router = useRouter();
 
   const { user, logout, completeProfile } = useAuth();
 

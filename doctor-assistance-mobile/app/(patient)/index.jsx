@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react';
 import { View, Text, Alert, BackHandler, Button } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'expo-router';
 
 const Home = () => {
 
   const { user, logout } = useAuth(); 
-  const router =  useRouter();
 
   const handleBackPress = () => {
     Alert.alert('Exit App', 'Are you sure you want to exit?', [
