@@ -36,16 +36,16 @@ class Command(BaseCommand):
         return {speciality.name: speciality for speciality in Speciality.objects.all()}
 
     def create_diseases(self, data):
-        return {
-            Disease.objects.get_or_create(name=disease.strip())[0]
-            for disease in data['diseases'].dropna().str.split(',').explode().unique() if disease
-        }
+        for disease_name in data['diseases'].dropna().str.split(',').explode().unique():
+            if disease_name:
+                Disease.objects.get_or_create(name=disease_name.strip())
+        return {disease.name: disease for disease in Disease.objects.all()}
 
     def create_degrees(self, data):
-        return {
-            Degree.objects.get_or_create(name=degree.strip())[0]
-            for degree in data['degrees'].dropna().str.split(',').explode().unique() if degree
-        }
+        for degree_name in data['degrees'].dropna().str.split(',').explode().unique():
+            if degree_name:
+                Degree.objects.get_or_create(name=degree_name.strip())
+        return {degree.name: degree for degree in Degree.objects.all()}
 
     def get_hospitals(self):
         return {hospital.name: hospital for hospital in Hospital.objects.all()}
@@ -75,6 +75,7 @@ class Command(BaseCommand):
                             for item in row[field].split(',')
                             if item.strip() in objects
                         ]
+                                    
                         getattr(doctor_profile, field).set(items)
 
                 doctor_profile.save()
