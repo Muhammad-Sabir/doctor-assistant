@@ -23,8 +23,6 @@ const Home = () => {
         handleBackPress
       );
       return () => backHandler.remove();
-    } else {
-      router.replace('login');
     }
   }, [user]);
 

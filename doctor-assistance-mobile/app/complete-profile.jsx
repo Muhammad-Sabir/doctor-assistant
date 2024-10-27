@@ -72,8 +72,6 @@ const CompleteProfile = () => {
         handleBackPress
       );
       return () => backHandler.remove();
-    } else {
-      router.replace('login');
     }
   }, [user]);
 
