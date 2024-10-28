@@ -19,7 +19,7 @@ const MainLayout = () => {
             <Stack.Screen name="verify-email" />
             <Stack.Screen name="verify-account/[uid]/[token]"/>
             <Stack.Screen name="complete-profile"/>
-            <Stack.Screen name="(patient)/index" />
+            <Stack.Screen name="(patient)" />
         </Stack>
     );
 };
