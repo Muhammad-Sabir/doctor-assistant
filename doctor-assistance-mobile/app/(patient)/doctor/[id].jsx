@@ -4,19 +4,23 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { StarIcon, Stethoscope, GraduationCap, CircleCheckBig, CalendarDays } from 'lucide-react-native';
 
 import { useFetchQuery } from '@/hooks/useFetchQuery';
-import { fetchWithAuth } from '@/utils/fetchApis';
+import { useAuth } from '@/contexts/AuthContext';
 import banner from "@/assets/images/profileBanner.webp";
 import ListGrid from '@/components/shared/ListGrid';
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 import HospitalCard from '@/components/shared/HopsitalCard';
+import AddReviewModal from '@/components/modals/AddReview';
+import BookAppointment from '@/components/modals/BookAppointment';
 
 export default function DoctorDetail() {
+
     const { id } = useLocalSearchParams();
+    const { fetchWithUserAuth } = useAuth();
 
     const { data, isFetching, isError, error } = useFetchQuery({
         url: `doctors/${id}`,
         queryKey: ['doctorDetails', id],
-        fetchFunction: fetchWithAuth,
+        fetchFunction: fetchWithUserAuth,
     });
 
     if (isFetching) return <Text>Loading....</Text>;
@@ -38,7 +42,7 @@ export default function DoctorDetail() {
                     <Image source={banner} style={{ height: 200 }} />
                 </View>
 
-                <View className="w-full max-w-7xl mx-auto px-4 -mt-20 bg-white rounded-lg shadow-md">
+                <View className="w-full max-w-7xl mx-auto px-5 -mt-20 bg-white rounded-lg shadow-md">
                     <View className="flex items-center justify-center mt-4">
                         <Image source={{ uri: getDoctorImageUrl(data.file_url) }}
                             alt={data.name} resizeMode='contain'
@@ -62,14 +66,7 @@ export default function DoctorDetail() {
                             </View>
                         </View>
 
-                        <View className="flex flex-row items-center justify-center gap-4">
-                            <TouchableOpacity className="mt-4 bg-primary text-primary justify-center items-center px-4 h-10 rounded-md p-2">
-                                <Text className="text-white font-bold">Visit Clinic</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity className="mt-4 justify-center items-center h-10 rounded-md p-2 px-4" style={{ backgroundColor: 'rgb(219 234 254)' }}>
-                                <Text className="text-primary font-bold">Consult Online</Text>
-                            </TouchableOpacity>
-                        </View>
+                        <BookAppointment doctorId={data.id} doctorName={data.name} />
                     </View>
 
                     <View className="border-t border-gray-200 my-4" />
@@ -97,18 +94,16 @@ export default function DoctorDetail() {
                     <Text className="text-md font-semibold text-primary">Diseases Treated</Text>
                     <ListGrid data={data.diseases} icon={CircleCheckBig} color="green" />
 
-                    <View className="border-t border-gray-200 my-4 mb-3" />
+                    <View className="border-t border-gray-200 my-4 mb-4" />
                     <View className="flex flex-row items-center justify-between">
                         <Text className="text-md font-semibold text-primary mb-4 mt-2">Reviews</Text>
-                        <TouchableOpacity className=" bg-primary text-primary justify-center items-center px-4 h-10 rounded-md p-2">
-                            <Text className="text-white font-bold">Add Review</Text>
-                        </TouchableOpacity>
+                        <AddReviewModal doctorId={data.id} doctorName={data.name} />
                     </View>
                     <View className='mb-3'>
                         {data.reviews.length > 0 ? (
-                            <View className="flex mt-3">
+                            <View className="flex mt-4">
                                 {data.reviews.map((review) => (
-                                    <View key={review.id} className="mb-5 p-4 bg-white border border-gray-300 rounded-md shadow hover:border-primary">
+                                    <View key={review.id} className="mb-5 p-4 bg-white border border-gray-300 rounded-md hover:border-primary">
                                         <View className="flex flex-row justify-between">
                                             <View className="flex flex-row items-center mb-3">
                                                 {Array(review.rating).fill(0).map((_, index) => (
