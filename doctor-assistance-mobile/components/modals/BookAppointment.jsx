@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Modal, Pressable } from 'react-native';
-import { StarIcon, X, TriangleAlert } from 'lucide-react-native';
+import { X, TriangleAlert } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { useAuth } from '@/contexts/AuthContext';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
@@ -80,7 +81,7 @@ export default function BookAppointment({ doctorId, doctorName }) {
                 <TouchableOpacity className="mt-4 bg-primary text-primary justify-center items-center px-4 h-10 rounded-md p-2"
                     onPress={() => {
                         setIsModalVisible(true)
-                        setAppointmentMode('online')
+                        setAppointmentMode('physical')
                     }}>
                     <Text className="text-white font-bold">Visit Clinic</Text>
                 </TouchableOpacity>

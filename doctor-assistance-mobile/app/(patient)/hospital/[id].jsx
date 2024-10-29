@@ -53,7 +53,7 @@ export default function HospitalDetail() {
                     <Image source={banner} style={{ height: 200 }} />
                 </View>
 
-                <View className="w-full max-w-7xl mx-auto px-4 -mt-20 bg-white rounded-lg shadow-md">
+                <View className="w-full max-w-7xl mx-auto px-5 -mt-20 bg-white rounded-lg shadow-md">
                     <View className="flex items-center justify-center mt-4">
                         <Image source={{ uri: hospitalData.logo_url }}
                             alt={hospitalData.name} resizeMode='contain'

@@ -3,6 +3,8 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
+import BookAppointment from '@/components/modals/BookAppointment';
+
 const DoctorCard = ({ doctor }) => {
     const router = useRouter();
     const baseUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -64,14 +66,7 @@ const DoctorCard = ({ doctor }) => {
                 </View>
             </TouchableOpacity>
 
-            <View className="flex flex-row items-center justify-center gap-4">
-                <TouchableOpacity className="mt-6 bg-primary text-primary justify-center items-center px-4 h-10 rounded-md p-2">
-                    <Text className="text-white font-bold">Visit Clinic</Text>
-                </TouchableOpacity>
-                <TouchableOpacity className="mt-6 justify-center items-center h-10 rounded-md p-2 px-4" style={{backgroundColor: 'rgb(219 234 254)' }}>
-                    <Text className="text-primary font-bold">Consult Online</Text>
-                </TouchableOpacity>
-            </View>
+            <BookAppointment doctorId={doctor.id} doctorName={doctor.name} />
         </View>
     );
 };
