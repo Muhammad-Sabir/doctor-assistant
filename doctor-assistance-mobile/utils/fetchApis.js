@@ -1,6 +1,4 @@
-import {API_BASE_URL} from '@env'
-
-const baseUrl = API_BASE_URL;
+const baseUrl = process.env.EXPO_PUBLIC_API_URL;
 
 export const fetchApi = async (url, options = {}) => {
 

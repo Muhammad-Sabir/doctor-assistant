@@ -74,6 +74,52 @@ const PatientLayout = () => {
                     headerLeft: () => (HeaderBackButton(router)),
                 }}
             />
+            <Drawer.Screen
+                name="search-results"
+                options={{
+                    title: 'Doctor Search Results',
+                    drawerItemStyle: { display: 'none' },
+                    headerLeft: () => (HeaderBackButton(router)),
+                    headerStyle: {
+                        elevation: 4,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 2,
+                    },
+                }}
+            />
+            <Drawer.Screen
+                name="doctor/[id]"
+                options={{
+                    title: 'Doctor Details',
+                    drawerItemStyle: { display: 'none' },
+                    headerLeft: () => (HeaderBackButton(router)),
+                    headerStyle: {
+                        elevation: 4,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 2,
+                    },
+                }}
+            />
+
+            <Drawer.Screen
+                name="hospital/[id]"
+                options={{
+                    title: 'Hospital Details',
+                    drawerItemStyle: { display: 'none' },
+                    headerLeft: () => (HeaderBackButton(router)),
+                    headerStyle: {
+                        elevation: 4,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 2,
+                    },
+                }}
+            />
         </Drawer>
     )
 }

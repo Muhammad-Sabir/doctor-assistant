@@ -5,6 +5,7 @@ import { Bell } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 
 import { useAuth } from '@/contexts/AuthContext';
+import HospitalSearchBar from '@/components/dashboard/HospitalSearchBar';
 
 const Home = () => {
 
@@ -36,7 +37,9 @@ const Home = () => {
     };
 
     return (
-        <View className="flex-1 justify-center items-center bg-gray-100 p-4">
+        <View className=" bg-white">
+            <HospitalSearchBar/>
+
             <Text className="text-3xl font-bold mb-4 text-gray-800">Patient</Text>
             <Text className="text-lg text-gray-600 text-center mb-8">HomePage</Text>
 
