@@ -49,6 +49,34 @@ const PatientLayout = () => {
                     headerLeft: () => (HeaderBackButton(router)),
                 }}
             />
+
+            <Drawer.Screen
+                name="dependents"
+                options={{
+                    title: 'Dependent Patients',
+                    drawerItemStyle: { display: 'none' },
+                    headerLeft: () => (HeaderBackButton(router)),
+                }}
+            />
+
+            <Drawer.Screen
+                name="allergies"
+                options={{
+                    title: 'Allergies Details',
+                    drawerItemStyle: { display: 'none' },
+                    headerLeft: () => (HeaderBackButton(router)),
+                }}
+            />
+
+            <Drawer.Screen
+                name="notifications"
+                options={{
+                    title: 'Notifications',
+                    drawerItemStyle: { display: 'none' },
+                    headerLeft: () => (HeaderBackButton(router)),
+                }}
+            />
+
             <Drawer.Screen
                 name="reviews"
                 options={{
