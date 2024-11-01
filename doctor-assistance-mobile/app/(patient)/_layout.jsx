@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { View, TouchableOpacity } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { ArrowLeft, MessageCircleMore, Pill, Bell } from 'lucide-react-native';
+import { ArrowLeft, Pill, Bell, ClipboardPlus } from 'lucide-react-native';
 
 import CustomDrawerContent from '@/components/ui/CustomDrawerContent';
 
@@ -27,7 +27,7 @@ const PatientLayout = () => {
             drawerContent={(props) => <CustomDrawerContent {...props} />}
             screenOptions={{
                 drawerLabelStyle: { marginLeft: -20, color: 'hsl(203, 87%, 30%)' },
-                drawerActiveTintColor: 'gray', headerTintColor: 'hsl(203, 87%, 30%)'
+                drawerActiveTintColor: 'gray', headerTintColor: 'hsl(203, 87%, 30%)',
             }}>
             <Drawer.Screen
                 name="(tabs)"
@@ -60,15 +60,6 @@ const PatientLayout = () => {
             />
 
             <Drawer.Screen
-                name="allergies"
-                options={{
-                    title: 'Allergies Details',
-                    drawerItemStyle: { display: 'none' },
-                    headerLeft: () => (HeaderBackButton(router)),
-                }}
-            />
-
-            <Drawer.Screen
                 name="notifications"
                 options={{
                     title: 'Notifications',
@@ -87,11 +78,13 @@ const PatientLayout = () => {
                 }}
             />
             <Drawer.Screen
-                name="chats"
+                name="appointments"
                 options={{
-                    title: 'My Chats',
-                    drawerIcon: () => <MessageCircleMore size={24} color='hsl(203, 87%, 30%)' />,
+                    title: 'My Appointments',
+                    drawerIcon: () => <ClipboardPlus size={24} color='hsl(203, 87%, 30%)' />,
                     headerLeft: () => (HeaderBackButton(router)),
+                    headerShown: false
+                    
                 }}
             />
             <Drawer.Screen
@@ -130,6 +123,15 @@ const PatientLayout = () => {
                         shadowOpacity: 0.2,
                         shadowRadius: 2,
                     },
+                }}
+            />
+
+            <Drawer.Screen
+                name="allergies/[id]"
+                options={{
+                    title: 'Allergies Details',
+                    drawerItemStyle: { display: 'none' },
+                    headerLeft: () => (HeaderBackButton(router)),
                 }}
             />
 

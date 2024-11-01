@@ -16,7 +16,7 @@ const AppointmentCard = ({ appointment }) => {
             </View>
 
             <Text className="text-primary font-medium mt-2">{appointment.message}</Text>
-            <Text className="text-sm mb-1">Doctor: {appointment.doctor_name}</Text>
+            <Text className="text-gray-700 mb-1">Doctor: {appointment.doctor_name}</Text>
 
             {appointment.status === 'rejected' && appointment.cancellation_reason && (
                 <Text className="text-red-500 text-sm mb-1">Reason of Rejection: {appointment.cancellation_reason}</Text>
@@ -25,8 +25,8 @@ const AppointmentCard = ({ appointment }) => {
             <View className="mt-2 flex flex-row justify-between items-center">
 
                 <View className="flex flex-row gap-2 items-center py-1 px-2 bg-accent rounded-md">
-                    <BadgeCheck color={'blue'} size={15}/>
-                    <Text className='text-xs font-medium text-primary'>{appointment.appointment_mode}</Text>
+                    <BadgeCheck color={'hsl(203, 87%, 30%)'} size={17}/>
+                    <Text className='text-sm font-medium text-primary'>{appointment.appointment_mode}</Text>
                 </View>
 
                 {appointment.status === 'pending' && (

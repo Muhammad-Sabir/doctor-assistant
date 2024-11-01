@@ -78,7 +78,7 @@ export default function UpdateReview({ doctorName, review }) {
                 }}
             >
                 <View className='flex-1 relative items-center justify-center' style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
-                    <View className="bg-white rounded-md p-5 shadow-lg" style={{ width: 390 }} >
+                    <View className="bg-white rounded-md p-5" style={{ width: 390 }} >
 
                         <View className='flex flex-row justify-between'>
                             <Text className="text-xl font-bold text-primary mb-1">Update Review</Text>

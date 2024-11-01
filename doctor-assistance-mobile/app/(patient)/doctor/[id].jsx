@@ -42,7 +42,7 @@ export default function DoctorDetail() {
                     <Image source={banner} style={{ height: 200 }} />
                 </View>
 
-                <View className="w-full max-w-7xl mx-auto px-5 -mt-20 bg-white rounded-lg shadow-md">
+                <View className="w-full max-w-7xl mx-auto px-5 -mt-20 bg-white rounded-lg">
                     <View className="flex items-center justify-center mt-4">
                         <Image source={{ uri: getDoctorImageUrl(data.file_url) }}
                             alt={data.name} resizeMode='contain'

@@ -5,7 +5,7 @@ const CustomKeyboardView = ({children}) => {
 	return (
 		<KeyboardAvoidingView
 			behavior='height'
-			className="flex-1"
+			className="flex-1 bg-white"
 		>
 			<ScrollView 
 				contentContainerStyle={{ flexGrow: 1 }}

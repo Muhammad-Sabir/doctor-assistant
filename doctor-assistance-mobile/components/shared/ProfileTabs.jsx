@@ -26,13 +26,13 @@ const ProfileTabs = ({ activeTab, setActiveTab, tabs }) => {
     };
 
     return (
-        <View className="flex-row justify-center items-center bg-gray-200 rounded-full p-1 mb-4">
+        <View className="flex-row justify-center items-center bg-gray-200 rounded-full p-1 mb-2 mt-2">
             {tabs.map(tab => (
                 <TouchableOpacity
                     key={tab.key}
                     onPress={() => handleTabClick(tab.key)}
                     className={`flex-1 py-2 rounded-full ${activeTab === tab.key ? 'bg-white' : 'bg-transparent'}`}>
-                    <Text className={`text-center font-semibold ${activeTab === tab.key ? 'text-black' : 'text-gray-500'}`}>
+                    <Text className={`text-center font-semibold ${activeTab === tab.key ? 'text-primary' : 'text-gray-500'}`}>
                         {tab.label}
                     </Text>
                 </TouchableOpacity>

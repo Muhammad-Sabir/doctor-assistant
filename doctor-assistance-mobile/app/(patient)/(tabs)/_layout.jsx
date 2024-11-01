@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tabs } from 'expo-router';
-import { CircleUser, ClipboardPlus, House, UserSearch } from 'lucide-react-native';
+import { CircleUser, House, MessageCircleMore, UserSearch } from 'lucide-react-native';
 
 import { TabIcon } from '@/components/shared/TabIcon';
 
@@ -20,8 +20,8 @@ const PatientTabs = () => {
                 options={{ tabBarIcon: ({ focused }) => TabIcon(UserSearch, focused, 'Doctors') }}
             />
             <Tabs.Screen
-                name="appointments"
-                options={{ tabBarIcon: ({ focused }) => TabIcon(ClipboardPlus, focused, 'Appointments') }}
+                name="chats"
+                options={{ tabBarIcon: ({ focused }) => TabIcon(MessageCircleMore, focused, 'Chats') }}
             />
             <Tabs.Screen
                 name="profile"
