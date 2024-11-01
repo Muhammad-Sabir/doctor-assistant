@@ -17,7 +17,7 @@ const DoctorCard = ({ doctor }) => {
     };
 
     return (
-        <View style={{ marginBottom: 17, padding: 17 }} className="border border-gray-300 rounded-md hover:shadow-md hover:border-primary transition-shadow duration-500 w-full max-w-[90vw] sm:max-w-[350px] mx-auto relative">
+        <View style={{ marginBottom: 17, padding: 17 }} className="border border-gray-300 rounded-md hover:shadow-md hover:border-primary transition-shadow duration-500 w-full mx-auto relative">
             <TouchableOpacity onPress={() => router.push(`/(patient)/doctor/${doctor.id}`)}>
                 <View className="text-xs font-medium flex-row items-center rounded-md px-3 absolute top-0 right-0 bg-orange-100" style={{ paddingVertical: 3 }}>
                     <FontAwesome name="star" size={16} color="orange" />

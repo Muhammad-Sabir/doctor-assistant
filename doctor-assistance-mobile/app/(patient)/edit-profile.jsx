@@ -3,7 +3,7 @@ import { View, Text, Image, Pressable, TextInput, TouchableOpacity } from 'react
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useQueryClient } from '@tanstack/react-query';
-import { TriangleAlert } from 'lucide-react-native';
+import { CheckCircle, Circle, TriangleAlert } from 'lucide-react-native';
 
 import userIcon from '@/assets/images/user.png';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
@@ -12,6 +12,8 @@ import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { useAuth } from '@/contexts/AuthContext';
 import banner from "@/assets/images/profileBanner.webp";
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
+import { HeaderBackButton } from '@/components/ui/HeaderBackButton';
+import Loading from '@/components/shared/Loading';
 
 export default function Profile() {
   const queryClient = useQueryClient();
@@ -82,107 +84,130 @@ export default function Profile() {
     }
   }, [data]);
 
-  if (isFetching) return <Text>Loading....</Text>;
+  if (isFetching) return <Loading />;
   if (isError) return <Text className="text-red-500">Error: {error.message}</Text>;
 
   console.log(userDetails);
 
   return (
-    <CustomKeyboardView>
-      <View className="flex-1 bg-white mx-1">
-        <View style={{ position: 'relative' }}>
-          <Image source={banner} style={{ height: 200 }} />
-        </View>
-
-        <View className="flex-1 w-full max-w-7xl mx-auto px-5 -mt-20 bg-white rounded-md">
-          <View className="flex items-center justify-center mt-4">
-            <Image source={userIcon}
-              alt={data.name} resizeMode='contain'
-              style={{ position: 'absolute', top: -100, height: 150, width: 150, objectFit: 'cover', borderRadius: 100, backgroundColor: 'white' }}
-            />
-          </View>
-
-          <View className="flex items-center justify-center gap-3 mb-5" style={{ marginTop: 70 }}>
-            <View className="items-center">
-              <Text className="font-bold text-xl text-primary text-center">{data?.results[0].name}</Text>
-              <View className="flex flex-col lg:flex-row lg:gap-3 mt-2 items-center text-sm text-gray-500">
-                <View className="flex flex-row items-center gap-2">
-                  <Text className='text-gray-500'>{user?.username}</Text>
-                </View>
-                <View className="flex flex-row items-center mt-2 gap-1">
-                  <Text className="text-gray-500">Patient ID: {data?.results[0].id} </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          <View className="border-t border-gray-200 my-4" />
-
-          <View>
-            <View className="gap-3 mt-3 mb-4">
-              <Text className="text-black">Name</Text>
-              <TextInput
-                className={`w-full py-2 px-4 rounded-md border ${inputErrors.name ? 'border-red-500' : 'border-gray-300'}`}
-                placeholder="Enter your name"
-                value={userDetails.name}
-                onChangeText={(value) => handleChange("name", value)}
-                onBlur={() => handleBlur("name", userDetails.name)}
-              />
-              {inputErrors.name && (
-                <View className="flex flex-row items-center text-red-500 text-sm gap-2 -mt-2">
-                  <TriangleAlert size={13} color="red" />
-                  <Text className='text-sm text-red-500'>{inputErrors.name} </Text>
-                </View>
-              )}
-            </View>
-
-            <View className="gap-3 mb-4">
-              <Text className="text-black">Date of Birth</Text>
-              <Pressable onPress={() => setShowDatePicker(true)}>
-                <View className={`w-full py-3 px-4 rounded-md border ${inputErrors.birthDate ? 'border-red-500' : 'border-gray-300'}`}>
-                  <Text className={userDetails.dob ? "text-black" : "text-gray-400"}>{userDetails.dob || 'Select your Date of Birth'} </Text>
-                </View>
-              </Pressable>
-              {showDatePicker && (
-                <DateTimePicker
-                  value={userDetails.dob ? new Date(userDetails.dob) : new Date()}
-                  mode="date"
-                  display="default"
-                  onChange={onDateChange}
-                />
-              )}
-              {inputErrors.birthDate && (
-                <View className="flex flex-row items-center text-red-500 text-sm gap-2 -mt-2">
-                  <TriangleAlert size={13} color="red" />
-                  <Text className='text-sm text-red-500'>{inputErrors.birthDate} </Text>
-                </View>
-              )}
-            </View>
-
-            <View className="gap-3">
-              <Text className="text-black">Gender</Text>
-              <View className="flex flex-row -mt-3">
-                <Pressable onPress={() => handleChange("gender", "M")}>
-                  <View className={`flex-row items-center p-2  mr-3`}>
-                    <MaterialIcons name={userDetails.gender === "M" ? "radio-button-checked" : "radio-button-unchecked"} size={20} color="hsl(203, 87%, 30%)" />
-                    <Text className="ml-2">Male</Text>
-                  </View>
-                </Pressable>
-                <Pressable onPress={() => handleChange("gender", "F")}>
-                  <View className={`flex-row items-center p-2`}>
-                    <MaterialIcons name={userDetails.gender === "F" ? "radio-button-checked" : "radio-button-unchecked"} size={20} color="hsl(203, 87%, 30%)" />
-                    <Text className="ml-2">Female</Text>
-                  </View>
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <TouchableOpacity className="bg-primary p-3 rounded-md items-center" style={{ position: 'absolute', bottom: 20, left: 20, right: 20 }} onPress={handleSubmit}>
-          <Text className="text-white font-bold">Update</Text>
-        </TouchableOpacity>
+    <>
+      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 65, marginTop: 40 }}>
+        <HeaderBackButton />
+        <Text className="text-xl font-semibold text-primary flex-1 text-center">Edit Profile</Text>
       </View>
-    </CustomKeyboardView>
+
+      <CustomKeyboardView>
+        {isFetching && <Loading />}
+        {isError && <Text className="text-center mt-4 text-red-500">Error: {error.message}</Text>}
+
+        {!isFetching && !isError && data && (
+          <>
+            <View className="flex-1 bg-white mx-1">
+              <View style={{ position: 'relative' }}>
+                <Image source={banner} style={{ height: 200 }} />
+              </View>
+
+              <View className="flex-1 w-full max-w-7xl mx-auto px-5 -mt-20 bg-white rounded-md">
+                <View className="flex items-center justify-center mt-4">
+                  <Image source={userIcon}
+                    alt={data.name} resizeMode='contain'
+                    style={{ position: 'absolute', top: -100, height: 150, width: 150, objectFit: 'cover', borderRadius: 100, backgroundColor: 'white' }}
+                  />
+                </View>
+
+                <View className="flex items-center justify-center gap-3 mb-5" style={{ marginTop: 70 }}>
+                  <View className="items-center">
+                    <Text className="font-bold text-xl text-primary text-center">{data?.results[0].name}</Text>
+                    <View className="flex flex-col lg:flex-row lg:gap-3 mt-2 items-center text-sm text-gray-500">
+                      <View className="flex flex-row items-center gap-2">
+                        <Text className='text-gray-500'>{user?.username}</Text>
+                      </View>
+                      <View className="flex flex-row items-center mt-2 gap-1">
+                        <Text className="text-gray-500">Patient ID: {data?.results[0].id} </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+
+                <View className="border-t border-gray-200 my-4" />
+
+                <View>
+                  <View className="gap-3 mt-3 mb-4">
+                    <Text className="text-black">Name</Text>
+                    <TextInput
+                      className={`w-full py-2 px-4 rounded-md border ${inputErrors.name ? 'border-red-500' : 'border-gray-300'}`}
+                      placeholder="Enter your name"
+                      value={userDetails.name}
+                      onChangeText={(value) => handleChange("name", value)}
+                      onBlur={() => handleBlur("name", userDetails.name)}
+                    />
+                    {inputErrors.name && (
+                      <View className="flex flex-row items-center text-red-500 text-sm gap-2 -mt-2">
+                        <TriangleAlert size={13} color="red" />
+                        <Text className='text-sm text-red-500'>{inputErrors.name} </Text>
+                      </View>
+                    )}
+                  </View>
+
+                  <View className="gap-3 mb-4">
+                    <Text className="text-black">Date of Birth</Text>
+                    <Pressable onPress={() => setShowDatePicker(true)}>
+                      <View className={`w-full py-3 px-4 rounded-md border ${inputErrors.birthDate ? 'border-red-500' : 'border-gray-300'}`}>
+                        <Text className={userDetails.dob ? "text-black" : "text-gray-400"}>{userDetails.dob || 'Select your Date of Birth'} </Text>
+                      </View>
+                    </Pressable>
+                    {showDatePicker && (
+                      <DateTimePicker
+                        value={userDetails.dob ? new Date(userDetails.dob) : new Date()}
+                        mode="date"
+                        display="default"
+                        onChange={onDateChange}
+                      />
+                    )}
+                    {inputErrors.birthDate && (
+                      <View className="flex flex-row items-center text-red-500 text-sm gap-2 -mt-2">
+                        <TriangleAlert size={13} color="red" />
+                        <Text className='text-sm text-red-500'>{inputErrors.birthDate} </Text>
+                      </View>
+                    )}
+                  </View>
+
+                  <View className="gap-3">
+                    <Text className="text-black">Gender</Text>
+                    <View className="flex flex-row -mt-3">
+                      <Pressable onPress={() => handleChange('gender', 'M')}>
+                        <View className="flex-row items-center p-2 mr-3">
+                          {userDetails.gender === 'M' ? (
+                            <CheckCircle size={18} color="hsl(203, 87%, 30%)" />
+                          ) : (
+                            <Circle size={18} color="hsl(203, 87%, 30%)" />
+                          )}
+                          <Text className="ml-2 text-gray-700">Male</Text>
+                        </View>
+                      </Pressable>
+                      <Pressable onPress={() => handleChange('gender', 'F')}>
+                        <View className="flex-row items-center p-2 mr-3">
+                          {userDetails.gender === 'F' ? (
+                            <CheckCircle size={18} color="hsl(203, 87%, 30%)" />
+                          ) : (
+                            <Circle size={18} color="hsl(203, 87%, 30%)" />
+                          )}
+                          <Text className="ml-2 text-gray-700">Female</Text>
+                        </View>
+                      </Pressable>
+                    </View>
+                  </View>
+                </View>
+              </View>
+
+              <TouchableOpacity className="bg-primary p-3 rounded-md items-center" style={{ position: 'absolute', bottom: 20, left: 20, right: 20 }} onPress={handleSubmit}>
+                <Text className="text-white font-bold">Update</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+
+      </CustomKeyboardView>
+    </>
   );
 }

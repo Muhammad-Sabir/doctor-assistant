@@ -65,8 +65,8 @@ export default function AddDependent() {
 
     return (
         <View>
-            <TouchableOpacity onPress={() => setIsModalVisible(true)} className='mb-3'>
-                <Plus size={20} color='blue' />
+            <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                <Plus size={24} color="hsl(203, 87%, 30%)" />
             </TouchableOpacity>
 
             <Modal animationType="slide" transparent={true} visible={isModalVisible}
@@ -75,7 +75,7 @@ export default function AddDependent() {
                 }}
             >
                 <View className='flex-1 relative items-center justify-center' style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
-                    <View className="bg-white rounded-md p-5 shadow-lg" style={{ width: 390 }} >
+                    <View className="bg-white rounded-md p-5" style={{ width: 390 }} >
 
                         <View className='flex flex-row justify-between'>
                             <Text className="text-xl font-bold text-primary mb-1">Add Dependent</Text>

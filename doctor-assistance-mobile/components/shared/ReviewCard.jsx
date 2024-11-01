@@ -21,7 +21,7 @@ const ReviewCard = ({ review }) => {
 
     return (
 
-        <View className="p-4 bg-white border border-gray-300 rounded-lg mb-4 shadow hover:shadow-md">
+        <View className="p-4 bg-white border border-gray-300 rounded-md mb-4">
             <Text className="text-base text-primary">Reviewed {doctorName}</Text>
             <View className="flex flex-row mt-3 mb-1 gap-1">
                 {Array(review.rating).fill(0).map((_, index) => (

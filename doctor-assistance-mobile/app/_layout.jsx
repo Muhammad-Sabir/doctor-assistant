@@ -6,22 +6,25 @@ import { Toaster } from 'sonner-native';
 
 import "@/global.css";
 import { AuthProvider } from '@/contexts/AuthContext';
-import { StatusBar } from 'expo-status-bar'
+import { StatusBar } from 'expo-status-bar';
 
 const MainLayout = () => {
 
     return (
-        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: 'white' } }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="login" />
-            <Stack.Screen name="register" />
-            <Stack.Screen name="forget-password" />
-            <Stack.Screen name="reset-password/[uid]/[token]" />
-            <Stack.Screen name="verify-email" />
-            <Stack.Screen name="verify-account/[uid]/[token]" />
-            <Stack.Screen name="complete-profile" />
-            <Stack.Screen name="(patient)" />
-        </Stack>
+        <>
+            <StatusBar style='light' backgroundColor="hsl(203, 87%, 30%)" />
+            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: 'white' } }}>
+                <Stack.Screen name="index" />
+                <Stack.Screen name="login" />
+                <Stack.Screen name="register" />
+                <Stack.Screen name="forget-password" />
+                <Stack.Screen name="reset-password/[uid]/[token]" />
+                <Stack.Screen name="verify-email" />
+                <Stack.Screen name="verify-account/[uid]/[token]" />
+                <Stack.Screen name="complete-profile" />
+                <Stack.Screen name="(patient)" />
+            </Stack>
+        </>
     );
 };
 
@@ -32,7 +35,6 @@ const RootLayout = () => {
         <GestureHandlerRootView style={{ flex: 1 }}>
             <QueryClientProvider client={queryClient}>
                 <AuthProvider>
-                    <StatusBar style='light' backgroundColor="hsl(203, 87%, 30%)" />
                     <MainLayout />
                     <Toaster />
                 </AuthProvider>

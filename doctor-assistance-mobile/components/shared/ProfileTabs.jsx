@@ -26,7 +26,7 @@ const ProfileTabs = ({ activeTab, setActiveTab, tabs }) => {
     };
 
     return (
-        <View className="flex-row justify-center items-center bg-gray-200 rounded-full p-1 mb-2 mt-2">
+        <View className="flex-row justify-center items-center bg-gray-200 rounded-full p-1 mb-3">
             {tabs.map(tab => (
                 <TouchableOpacity
                     key={tab.key}
