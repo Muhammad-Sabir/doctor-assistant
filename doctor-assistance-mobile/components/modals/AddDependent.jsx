@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Modal, Pressable } from 'react-native';
 import { X } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -60,8 +60,14 @@ export default function AddDependent() {
             return;
         }
         const { name, dob, gender } = userDetails;
-        addDependentMutation.mutate(JSON.stringify({ name, date_of_birth: dob, gender }))
+        addDependentMutation.mutate(JSON.stringify({ name, date_of_birth: dob, gender }));
+        setIsModalVisible(false);
+        resetForm();
     };
+
+    const resetForm = () => {
+        setUserDetails({ name: "", dob: "", gender: "M" });
+    }
 
     return (
         <View>
@@ -72,6 +78,7 @@ export default function AddDependent() {
             <Modal animationType="slide" transparent={true} visible={isModalVisible}
                 onRequestClose={() => {
                     setIsModalVisible(false);
+                    resetForm();
                 }}
             >
                 <View className='flex-1 relative items-center justify-center' style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
@@ -81,6 +88,7 @@ export default function AddDependent() {
                             <Text className="text-xl font-bold text-primary mb-1">Add Dependent</Text>
                             <Pressable onPress={() => {
                                 setIsModalVisible(false);
+                                resetForm();
                             }}>
                                 <X size={24} color="grey" />
                             </Pressable>
@@ -152,6 +160,7 @@ export default function AddDependent() {
                             <TouchableOpacity
                                 onPress={() => {
                                     setIsModalVisible(false);
+                                    resetForm();
                                 }}
                                 className="mr-4 bg-gray-200 px-4 py-2 rounded-md"
                             >

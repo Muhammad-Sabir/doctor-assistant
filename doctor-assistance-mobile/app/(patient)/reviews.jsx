@@ -38,7 +38,7 @@ const MyReviews = () => {
 
   return (
     <>
-      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 65, marginTop: 40 }}>
+      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
         <HeaderBackButton />
         <Text className="text-xl font-semibold text-primary flex-1 text-center">My Reviews</Text>
       </View>

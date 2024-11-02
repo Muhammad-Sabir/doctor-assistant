@@ -1,28 +1,21 @@
 import React from 'react'
 import { useRouter } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
-import { View, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { ArrowLeft, Pill, Bell, ClipboardPlus } from 'lucide-react-native';
+import { Pill, Bell, ClipboardPlus } from 'lucide-react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import CustomDrawerContent from '@/components/ui/CustomDrawerContent';
 
-const HeaderBackButton = (router) => (
-    <TouchableOpacity onPress={() => { router.back() }}>
-        <View className='ml-4 mr-4'>
-            <ArrowLeft size={24} color="hsl(203, 87%, 30%)" />
-        </View>
-    </TouchableOpacity>
-);
-
 const PatientLayout = () => {
+
     const router = useRouter();
 
     const handleNotificationPress = () => {
-        console.log("Notification Pressed");
-        router.push('/(patient)/edit-profile');
+        router.push('/(patient)/notifications');
     };
+
     return (
         <>
             <StatusBar style='light' backgroundColor="hsl(203, 87%, 30%)" />
@@ -42,6 +35,16 @@ const PatientLayout = () => {
                                 <Bell size={24} color="hsl(203, 87%, 30%)" />
                             </TouchableOpacity>
                         ),
+                        headerTitleAlign: 'center', 
+                        headerStyle: {
+                            backgroundColor: 'white',
+                            borderBottomWidth: 1,
+                            borderBottomColor: '#D1D5DB',
+                            height: 99,
+                        },
+                        headerTitleStyle: {
+                            fontSize: 18,
+                        },
                     }}
                 />
                 <Drawer.Screen
@@ -67,7 +70,6 @@ const PatientLayout = () => {
                     options={{
                         title: 'Notifications',
                         drawerItemStyle: { display: 'none' },
-                        headerLeft: () => (HeaderBackButton(router)),
                     }}
                 />
 
@@ -92,7 +94,6 @@ const PatientLayout = () => {
                     options={{
                         title: 'My Prescription',
                         drawerIcon: () => <Pill size={24} color='hsl(203, 87%, 30%)' />,
-                        headerLeft: () => (HeaderBackButton(router)),
                     }}
                 />
                 <Drawer.Screen
@@ -117,7 +118,7 @@ const PatientLayout = () => {
                     options={{
                         title: 'Allergies Details',
                         drawerItemStyle: { display: 'none' },
-                        headerLeft: () => (HeaderBackButton(router)),
+                        headerShown:false
                     }}
                 />
 

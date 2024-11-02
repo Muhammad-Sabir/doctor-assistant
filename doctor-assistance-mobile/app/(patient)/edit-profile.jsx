@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, Image, Pressable, TextInput, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { CheckCircle, Circle, TriangleAlert } from 'lucide-react-native';
+import { useFocusEffect } from 'expo-router';
 
 import userIcon from '@/assets/images/user.png';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
@@ -74,24 +74,21 @@ export default function Profile() {
     updateProfileMutation.mutate(JSON.stringify({ name, date_of_birth: dob, gender }));
   };
 
-  useEffect(() => {
-    if (data && data.results.length > 0) {
-      const patient = data.results[0];
-      setUserDetails((prev) => ({
-        ...prev, name: patient.name || '', dob: patient.date_of_birth || '', gender: patient.gender || '',
-      }));
-      setInputErrors({});
-    }
-  }, [data]);
-
-  if (isFetching) return <Loading />;
-  if (isError) return <Text className="text-red-500">Error: {error.message}</Text>;
-
   console.log(userDetails);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (data && data.results.length > 0) {
+        const patient = data.results[0];
+        setUserDetails({ name: patient.name || '', dob: patient.date_of_birth || '', gender: patient.gender || '' });
+        setInputErrors({});
+      }
+    }, [data])
+  );
 
   return (
     <>
-      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 65, marginTop: 40 }}>
+      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
         <HeaderBackButton />
         <Text className="text-xl font-semibold text-primary flex-1 text-center">Edit Profile</Text>
       </View>
@@ -109,8 +106,7 @@ export default function Profile() {
 
               <View className="flex-1 w-full max-w-7xl mx-auto px-5 -mt-20 bg-white rounded-md">
                 <View className="flex items-center justify-center mt-4">
-                  <Image source={userIcon}
-                    alt={data.name} resizeMode='contain'
+                  <Image source={userIcon} alt={data.name} resizeMode='contain'
                     style={{ position: 'absolute', top: -100, height: 150, width: 150, objectFit: 'cover', borderRadius: 100, backgroundColor: 'white' }}
                   />
                 </View>
@@ -134,11 +130,8 @@ export default function Profile() {
                 <View>
                   <View className="gap-3 mt-3 mb-4">
                     <Text className="text-black">Name</Text>
-                    <TextInput
-                      className={`w-full py-2 px-4 rounded-md border ${inputErrors.name ? 'border-red-500' : 'border-gray-300'}`}
-                      placeholder="Enter your name"
-                      value={userDetails.name}
-                      onChangeText={(value) => handleChange("name", value)}
+                    <TextInput className={`w-full py-2 px-4 rounded-md border ${inputErrors.name ? 'border-red-500' : 'border-gray-300'}`}
+                      placeholder="Enter your name" value={userDetails.name} onChangeText={(value) => handleChange("name", value)}
                       onBlur={() => handleBlur("name", userDetails.name)}
                     />
                     {inputErrors.name && (
@@ -157,11 +150,8 @@ export default function Profile() {
                       </View>
                     </Pressable>
                     {showDatePicker && (
-                      <DateTimePicker
-                        value={userDetails.dob ? new Date(userDetails.dob) : new Date()}
-                        mode="date"
-                        display="default"
-                        onChange={onDateChange}
+                      <DateTimePicker value={userDetails.dob ? new Date(userDetails.dob) : new Date()}
+                        mode="date" display="default" onChange={onDateChange}
                       />
                     )}
                     {inputErrors.birthDate && (
