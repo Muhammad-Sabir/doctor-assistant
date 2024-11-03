@@ -1,10 +1,9 @@
 import React from 'react';
-import { FlatList, Dimensions, View, Text } from 'react-native';
+import { FlatList, Dimensions, View, Text, ActivityIndicator } from 'react-native';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 
 import { useAuth } from '@/contexts/AuthContext';
 import DoctorCard from '@/components/shared/DoctorCard';
-import Loading from '@/components/shared/Loading';
 
 const TopDoctors = () => {
 
@@ -23,9 +22,12 @@ const TopDoctors = () => {
     );
 
     return (
-        <View style={{ height: 170 }}> 
+        <View style={{ height: 170 }}>
             {isFetching ? (
-                <Loading />
+                <View className="flex-row items-center justify-center">
+                    <ActivityIndicator size="small" color="hsl(203, 87%, 30%)" />
+                    <Text className="text-gray-500 ml-2">Loading Doctors....</Text>
+                </View>
             ) : isError ? (
                 <Text className="text-center mt-4 text-red-500">Error: {error.message}</Text>
             ) : topDoctors && topDoctors.length > 0 ? (
