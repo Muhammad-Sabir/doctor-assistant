@@ -34,7 +34,6 @@ const DoctorSearchBar = () => {
 
     const handleSearch = () => {
         if (searchQuery.trim()) {
-            console.log('router calleddddd')
             router.push(`/(patient)/search-results?searchBy=${searchBy}&searchQuery=${searchQuery}`);
             setSearchQuery("");
         }
@@ -51,8 +50,8 @@ const DoctorSearchBar = () => {
     };
 
     return (
-        <View className="mt-2 relative">
-            <View className="flex-row items-center border border-gray-300 rounded-md px-3 mt-2">
+        <View className="relative">
+            <View className="flex-row items-center border border-gray-300 rounded-md px-3">
                 <TextInput className="flex-1 p-2 border-0" value={searchQuery}
                     onChangeText={(text) => handleInputChange(text)}
                     placeholder={`Search Doctors By ${searchBy.replace("_", " ")}...`}
@@ -65,13 +64,13 @@ const DoctorSearchBar = () => {
             <Picker
                 selectedValue={searchBy}
                 onValueChange={(itemValue) => setSearchBy(itemValue)}
-                style={{ width: 150, color: "hsl(203, 87%, 30%)", position: 'absolute', top: 40, right: -5, transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] }}
+                style={{ width: 150, color: "hsl(203, 87%, 30%)", position: 'absolute', top: 32, right: -5, transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] }}
                 dropdownIconColor={'hsl(203, 87%, 30%)'}
                 dropdownIconRippleColor={'hsl(214, 95%, 93%)'}
             >
-                <Picker.Item label="Speciality" value="speciality_name" />
-                <Picker.Item label="Disease" value="disease_name" />
-                <Picker.Item label="Degree" value="degree_name" />
+                <Picker.Item style={{fontSize: 14}} label="Speciality" value="speciality_name" />
+                <Picker.Item style={{fontSize: 14}} label="Disease" value="disease_name" />
+                <Picker.Item style={{fontSize: 14}} label="Degree" value="degree_name" />
             </Picker>
 
             <View className="absolute w-full bg-white rounded shadow-lg" style={{ zIndex: 10, top: 60 }}>

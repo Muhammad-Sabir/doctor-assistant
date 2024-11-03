@@ -49,7 +49,7 @@ const HospitalSearchBar = () => {
     };
 
     return (
-        <View className="mt-2 relative">
+        <View className="mt-3 relative">
             <View className="flex-row items-center border border-gray-300 rounded-md px-3 mt-2">
                 <TextInput className="flex-1 p-2 border-0" value={searchQuery}
                     onChangeText={(text) => handleInputChange(text)}
@@ -67,8 +67,8 @@ const HospitalSearchBar = () => {
                 dropdownIconColor={'hsl(203, 87%, 30%)'}
                 dropdownIconRippleColor={'hsl(214, 95%, 93%)'}
             >
-                <Picker.Item label="Address" value="street_address" />
-                <Picker.Item label="Name" value="name" />
+                <Picker.Item style={{fontSize: 14}} label="Address" value="street_address" />
+                <Picker.Item style={{fontSize: 14}} label="Name" value="name" />
             </Picker>
 
             <View className="absolute w-full bg-white rounded shadow-lg" style={{ zIndex: 10, top: 60 }}>

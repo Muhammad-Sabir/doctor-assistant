@@ -1,9 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-
-import BookAppointment from '@/components/modals/BookAppointment';
+import { Star } from 'lucide-react-native';
 
 const DoctorCard = ({ doctor }) => {
     const router = useRouter();
@@ -17,57 +15,50 @@ const DoctorCard = ({ doctor }) => {
     };
 
     return (
-        <View style={{ marginBottom: 17, padding: 17 }} className="border border-gray-300 rounded-md hover:shadow-md hover:border-primary transition-shadow duration-500 w-full mx-auto relative">
-            <TouchableOpacity onPress={() => router.push(`/(patient)/doctor/${doctor.id}`)}>
-                <View className="text-xs font-medium flex-row items-center rounded-md px-3 absolute top-0 right-0 bg-orange-100" style={{ paddingVertical: 3 }}>
-                    <FontAwesome name="star" size={16} color="orange" />
-                    <Text className="text-primary text-sm font-semibold ml-1" >{doctor.average_rating}</Text>
-                    <Text className="text-gray-500 text-sm ml-1">({doctor.total_reviews})</Text>
+        <TouchableOpacity
+            onPress={() => router.push(`/(patient)/doctor/${doctor.id}`)}
+            className="flex-row items-center border border-gray-300 rounded-md px-4 mb-4 bg-white"
+            style={{height: 150}}
+        >
+            <View className="mr-4 items-center justify-center">
+                <Image
+                    source={{ uri: getDoctorImageUrl(doctor.file_url) }} alt={doctor.name}
+                    style={{ height: 80, width: 80, borderRadius: 40, marginRight: 15 }}
+                />
+
+                <View className="mt-4 text-xs font-medium flex-row items-center rounded-md px-3 bg-orange-100 py-1" style={{ marginLeft: -10 }}>
+                    <Star size={16} color="orange" />
+                    {doctor.average_rating > 0 && doctor.total_reviews > 0 ? (
+                        <View className='flex-row'>
+                            <Text className="text-primary text-sm font-semibold ml-1"> {doctor.average_rating}</Text>
+                            <Text className="text-gray-500 text-sm ml-1">({doctor.total_reviews})</Text>
+                        </View>
+                    ) : (
+                        <Text className="text-primary text-sm font-semibold ml-1">N/A</Text>
+                    )}
                 </View>
+            </View>
 
-                <View className="flex justify-center items-center mb-4 mt-4">
-                    <Image
-                        source={{ uri: getDoctorImageUrl(doctor.file_url) }}
-                        alt={doctor.name}
-                        resizeMode='contain'
-                        style={{ height: 120, width: 120, objectFit: 'cover', borderRadius: 100 }}
-                    />
-                </View>
-
-                <View className="text-center">
-                    <View className="flex justify-center items-center w-full">
-                        <Text className="text-center text-base font-semibold text-primary w-90 sm:w-60 truncate">
-                            {doctor.name}
-                        </Text>
-                    </View>
-                    <View className="flex justify-center items-center w-full mt-1">
-                        <Text className="font-normal text-md mt-2 leading-6 text-gray-500 text-center" numberOfLines={1} ellipsizeMode="tail" style={{width: 300}}>
-                            Specialities<Text className="mx-1 inline"> - </Text>{doctor.specialities.length > 0 ? doctor.specialities.map(s => s.name).join(', ') : 'N/A'}
-                        </Text>
-                    </View>
-                    <View className="flex justify-center items-center w-full mt-1">
-                        <Text className="font-normal text-md leading-6 text-gray-500 text-center" numberOfLines={1} ellipsizeMode="tail" style={{width: 300 }}>
-                            Treats<Text className="mx-1 inline"> - </Text>{doctor.diseases.length > 0 ? doctor.diseases.map(d => d.name).join(', ') : 'N/A'}
-                        </Text>
-                    </View>
-                    <View className="flex justify-center w-full items-center mt-1">
-                        <Text className="font-normal text-md leading-6 text-gray-500 text-center" numberOfLines={1} ellipsizeMode="tail" style={{width: 300 }}>
-                            Degrees<Text className="mx-1 inline"> - </Text>{doctor.degrees.length > 0 ? doctor.degrees.map(d => d.name).join(', ') : 'N/A'}
-                        </Text>
-                    </View>
-
-                    <View className="flex justify-center items-center mt-4">
-                        <Text className="font-medium text-sm px-4 rounded-md bg-emerald-50 text-emerald-600" style={{ paddingVertical: 3 }}>
-                            {doctor.date_of_experience ?
-                                `${new Date().getFullYear() - new Date(doctor.date_of_experience).getFullYear()} years of experience`
-                                : 'N/A'}
-                        </Text>
-                    </View>
-                </View>
-            </TouchableOpacity>
-
-            <BookAppointment doctorId={doctor.id} doctorName={doctor.name} />
-        </View>
+            <View className="flex-1">
+                <Text className="text-md font-bold text-primary" numberOfLines={1} ellipsizeMode="tail" style={{ width: 250 }}>
+                    {doctor.name}
+                </Text>
+                <Text className="text-sm text-gray-600" numberOfLines={1} ellipsizeMode="tail" style={{ width: 250 }}>
+                    {doctor.specialities.length > 0 ? doctor.specialities.map(s => s.name).join(', ') : 'N/A'}
+                </Text>
+                <Text className="text-sm text-gray-500 mt-2" numberOfLines={1} ellipsizeMode="tail" style={{ width: 250 }}>
+                    Treats: {doctor.diseases.length > 0 ? doctor.diseases.map(d => d.name).join(', ') : 'N/A'}
+                </Text>
+                <Text className="text-sm text-gray-500" numberOfLines={1} ellipsizeMode="tail" style={{ width: 250 }}>
+                    Degrees: {doctor.degrees.length > 0 ? doctor.degrees.map(d => d.name).join(', ') : 'N/A'}
+                </Text>
+                <Text className="mt-4 font-medium text-sm px-4 rounded-md bg-emerald-50 text-emerald-600" style={{ paddingVertical: 3, width: 160 }}>
+                    {doctor.date_of_experience ?
+                        `${new Date().getFullYear() - new Date(doctor.date_of_experience).getFullYear()} years of experience`
+                        : 'N/A'}
+                </Text>
+            </View>
+        </TouchableOpacity>
     );
 };
 
