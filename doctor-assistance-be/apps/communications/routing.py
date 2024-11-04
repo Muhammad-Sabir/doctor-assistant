@@ -4,6 +4,6 @@ from apps.communications.consumers import ConsultationConsumer, CallConsumer, Ch
 
 websocket_urlpatterns = [
     path("ws/consultation/<int:consultation_id>/", ConsultationConsumer.as_asgi()),
-    path("ws/call/<str:room_name>/", CallConsumer.as_asgi()),
+    path("ws/call/", CallConsumer.as_asgi()),
     path("ws/chat/", ChatConsumer.as_asgi()),
 ]
