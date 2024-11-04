@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { Dimensions, TouchableOpacity } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { Pill, Bell, ClipboardPlus } from 'lucide-react-native';
+import { Pill, Bell, ClipboardPlus, Info, BadgeHelp } from 'lucide-react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import CustomDrawerContent from '@/components/ui/CustomDrawerContent';
@@ -92,6 +92,7 @@ const PatientLayout = () => {
                         headerShown: false
                     }}
                 />
+
                 <Drawer.Screen
                     name="appointments"
                     options={{
@@ -107,6 +108,25 @@ const PatientLayout = () => {
                         drawerIcon: () => <Pill size={24} color='hsl(203, 87%, 30%)' />,
                     }}
                 />
+
+                <Drawer.Screen
+                    name="about-us"
+                    options={{
+                        title: 'About App',
+                        drawerIcon: () => <Info size={20} color='hsl(203, 87%, 30%)' />,
+                        headerShown: false
+                    }}
+                />
+
+                <Drawer.Screen
+                    name="faqs"
+                    options={{
+                        title: 'FAQs',
+                        drawerIcon: () => <BadgeHelp size={20} color='hsl(203, 87%, 30%)' />,
+                        headerShown: false
+                    }}
+                />
+
                 <Drawer.Screen
                     name="search-results"
                     options={{

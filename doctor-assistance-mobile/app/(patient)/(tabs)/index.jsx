@@ -85,7 +85,7 @@ const Home = () => {
                 <View>
                     <View className="flex flex-row justify-between items-center mt-5">
                         <Text className="text-lg mb-1 font-semibold text-primary">Frequently Asked Questions</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handleFAQClick}>
                             <Text className="text-[#045883] text-md">See All</Text>
                         </TouchableOpacity>
                     </View>

@@ -25,8 +25,8 @@ export default function Profile() {
     { icon: <Users size={20} color="gray" />, title: 'Dependent Patients', screen: 'dependents' },
     { icon: <Siren size={20} color="gray" />, title: 'Allergies', screen: `allergies/${data?.results[0]?.id}` },
     { icon: <Bell size={20} color="gray" />, title: 'Notifications', screen: 'notifications' },
-    { icon: <BadgeHelp size={20} color="gray" />, title: 'FAQ', screen: 'FAQ' },
-    { icon: <Info size={20} color="gray" />, title: 'About App', screen: 'aboutApp' },
+    { icon: <BadgeHelp size={20} color="gray" />, title: 'FAQ', screen: 'faqs' },
+    { icon: <Info size={20} color="gray" />, title: 'About App', screen: 'about-us' },
   ];
 
   const handleOptionPress = (screen) => {
