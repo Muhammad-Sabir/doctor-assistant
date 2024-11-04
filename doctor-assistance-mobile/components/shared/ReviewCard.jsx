@@ -22,13 +22,13 @@ const ReviewCard = ({ review }) => {
     return (
 
         <View className="p-4 bg-white border border-gray-300 rounded-md mb-4">
-            <Text className="text-base text-primary">Reviewed {doctorName}</Text>
+            <Text className="text-base text-gray-600">Reviewed {doctorName}</Text>
             <View className="flex flex-row mt-3 mb-1 gap-1">
                 {Array(review.rating).fill(0).map((_, index) => (
                     <StarIcon key={index} color={'orange'} size={17} />
                 ))}
             </View>
-            <Text className="font-medium text-gray-600 mt-1 text-base mb-2">{review.comment}</Text>
+            <Text className="font-medium text-primary mt-1 text-md mb-2">{review.comment}</Text>
 
             <View className="flex flex-row justify-between items-center">
                 <Text className="text-sm text-gray-400">

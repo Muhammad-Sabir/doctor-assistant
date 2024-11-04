@@ -19,7 +19,7 @@ const FAQSection = () => {
                 <TouchableOpacity 
                     key={index} 
                     onPress={() => toggleFAQ(index)} 
-                    className="bg-gray-100 rounded-lg p-3 mb-3 border-b border-gray-300"
+                    className="bg-gray-100 rounded-lg p-3 mt-3 border-b border-gray-300"
                 >
                     <View className="flex-row justify-between items-center">
                         <Text className="text-base text-gray-700">{faq.question}</Text>

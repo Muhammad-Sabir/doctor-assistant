@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
+import { ArrowLeft, CircleUser, Search, Send } from 'lucide-react-native';
+
 import { dummyChats } from '@/assets/data/dummyChats';
 import { dummychatHistory } from '@/assets/data/dummyChats';
-import { ArrowLeft, CircleUser, Search, Send } from 'lucide-react-native';
 
 export default function Chats() {
 
@@ -76,7 +77,9 @@ export default function Chats() {
                       <Text className="text-primary font-semibold text-lg">{item.name}</Text>
                       <Text className="text-gray-500 text-sm mt-1">{item.date}</Text>
                     </View>
-                    <Text className="text-gray-500">{(chatHistory[item.id]?.slice(-1)[0]?.message) || "No currentChatMessages yet"}</Text>
+                    <Text className="text-gray-500" numberOfLines={1} ellipsizeMode="tail" style={{ width: 270 }}>
+                      {(chatHistory[item.id]?.slice(-1)[0]?.message) || "No currentChatMessages yet"}
+                    </Text>
                   </View>
                 </View>
 

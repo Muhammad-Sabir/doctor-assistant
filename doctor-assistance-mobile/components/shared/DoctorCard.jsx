@@ -43,7 +43,7 @@ const DoctorCard = ({ doctor }) => {
                 <Text className="text-md font-bold text-primary" numberOfLines={1} ellipsizeMode="tail" style={{ width: 250 }}>
                     {doctor.name}
                 </Text>
-                <Text className="text-sm text-gray-600" numberOfLines={1} ellipsizeMode="tail" style={{ width: 250 }}>
+                <Text className="text-md text-gray-600" numberOfLines={1} ellipsizeMode="tail" style={{ width: 250 }}>
                     {doctor.specialities.length > 0 ? doctor.specialities.map(s => s.name).join(', ') : 'N/A'}
                 </Text>
                 <Text className="text-sm text-gray-500 mt-2" numberOfLines={1} ellipsizeMode="tail" style={{ width: 250 }}>

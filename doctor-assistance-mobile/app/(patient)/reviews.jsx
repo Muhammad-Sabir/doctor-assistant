@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
-import { TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';;
 
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,24 +17,7 @@ const MyReviews = () => {
     queryKey: ['myReviews'],
     fetchFunction: fetchWithUserAuth,
   });
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const reviewsPerPage = 6;
-
-  const indexOfLastReview = currentPage * reviewsPerPage;
-  const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews = data?.slice(indexOfFirstReview, indexOfLastReview);
-  const totalPages = data ? Math.ceil(data.length / reviewsPerPage) : 0;
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => prev + 1);
-  };
-
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => prev - 1);
-  };
-
-
+ 
   return (
     <>
       <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
@@ -52,24 +34,9 @@ const MyReviews = () => {
           ) : data && data.length > 0 ? (
             <View>
               <View>
-                {currentReviews.map((review) => (
+                {data.map((review) => (
                   <ReviewCard key={review.id} review={review} />
                 ))}
-              </View>
-
-              <View className="flex flex-row justify-between items-center mt-4 mb-5">
-                <TouchableOpacity
-                  className={`px-4 py-2 bg-blue-500 rounded`}
-                  onPress={handlePrevPage} disabled={currentPage === 1} >
-                  <Text className="text-white">Previous</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className={`px-4 py-2 bg-blue-500 rounded`}
-                  onPress={handleNextPage}
-                  disabled={currentPage === totalPages}
-                >
-                  <Text className="text-white">Next</Text>
-                </TouchableOpacity>
               </View>
             </View>
           ) : (

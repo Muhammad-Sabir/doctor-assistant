@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,11 +8,15 @@ import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 import DoctorCard from '@/components/shared/DoctorCard';
 import { HeaderBackButton } from '@/components/ui/HeaderBackButton';
 import Loading from '@/components/shared/Loading';
+import { getPaginationItems } from '@/utils/pagination';
+import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 
 export default function HospitalDetail() {
     const { id } = useLocalSearchParams();
-    const [page, setPage] = useState(1);
     const { fetchWithUserAuth } = useAuth();
+
+    const [page, setPage] = useState(1);
+    const [resultPerPage, setResultPerPage] = useState(10);
 
     const { data: hospitalData, isFetching: isFetchingHospital, isError: isErrorHospital, error: errorHospital } = useFetchQuery({
         url: `hospitals/${id}`,
@@ -27,11 +31,23 @@ export default function HospitalDetail() {
     });
 
     const doctors = doctorsData?.results || [];
+    const dataCount = doctorsData?.count || 0;
     const nextPage = doctorsData?.next;
     const prevPage = doctorsData?.previous;
 
+    useEffect(() => {
+        setPage(1);
+    }, []);
+
+    const totalPages = resultPerPage ? Math.ceil(dataCount / resultPerPage) : 0;
+
+    const startResult = (page - 1) * resultPerPage + 1;
+    const endResult = Math.min(page * resultPerPage, dataCount);
+
     const handleNextPage = () => setPage((prev) => prev + 1);
     const handlePrevPage = () => setPage((prev) => prev - 1);
+    const handlePageClick = (pageNumber) => setPage(pageNumber);
+    const paginationItems = getPaginationItems(page, totalPages);
 
     return (
         <>
@@ -73,17 +89,40 @@ export default function HospitalDetail() {
                                     <Text className="text-center mt-4 text-red-500">Error: {errorDoctors.message}</Text>
                                 ) : (
                                     <View className="mb-6">
+                                        <Text className="text-gray-700 mb-4"> Showing {startResult}-{endResult} of {dataCount} results</Text>
                                         {doctors.length > 0 ? (
                                             <View>
                                                 {doctors.map((doctor) => (
                                                     <DoctorCard key={doctor.id} doctor={doctor} />
                                                 ))}
-                                                <View className="flex flex-row justify-between items-center mt-4 mb-5">
-                                                    <TouchableOpacity className={`px-4 py-2 bg-blue-500 rounded ${!prevPage && 'bg-gray-300'}`} onPress={handlePrevPage} disabled={!prevPage}>
-                                                        <Text className="text-white">Previous</Text>
+                                                <View className="flex flex-row gap-2 justify-center items-center mt-2">
+                                                    <TouchableOpacity
+                                                        className="px-2 py-2 rounded-md border border-gray-300"
+                                                        onPress={handlePrevPage}
+                                                        disabled={!prevPage}>
+                                                        <ChevronLeft size={20} color={!prevPage ? 'lightgrey' : 'grey'} />
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity className={`px-4 py-2 bg-blue-500 rounded ${!nextPage && 'bg-gray-300'}`} onPress={handleNextPage} disabled={!nextPage}>
-                                                        <Text className="text-white">Next</Text>
+
+                                                    <View className="flex flex-row">
+                                                        {paginationItems.map((pg, index) => (
+                                                            <TouchableOpacity
+                                                                key={index}
+                                                                className={`px-3 py-2 border border-gray-300 ${page === pg ? 'bg-primary' : ''} rounded-md mx-1`}
+                                                                onPress={() => {
+                                                                    if (pg !== '...') {
+                                                                        handlePageClick(pg);
+                                                                    }
+                                                                }}>
+                                                                <Text className={`${page === pg ? 'text-white' : 'text-gray-700'} font-semibold`}>{pg}</Text>
+                                                            </TouchableOpacity>
+                                                        ))}
+                                                    </View>
+
+                                                    <TouchableOpacity
+                                                        className="px-2 py-2 rounded-md border border-gray-300"
+                                                        onPress={handleNextPage}
+                                                        disabled={!nextPage}>
+                                                        <ChevronRight size={20} color={!nextPage ? 'lightgrey' : 'grey'} />
                                                     </TouchableOpacity>
                                                 </View>
                                             </View>

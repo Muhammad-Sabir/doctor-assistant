@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { SlidersHorizontal } from 'lucide-react-native';
+import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react-native';
 
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import AppointmentCard from '@/components/shared/AppointmentCard';
@@ -10,10 +10,13 @@ import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 import AppointmentFilters from '@/components/modals/AppointmentFilters';
 import Loading from '@/components/shared/Loading';
 import { HeaderBackButton } from '@/components/ui/HeaderBackButton';
+import { getPaginationItems } from '@/utils/pagination';
 
 export default function Appointments() {
 
   const [page, setPage] = useState(1);
+  const [resultPerPage, setResultPerPage] = useState(10);
+
   const [filters, setFilters] = useState({ doctorName: '', mode: '' });
   const [pendingFilters, setPendingFilters] = useState(filters);
 
@@ -34,11 +37,17 @@ export default function Appointments() {
   ];
 
   const appointments = data?.results || [];
+  const dataCount = data?.count || 0;
   const nextPage = data?.next;
   const prevPage = data?.previous;
 
+  const totalPages = resultPerPage ? Math.ceil(dataCount / resultPerPage) : 0;
+
   const handleNextPage = () => setPage((prev) => prev + 1);
   const handlePrevPage = () => setPage((prev) => prev - 1);
+  const handlePageClick = (pageNumber) => setPage(pageNumber);
+
+  const paginationItems = getPaginationItems(page, totalPages);
 
   const handleFilterChange = (name, value) => {
     setPendingFilters((prev) => ({ ...prev, [name]: value }));
@@ -56,7 +65,7 @@ export default function Appointments() {
 
   useEffect(() => {
     setFilters({ doctorName: '', mode: '' });
-
+    setPage(1);
   }, []);
 
   const filteredAppointments = appointments.filter(appointment =>
@@ -66,7 +75,7 @@ export default function Appointments() {
 
   return (
     <CustomKeyboardView>
-      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40  }}>
+      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
         <HeaderBackButton />
         <Text className="text-xl font-semibold text-primary flex-1 text-center">My Appointments</Text>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -88,22 +97,38 @@ export default function Appointments() {
               {filteredAppointments.map((item) => (
                 <AppointmentCard key={item.id} appointment={item} />
               ))}
-              <View className="flex flex-row justify-between items-center mt-4 mb-5">
-                <TouchableOpacity
-                  className={`px-4 py-2 bg-blue-500 rounded`}
-                  onPress={handlePrevPage}
-                  disabled={!prevPage}
-                >
-                  <Text className="text-white">Previous</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className={`px-4 py-2 bg-blue-500 rounded`}
-                  onPress={handleNextPage}
-                  disabled={!nextPage}
-                >
-                  <Text className="text-white">Next</Text>
-                </TouchableOpacity>
-              </View>
+              {(prevPage || nextPage) && (
+                <View className="flex flex-row gap-2 justify-center items-center mt-2">
+                  <TouchableOpacity
+                    className="px-2 py-2 rounded-md border border-gray-300"
+                    onPress={handlePrevPage}
+                    disabled={!prevPage}>
+                    <ChevronLeft size={20} color={!prevPage ? 'lightgrey' : 'grey'} />
+                  </TouchableOpacity>
+
+                  <View className="flex flex-row">
+                    {paginationItems.map((pg, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        className={`px-3 py-2 border border-gray-300 ${page === pg ? 'bg-primary' : ''} rounded-md mx-1`}
+                        onPress={() => {
+                          if (pg !== '...') {
+                            handlePageClick(pg);
+                          }
+                        }}>
+                        <Text className={`${page === pg ? 'text-white' : 'text-gray-700'} font-semibold`}>{pg}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+
+                  <TouchableOpacity
+                    className="px-2 py-2 rounded-md border border-gray-300"
+                    onPress={handleNextPage}
+                    disabled={!nextPage}>
+                    <ChevronRight size={20} color={!nextPage ? 'lightgrey' : 'grey'} />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           ) : (
             <Text className="text-gray-600">No {activeTab} appointments found.</Text>

@@ -60,7 +60,7 @@ export default function PatientAllergiesDetail() {
                     <Text className="text-primary text-center mt-4">Error fetching patient allergies: {error.message}</Text>
                 ) : (
                     <View className="px-5 flex-1 bg-white w-full py-5">
-                        <Text className="text-md font-semibold text-primary mb-3">Your Allergies:</Text>
+                        <Text className="text-lg font-semibold text-primary mb-3">Your Allergies:</Text>
                         {patientAllergies.length > 0 ? (
                             <View className="flex-row flex-wrap mb-4">
                                 {patientAllergies.map(allergy => (
@@ -73,7 +73,7 @@ export default function PatientAllergiesDetail() {
                             <Text className="text-gray-600 mb-4">No allergies found for this patient.</Text>
                         )}
 
-                        <Text className="text-md font-semibold text-primary mb-3">Dependent Patients Allergies:</Text>
+                        <Text className="text-lg font-semibold text-primary mb-3">Dependent Patients Allergies:</Text>
                         {Object.values(groupedOtherAllergies).length > 0 ? (
                             Object.values(groupedOtherAllergies).map(({ id, name, allergies }) => (
                                 <View key={id} className="border border-gray-300 rounded-md p-4 mb-4">
