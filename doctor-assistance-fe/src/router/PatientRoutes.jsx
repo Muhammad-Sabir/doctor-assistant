@@ -14,26 +14,29 @@ import Appointments from '@/pages/patient/Appointments';
 import Prescription from '@/pages/patient/Prescription';
 import Chats from '@/pages/patient/Chats';
 import VideoCall from '@/pages/patient/VideoCall';
+import { WebRTCProvider } from '@/context/WebRTCContext';
 
 export default function PatientRoutes() {
     return (
-        <Routes>
-            <Route element={<ProtectedRoute permission='patient' />}>
-                <Route element={<DashboardLayout />}>
-                    <Route path="home" element={<Home />} />
-                    <Route path="profile" element={<Profile />} />
-                    <Route path="doctors" element={<DoctorsList />} />
-                    <Route path="doctor/:id" element={<DoctorDetail />} />
-                    <Route path="doctors/search-results" element={<DoctorSearchResults />} />
-                    <Route path="hospital/:id" element={<HopsitalDetails />} />
-                    <Route path="reviews" element={<MyReviews />} />
-                    <Route path="appointments" element={<Appointments />} />
-                    <Route path="prescription" element={<Prescription />} />
-                    <Route path="chats" element={<Chats />} />
-                    <Route path="/consultation/video-call" element={<VideoCall />} />
-                    <Route path="*" element={<Navigate to="/patient/home" replace />} />
+        <WebRTCProvider>
+            <Routes>
+                <Route element={<ProtectedRoute permission='patient' />}>
+                    <Route element={<DashboardLayout />}>
+                        <Route path="home" element={<Home />} />
+                        <Route path="profile" element={<Profile />} />
+                        <Route path="doctors" element={<DoctorsList />} />
+                        <Route path="doctor/:id" element={<DoctorDetail />} />
+                        <Route path="doctors/search-results" element={<DoctorSearchResults />} />
+                        <Route path="hospital/:id" element={<HopsitalDetails />} />
+                        <Route path="reviews" element={<MyReviews />} />
+                        <Route path="appointments" element={<Appointments />} />
+                        <Route path="prescription" element={<Prescription />} />
+                        <Route path="chats" element={<Chats />} />
+                        <Route path="/consultation/video-call" element={<VideoCall />} />
+                        <Route path="*" element={<Navigate to="/patient/home" replace />} />
+                    </Route>
                 </Route>
-            </Route>
-        </Routes>
+            </Routes>
+        </WebRTCProvider>
     );
 }

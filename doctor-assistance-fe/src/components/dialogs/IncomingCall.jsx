@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import RingingIcon from '@/components/shared/RingingIcon';
+import { useWebRTCContext } from '@/context/WebRTCContext';
 
 export default function IncomingCall() {
-    
+    const {rejectCall} = useWebRTCContext();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(true); 
-
+    
     const handleDecline = () => {
         console.log('Call Declined');
         setIsOpen(false);
+        rejectCall();
     };
 
     const handleAccept = () => {
