@@ -1,11 +1,25 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
+
+import { HeaderBackButton } from '@/components/ui/HeaderBackButton';
+import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 
 const Prescription = () => {
+
+  const screenWidth = Dimensions.get('window').width;
+
   return (
-    <View>
-        <Text>Prescription Page</Text>
-    </View>
+    <>
+      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: screenWidth * 0.14, marginTop: screenWidth * 0.09 }}>
+        <HeaderBackButton />
+        <Text className="text-xl font-semibold text-primary flex-1 text-center">My Prescriptions</Text>
+      </View>
+      <CustomKeyboardView>
+        <View className='bg-white flex-1 px-5 py-5'>
+          <Text>This is prescription page</Text>
+        </View>
+      </CustomKeyboardView>
+    </>
   );
 };
 

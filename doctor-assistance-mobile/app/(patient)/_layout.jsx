@@ -81,6 +81,7 @@ const PatientLayout = () => {
                     options={{
                         title: 'Notifications',
                         drawerItemStyle: { display: 'none' },
+                        headerShown: false
                     }}
                 />
 
@@ -106,6 +107,7 @@ const PatientLayout = () => {
                     options={{
                         title: 'My Prescription',
                         drawerIcon: () => <Pill size={24} color='hsl(203, 87%, 30%)' />,
+                        headerShown: false
                     }}
                 />
 
