@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Modal, Pressable } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Modal, Pressable, Dimensions } from 'react-native';
 import { StarIcon, X, TriangleAlert, Pencil } from 'lucide-react-native';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,6 +11,7 @@ export default function UpdateReview({ doctorName, review }) {
 
     const { fetchWithUserAuth } = useAuth();
     const queryClient = useQueryClient();
+    const screenWidth = Dimensions.get('window').width;
 
     const [inputValues, setInputValues] = useState({ comment: '', rating: 0 });
     const [hoverRating, setHoverRating] = useState(0);
@@ -78,7 +79,7 @@ export default function UpdateReview({ doctorName, review }) {
                 }}
             >
                 <View className='flex-1 relative items-center justify-center' style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
-                    <View className="bg-white rounded-md p-5" style={{ width: 390 }} >
+                    <View className="bg-white rounded-md p-5" style={{ width: screenWidth * 0.91 }} >
 
                         <View className='flex flex-row justify-between'>
                             <Text className="text-xl font-bold text-primary mb-1">Update Review</Text>
@@ -148,7 +149,7 @@ export default function UpdateReview({ doctorName, review }) {
                                 <Text className="text-gray-700">Cancel</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={handleSubmit} className="bg-primary px-4 py-2 rounded-md">
-                                <Text className="text-white font-bold">Submit</Text>
+                                <Text className="text-white font-bold">Update</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

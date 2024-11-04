@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+
 import { useAuth } from '@/contexts/AuthContext';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import banner from "@/assets/images/profileBanner.webp";
@@ -9,11 +11,12 @@ import DoctorCard from '@/components/shared/DoctorCard';
 import { HeaderBackButton } from '@/components/ui/HeaderBackButton';
 import Loading from '@/components/shared/Loading';
 import { getPaginationItems } from '@/utils/pagination';
-import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 
 export default function HospitalDetail() {
+
     const { id } = useLocalSearchParams();
     const { fetchWithUserAuth } = useAuth();
+    const screenWidth = Dimensions.get('window').width;
 
     const [page, setPage] = useState(1);
     const [resultPerPage, setResultPerPage] = useState(10);
@@ -51,7 +54,7 @@ export default function HospitalDetail() {
 
     return (
         <>
-            <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
+            <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: screenWidth * 0.14, marginTop: screenWidth * 0.09 }}>
                 <HeaderBackButton />
                 <Text className="text-xl font-semibold text-primary flex-1 text-center">Hospital Details</Text>
             </View>
@@ -89,9 +92,9 @@ export default function HospitalDetail() {
                                     <Text className="text-center mt-4 text-red-500">Error: {errorDoctors.message}</Text>
                                 ) : (
                                     <View className="mb-6">
-                                        <Text className="text-gray-700 mb-4"> Showing {startResult}-{endResult} of {dataCount} results</Text>
                                         {doctors.length > 0 ? (
                                             <View>
+                                                <Text className="text-gray-700 mb-4"> Showing {startResult}-{endResult} of {dataCount} results</Text>
                                                 {doctors.map((doctor) => (
                                                     <DoctorCard key={doctor.id} doctor={doctor} />
                                                 ))}

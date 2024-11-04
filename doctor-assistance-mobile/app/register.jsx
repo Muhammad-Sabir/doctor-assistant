@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, TextInput, Pressable } from 'react-native';
-import { Link } from 'expo-router';
-import Feather from '@expo/vector-icons/Feather';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Link, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Eye, EyeOff, TriangleAlert } from 'lucide-react-native';
 
 import GoogleLogo from '@/assets/images/SVG/GoogleLogo';
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
@@ -37,29 +36,35 @@ const Register = () => {
 
     const handleSignup = async (e) => {
         e.preventDefault();
-    
+
         if (!hasNoFieldErrors(inputErrors)) {
             return;
         }
 
         const { email, password, phoneNo } = userDetails;
-        console.log(userDetails)
         await AsyncStorage.setItem('userEmail', email);
-        signupMutation.mutate( JSON.stringify({email, password, phone_number: phoneNo, role: 'patient'}));
+        signupMutation.mutate(JSON.stringify({ email, password, phone_number: phoneNo, role: 'patient' }));
     };
+
+    useFocusEffect(
+        useCallback(() => {
+            setInputErrors({});
+            setUserDetails({ email: "", password: "", phoneNo: "" });
+        }, [])
+    );
 
     return (
         <CustomKeyboardView>
             <View className="flex-1 px-5 bg-white justify-center">
-                <AuthHeaderImage/>
+                <AuthHeaderImage />
 
                 <View className="gap-3">
                     <Text className="text-2xl font-bold text-primary">Signup</Text>
                     <Text className="text-balance text-gray-500 -mt-2">Enter your information to create an account</Text>
 
                     <View className="gap-4 mt-4">
-                        <View className="gap-3">
-                            <Text className="text-black">Email</Text>
+                        <View className="gap-2">
+                            <Text className="text-gray-700">Email</Text>
                             <TextInput
                                 className={`w-full py-2 px-4 rounded-md border ${inputErrors.email ? 'border-red-500' : 'border-gray-300'}`}
                                 placeholder="Enter your Email"
@@ -68,16 +73,16 @@ const Register = () => {
                                 onBlur={() => handleBlur("email", userDetails.email)}
                             />
                             {inputErrors.email && (
-                                <View className="flex flex-row items-center text-red-500 text-sm -mt-2">
-                                    <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
+                                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                                    <TriangleAlert size={13} color="red" />
                                     <Text className='text-sm text-red-500'>{inputErrors.email} </Text>
                                 </View>
                             )}
                         </View>
 
-                        <View className="gap-3">
+                        <View className="gap-2">
                             <View className="flex-row justify-between items-center">
-                                <Text className="text-black">Password</Text>
+                                <Text className="text-gray-700">Password</Text>
                             </View>
                             <View className="relative">
                                 <TextInput
@@ -89,22 +94,23 @@ const Register = () => {
                                     onBlur={() => handleBlur("password", userDetails.password)}
                                 />
                                 {inputErrors.password && (
-                                    <View className="flex flex-row items-center text-red-500 text-sm mt-1">
-                                        <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
+                                    <View className="flex flex-row items-center text-red-500 text-sm gap-2 mt-2">
+                                        <TriangleAlert size={13} color="red" />
                                         <Text className='text-sm text-red-500'>{inputErrors.password} </Text>
                                     </View>
                                 )}
-                                <Pressable
-                                    onPress={() => setPasswordVisible(!passwordVisible)}
-                                    className="absolute right-2 top-2"
-                                >
-                                    <Feather name={passwordVisible ? "eye-off" : "eye"} size={15} color="gray" className='mr-2 mt-2' />
+                                <Pressable onPress={() => setPasswordVisible(!passwordVisible)} className="mt-2 mr-2 absolute right-2 top-2">
+                                    {passwordVisible ? (
+                                        <EyeOff size={17} color="gray" />
+                                    ) : (
+                                        <Eye size={17} color="gray" />
+                                    )}
                                 </Pressable>
                             </View>
                         </View>
 
-                        <View className="gap-3">
-                            <Text className="text-black">Phone No</Text>
+                        <View className="gap-2">
+                            <Text className="text-gray-700">Phone No</Text>
                             <TextInput
                                 className={`w-full py-2 px-4 rounded-md border ${inputErrors.phoneNo ? 'border-red-500' : 'border-gray-300'}`}
                                 placeholder="Enter your Phone No"
@@ -113,8 +119,8 @@ const Register = () => {
                                 onBlur={() => handleBlur("phoneNo", userDetails.phoneNo)}
                             />
                             {inputErrors.phoneNo && (
-                                <View className="flex flex-row items-center text-red-500 text-sm -mt-2">
-                                    <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
+                                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                                    <TriangleAlert size={13} color="red" />
                                     <Text className='text-sm text-red-500'>{inputErrors.phoneNo} </Text>
                                 </View>
                             )}

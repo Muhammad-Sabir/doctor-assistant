@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
-import { TouchableOpacity } from 'react-native';
+import { Dimensions, TouchableOpacity } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Pill, Bell, ClipboardPlus } from 'lucide-react-native';
 import { StatusBar } from 'expo-status-bar';
@@ -15,6 +15,8 @@ const PatientLayout = () => {
     const handleNotificationPress = () => {
         router.push('/(patient)/notifications');
     };
+
+    const screenWidth = Dimensions.get('window').width;
 
     return (
         <>
@@ -40,7 +42,7 @@ const PatientLayout = () => {
                             backgroundColor: 'white',
                             borderBottomWidth: 1,
                             borderBottomColor: '#D1D5DB',
-                            height: 99,
+                            height: screenWidth * 0.23,
                         },
                         headerTitleStyle: {
                             fontSize: 18,

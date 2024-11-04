@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Pressable, Dimensions } from 'react-native';
 import { Trash, X } from 'lucide-react-native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -10,6 +10,7 @@ export default function DeleteItem({ deleteUrl, itemName, iconSize, queryKey }) 
 
     const queryClient = useQueryClient();
     const { fetchWithUserAuth } = useAuth();
+    const screenWidth = Dimensions.get('window').width;
 
     const deleteMutation = useDeleteMutation({
         url: `${deleteUrl}`,
@@ -40,7 +41,7 @@ export default function DeleteItem({ deleteUrl, itemName, iconSize, queryKey }) 
                 }}
             >
                 <View className='flex-1 relative items-center justify-center' style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
-                    <View className="bg-white rounded-md p-5 shadow-lg" style={{ width: 390 }} >
+                    <View className="bg-white rounded-md p-5" style={{ width: screenWidth * 0.91 }} >
 
                         <View className='flex flex-row justify-between'>
                             <Text className="text-xl font-bold text-primary mb-1">Delete {itemName}</Text>

@@ -8,6 +8,7 @@ import DoctorCard from '@/components/shared/DoctorCard';
 const TopDoctors = () => {
 
     const { fetchWithUserAuth } = useAuth();
+    const screenWidth = Dimensions.get('window').width;
 
     const { data, isFetching, isError, error } = useFetchQuery({
         url: 'doctors?average_rating_min=3&average_rating_max=5',
@@ -22,7 +23,7 @@ const TopDoctors = () => {
     );
 
     return (
-        <View style={{ height: 170 }}>
+        <View style={{ height: 170, width: screenWidth * 0.91}}>
             {isFetching ? (
                 <View className="flex-row items-center justify-center">
                     <ActivityIndicator size="small" color="hsl(203, 87%, 30%)" />

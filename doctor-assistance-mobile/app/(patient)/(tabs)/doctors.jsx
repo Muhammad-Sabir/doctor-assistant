@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 
 import DoctorSearchBar from '@/components/dashboard/DoctorSearchBar';
 import TopDoctors from '@/components/dashboard/TopDoctors';
@@ -11,7 +11,7 @@ export default function DoctorsList() {
     <View className="flex-1 px-5 py-5 bg-white">
       <DoctorSearchBar />
 
-      <Banner imageSource={require('@/assets/images/banner3.webp')} />
+      <Banner imageSource={require('@/assets/images/banner2.webp')} />
 
       <View>
         <View className="flex flex-row justify-between items-center mb-3">

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Dimensions } from 'react-native';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { useFocusEffect } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
@@ -17,6 +17,7 @@ export default function DependentPatientsDetails() {
     const [dependentDetails, setDependentDetails] = useState([]);
     const queryClient = useQueryClient();
     const { fetchWithUserAuth } = useAuth();
+    const screenWidth = Dimensions.get('window').width;
 
     const { data, isFetching, isError, error } = useFetchQuery({
         url: 'patients/',
@@ -38,7 +39,7 @@ export default function DependentPatientsDetails() {
 
     return (
         <>
-            <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
+            <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: screenWidth * 0.14, marginTop: screenWidth * 0.09 }}>
                 <HeaderBackButton />
                 <Text className="text-xl font-semibold text-primary flex-1 text-center">Dependent Details</Text>
                 <AddDependent />

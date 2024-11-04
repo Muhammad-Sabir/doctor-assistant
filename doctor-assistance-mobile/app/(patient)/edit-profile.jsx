@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Image, Pressable, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, Image, Pressable, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useQueryClient } from '@tanstack/react-query';
 import { CheckCircle, Circle, TriangleAlert } from 'lucide-react-native';
@@ -16,8 +16,10 @@ import { HeaderBackButton } from '@/components/ui/HeaderBackButton';
 import Loading from '@/components/shared/Loading';
 
 export default function Profile() {
+
   const queryClient = useQueryClient();
   const { fetchWithUserAuth, user } = useAuth();
+  const screenWidth = Dimensions.get('window').width;
 
   const [userDetails, setUserDetails] = useState({ name: "", dob: "", gender: "M" });
   const [inputErrors, setInputErrors] = useState({});
@@ -69,12 +71,9 @@ export default function Profile() {
       return;
     }
 
-    console.log(userDetails);
     const { name, dob, gender } = userDetails;
     updateProfileMutation.mutate(JSON.stringify({ name, date_of_birth: dob, gender }));
   };
-
-  console.log(userDetails);
 
   useFocusEffect(
     useCallback(() => {
@@ -88,7 +87,7 @@ export default function Profile() {
 
   return (
     <>
-      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
+      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: screenWidth * 0.14, marginTop: screenWidth * 0.09 }}>
         <HeaderBackButton />
         <Text className="text-xl font-semibold text-primary flex-1 text-center">Edit Profile</Text>
       </View>
@@ -128,22 +127,22 @@ export default function Profile() {
                 <View className="border-t border-gray-200 my-4" />
 
                 <View>
-                  <View className="gap-3 mt-3 mb-4">
-                    <Text className="text-black">Name</Text>
+                  <View className="gap-2 mt-3 mb-4">
+                    <Text className="text-gray-700">Name</Text>
                     <TextInput className={`w-full py-2 px-4 rounded-md border ${inputErrors.name ? 'border-red-500' : 'border-gray-300'}`}
                       placeholder="Enter your name" value={userDetails.name} onChangeText={(value) => handleChange("name", value)}
                       onBlur={() => handleBlur("name", userDetails.name)}
                     />
                     {inputErrors.name && (
-                      <View className="flex flex-row items-center text-red-500 text-sm gap-2 -mt-2">
+                      <View className="flex flex-row items-center text-red-500 text-sm gap-2">
                         <TriangleAlert size={13} color="red" />
                         <Text className='text-sm text-red-500'>{inputErrors.name} </Text>
                       </View>
                     )}
                   </View>
 
-                  <View className="gap-3 mb-4">
-                    <Text className="text-black">Date of Birth</Text>
+                  <View className="gap-2 mb-4">
+                    <Text className="text-gray-700">Date of Birth</Text>
                     <Pressable onPress={() => setShowDatePicker(true)}>
                       <View className={`w-full py-3 px-4 rounded-md border ${inputErrors.birthDate ? 'border-red-500' : 'border-gray-300'}`}>
                         <Text className={userDetails.dob ? "text-black" : "text-gray-400"}>{userDetails.dob || 'Select your Date of Birth'} </Text>
@@ -155,7 +154,7 @@ export default function Profile() {
                       />
                     )}
                     {inputErrors.birthDate && (
-                      <View className="flex flex-row items-center text-red-500 text-sm gap-2 -mt-2">
+                      <View className="flex flex-row items-center text-red-500 text-sm gap-2">
                         <TriangleAlert size={13} color="red" />
                         <Text className='text-sm text-red-500'>{inputErrors.birthDate} </Text>
                       </View>
@@ -163,7 +162,7 @@ export default function Profile() {
                   </View>
 
                   <View className="gap-3">
-                    <Text className="text-black">Gender</Text>
+                    <Text className="text-gray-700">Gender</Text>
                     <View className="flex flex-row -mt-3">
                       <Pressable onPress={() => handleChange('gender', 'M')}>
                         <View className="flex-row items-center p-2 mr-3">

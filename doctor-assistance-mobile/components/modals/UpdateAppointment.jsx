@@ -91,7 +91,7 @@ const UpdateAppointment = ({ appointment }) => {
                             </Pressable>
                         </View>
 
-                        <Text className="text-md text-gray-500 mb-4"> Update appointment with {appointment.doctor_name}</Text>
+                        <Text className="text-md text-gray-500 mb-4">Update appointment with {appointment.doctor_name}. Click Update when done.</Text>
 
                         <View className='mb-3'>
                             <Text className="text-gray-700 text-base mb-2">Message</Text>
@@ -138,7 +138,7 @@ const UpdateAppointment = ({ appointment }) => {
                             <TouchableOpacity
                                 onPress={() => {
                                     setIsModalVisible(false);
-                                    setReview();
+                                    setAppointment();
                                     setInputErrors({});
                                 }}
                                 className="mr-4 bg-gray-200 px-4 py-2 rounded-md"
@@ -146,7 +146,7 @@ const UpdateAppointment = ({ appointment }) => {
                                 <Text className="text-gray-700">Cancel</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={handleSubmit} className="bg-primary px-4 py-2 rounded-md">
-                                <Text className="text-white font-bold">Submit</Text>
+                                <Text className="text-white font-bold">Update</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

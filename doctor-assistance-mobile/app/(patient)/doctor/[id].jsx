@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { StarIcon, Stethoscope, GraduationCap, CircleCheckBig, CalendarDays } from 'lucide-react-native';
 
 import { useFetchQuery } from '@/hooks/useFetchQuery';
@@ -19,6 +19,8 @@ export default function DoctorDetail() {
     const { id } = useLocalSearchParams();
     const { fetchWithUserAuth } = useAuth();
 
+    const screenWidth = Dimensions.get('window').width;
+
     const { data, isFetching, isError, error } = useFetchQuery({
         url: `doctors/${id}`,
         queryKey: ['doctorDetails', id],
@@ -36,7 +38,7 @@ export default function DoctorDetail() {
 
     return (
         <>
-            <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
+            <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: screenWidth * 0.14, marginTop: screenWidth * 0.09 }}>
                 <HeaderBackButton />
                 <Text className="text-xl font-semibold text-primary flex-1 text-center">Doctor Details</Text>
             </View>

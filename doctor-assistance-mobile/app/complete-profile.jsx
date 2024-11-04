@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Alert, BackHandler, Pressable } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useAuth } from '@/contexts/AuthContext';
 import AuthHeaderImage from '@/components/shared/AuthHeaderImage';
+import { CheckCircle, TriangleAlert, Circle } from 'lucide-react-native';
 
 const CompleteProfile = () => {
 
@@ -49,7 +49,6 @@ const CompleteProfile = () => {
       return;
     }
 
-    console.log(userDetails);
     const { name, dob, gender } = userDetails;
     completeProfile.mutate(JSON.stringify({ name, date_of_birth: dob, gender }));
   };
@@ -82,8 +81,8 @@ const CompleteProfile = () => {
           <Text className="text-balance text-gray-500 -mt-2">Enter your complete information to continue</Text>
 
           <View className="gap-4 mt-4">
-            <View className="gap-3">
-              <Text className="text-black">Name</Text>
+            <View className="gap-2">
+              <Text className="text-gray-700">Name</Text>
               <TextInput
                 className={`w-full py-2 px-4 rounded-md border ${inputErrors.name ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Enter your name"
@@ -92,15 +91,15 @@ const CompleteProfile = () => {
                 onBlur={() => handleBlur("name", userDetails.name)}
               />
               {inputErrors.name && (
-                <View className="flex flex-row items-center text-red-500 text-sm -mt-2">
-                  <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
-                  <Text className='text-sm text-red-500'>{inputErrors.name}</Text>
+                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                  <TriangleAlert size={13} color="red" />
+                  <Text className='text-sm text-red-500'>{inputErrors.name} </Text>
                 </View>
               )}
             </View>
 
-            <View className="gap-3">
-              <Text className="text-black">Date of Birth</Text>
+            <View className="gap-2">
+              <Text className="text-gray-700">Date of Birth</Text>
               <Pressable onPress={() => setShowDatePicker(true)}>
                 <View className={`w-full py-3 px-4 rounded-md border ${inputErrors.birthDate ? 'border-red-500' : 'border-gray-300'}`}>
                   <Text className={userDetails.dob ? "text-black" : "text-gray-400"}>{userDetails.dob || 'Select your Date of Birth'} </Text>
@@ -115,26 +114,34 @@ const CompleteProfile = () => {
                 />
               )}
               {inputErrors.birthDate && (
-                <View className="flex flex-row items-center text-red-500 text-sm -mt-2">
-                  <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
-                  <Text className='text-sm text-red-500'>{inputErrors.birthDate}</Text>
+                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                  <TriangleAlert size={13} color="red" />
+                  <Text className='text-sm text-red-500'>{inputErrors.birthDate} </Text>
                 </View>
               )}
             </View>
 
             <View className="gap-3">
-              <Text className="text-black">Gender</Text>
+              <Text className="text-gray-700">Gender</Text>
               <View className="flex flex-row -mt-3">
-                <Pressable onPress={() => handleChange("gender", "M")}>
-                  <View className={`flex-row items-center p-2  mr-3`}>
-                    <MaterialIcons name={userDetails.gender === "M" ? "radio-button-checked" : "radio-button-unchecked"} size={20} color="hsl(203, 87%, 30%)" />
-                    <Text className="ml-2">Male</Text>
+                <Pressable onPress={() => handleChange('gender', 'M')}>
+                  <View className="flex-row items-center p-2 mr-3">
+                    {userDetails.gender === "M" ? (
+                      <CheckCircle size={18} color="hsl(203, 87%, 30%)" />
+                    ) : (
+                      <Circle size={18} color="hsl(203, 87%, 30%)" />
+                    )}
+                    <Text className="ml-2 text-gray-700">Male</Text>
                   </View>
                 </Pressable>
-                <Pressable onPress={() => handleChange("gender", "F")}>
-                  <View className={`flex-row items-center p-2 `}>
-                    <MaterialIcons name={userDetails.gender === "F" ? "radio-button-checked" : "radio-button-unchecked"} size={20} color="hsl(203, 87%, 30%)" />
-                    <Text className="ml-2">Female</Text>
+                <Pressable onPress={() => handleChange('gender', 'F')}>
+                  <View className="flex-row items-center p-2 mr-3">
+                    {userDetails.gender === "F" ? (
+                      <CheckCircle size={18} color="hsl(203, 87%, 30%)" />
+                    ) : (
+                      <Circle size={18} color="hsl(203, 87%, 30%)" />
+                    )}
+                    <Text className="ml-2 text-gray-700">Female</Text>
                   </View>
                 </Pressable>
               </View>

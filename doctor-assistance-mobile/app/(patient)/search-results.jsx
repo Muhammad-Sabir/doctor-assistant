@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react-native';
 
@@ -13,8 +13,10 @@ import Loading from '@/components/shared/Loading';
 import { getPaginationItems } from '@/utils/pagination';
 
 export default function DoctorSearchResults() {
+
     const { fetchWithUserAuth } = useAuth();
     const { searchBy, searchQuery } = useLocalSearchParams();
+    const screenWidth = Dimensions.get('window').width;
 
     const [searchParams, setSearchParams] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -84,7 +86,7 @@ export default function DoctorSearchResults() {
 
     return (
         <>
-            <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
+            <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: screenWidth * 0.14, marginTop: screenWidth * 0.09 }}>
                 <HeaderBackButton />
                 <Text className="text-xl font-semibold text-primary flex-1 text-center">Doctor Search Results</Text>
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -100,7 +102,7 @@ export default function DoctorSearchResults() {
                     {!isFetching && !isError && (
                         <>
                             <ScrollView>
-                                <Text className="text-gray-700 mb-4"> Showing {startResult}-{endResult} of {dataCount} results</Text>
+                                {doctors.length > 0 && <Text className="text-gray-700 mb-4"> Showing {startResult}-{endResult} of {dataCount} results</Text>}
                                 {doctors.length > 0 ? (
                                     doctors.map((doctor) => (
                                         <DoctorCard key={doctor.id} doctor={doctor} />

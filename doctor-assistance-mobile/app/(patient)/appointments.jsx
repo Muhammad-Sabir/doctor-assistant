@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react-native';
 
 import { useFetchQuery } from '@/hooks/useFetchQuery';
@@ -16,6 +16,7 @@ export default function Appointments() {
 
   const [page, setPage] = useState(1);
   const [resultPerPage, setResultPerPage] = useState(10);
+  const screenWidth = Dimensions.get('window').width;
 
   const [filters, setFilters] = useState({ doctorName: '', mode: '' });
   const [pendingFilters, setPendingFilters] = useState(filters);
@@ -75,7 +76,7 @@ export default function Appointments() {
 
   return (
     <CustomKeyboardView>
-      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
+      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: screenWidth * 0.14, marginTop: screenWidth * 0.09 }}>
         <HeaderBackButton />
         <Text className="text-xl font-semibold text-primary flex-1 text-center">My Appointments</Text>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -131,7 +132,7 @@ export default function Appointments() {
               )}
             </View>
           ) : (
-            <Text className="text-gray-600">No {activeTab} appointments found.</Text>
+            <Text className="text-gray-600 text-center">No {activeTab} appointments found.</Text>
           )}
         </View>
 

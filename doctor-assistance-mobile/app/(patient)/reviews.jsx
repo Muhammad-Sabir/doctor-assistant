@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';;
+import { View, Text, Dimensions } from 'react-native';;
 
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,6 +11,7 @@ import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 const MyReviews = () => {
 
   const { fetchWithUserAuth } = useAuth();
+  const screenWidth = Dimensions.get('window').width;
 
   const { data, isFetching, isError, error } = useFetchQuery({
     url: `reviews/me/`,
@@ -20,7 +21,7 @@ const MyReviews = () => {
  
   return (
     <>
-      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
+      <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: screenWidth * 0.14, marginTop: screenWidth * 0.09 }}>
         <HeaderBackButton />
         <Text className="text-xl font-semibold text-primary flex-1 text-center">My Reviews</Text>
       </View>
@@ -40,7 +41,7 @@ const MyReviews = () => {
               </View>
             </View>
           ) : (
-            <Text className="text-gray-600 text-sm">No reviews by you yet.</Text>
+            <Text className="text-gray-600 text-md text-center">No reviews by you yet.</Text>
           )}
         </View>
       </CustomKeyboardView>

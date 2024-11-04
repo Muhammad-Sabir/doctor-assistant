@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 
 import { useFetchQuery } from '@/hooks/useFetchQuery';
@@ -12,6 +12,7 @@ export default function PatientAllergiesDetail() {
 
     const { fetchWithUserAuth } = useAuth();
     const { id } = useLocalSearchParams();
+    const screenWidth = Dimensions.get('window').width;
 
     const [patientAllergies, setPatientAllergies] = useState([]);
     const [dependentsAllergies, setDependentsAllergies] = useState([]);
@@ -48,7 +49,7 @@ export default function PatientAllergiesDetail() {
 
     return (
         <>
-            <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: 59, marginTop: 40 }}>
+            <View className="border border-r-0 border-t-0 border-l-0 border-gray-300 flex-row justify-between items-center bg-white p-4 rounded-b z-1" style={{ height: screenWidth * 0.14, marginTop: screenWidth * 0.09 }}>
                 <HeaderBackButton />
                 <Text className="text-xl font-semibold text-primary flex-1 text-center">Allergies Details</Text>
             </View>

@@ -17,7 +17,7 @@ const HospitalCard = ({ hospital }) => {
                 />
             )}
             <View>
-                <Text className="text-base font-semibold text-primary capitalize">
+                <Text className="text-base font-semibold text-primary capitalize" numberOfLines={1} ellipsizeMode="tail" style={{ width: 250 }}>
                     {hospital.name}, {hospital.city}
                 </Text>
                 <Text className="text-sm text-gray-500 wrap" style={{width: 270}}>
