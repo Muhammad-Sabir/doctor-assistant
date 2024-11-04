@@ -37,7 +37,7 @@ const PatientLayout = () => {
                                 <Bell size={24} color="hsl(203, 87%, 30%)" />
                             </TouchableOpacity>
                         ),
-                        headerTitleAlign: 'center', 
+                        headerTitleAlign: 'center',
                         headerStyle: {
                             backgroundColor: 'white',
                             borderBottomWidth: 1,
@@ -53,6 +53,15 @@ const PatientLayout = () => {
                     name="edit-profile"
                     options={{
                         title: 'Edit Profile',
+                        drawerItemStyle: { display: 'none' },
+                        headerShown: false
+                    }}
+                />
+
+                <Drawer.Screen
+                    name="video-call"
+                    options={{
+                        title: 'Video Call',
                         drawerItemStyle: { display: 'none' },
                         headerShown: false
                     }}
@@ -120,7 +129,7 @@ const PatientLayout = () => {
                     options={{
                         title: 'Allergies Details',
                         drawerItemStyle: { display: 'none' },
-                        headerShown:false
+                        headerShown: false
                     }}
                 />
 
