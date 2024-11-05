@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
+import { BiSolidError } from 'react-icons/bi';
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { BiSolidError } from 'react-icons/bi';
 
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
+import { useFetchQuery } from '@/hooks/useFetchQuery';
 
 export default function BookAppointment({ doctorId, doctorName }) {
-
     const [inputErrors, setInputErrors] = useState({});
+
     const [formData, setFormData] = useState({
         patientId: '',
         message: '',
@@ -33,6 +35,15 @@ export default function BookAppointment({ doctorId, doctorName }) {
             }, 1000);
         },
     });
+
+    const { data: dependentsData, isFetching, isError, error } = useFetchQuery({
+        url: `patients/`,
+        queryKey: ['allRelatedPatientList'],
+        fetchFunction: fetchWithAuth,
+    });
+
+    const dependents = dependentsData?.results[0].dependents || [];
+    const patient = dependentsData?.results[0]; 
 
     const handleBlur = (e) => {
         const { id, value } = e.target;
@@ -84,22 +95,44 @@ export default function BookAppointment({ doctorId, doctorName }) {
 
                 <div className="grid gap-4 py-2">
                     <div className="grid gap-2">
-                        <Label htmlFor="patientId" className='text-gray-700 text-sm font-normal'>Patient ID</Label>
-                        <Input
-                            type="text"
+                        <Label htmlFor="patientId" className='text-gray-700 text-sm font-normal'>Patient</Label>
+                        <div className="text-gray-500">
+                        <Select
                             id="patientId"
                             value={formData.patientId}
-                            onChange={handleChange}
-                            placeholder="Enter patient ID"
-                            className={`${inputErrors.patientId ? 'border-red-500' : ''}`}
-                            onBlur={handleBlur}
+                            onValueChange={(value) => setFormData({ ...formData, patientId: value })}
                             required
-                        />
+                        >
+                            <SelectTrigger className={`${inputErrors.patientId ? 'border-red-500' : ''}`}>
+                                <SelectValue placeholder="Select a patient for the appointment" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {isFetching ? (
+                                    <SelectItem value="loading" disabled>Loading...</SelectItem>
+                                ) : isError ? (
+                                    <SelectItem value="error" disabled>Error fetching dependents...</SelectItem>
+                                ) : (
+                                    <>
+                                        {patient && (
+                                            <SelectItem key={patient.id} value={patient.id}>
+                                                {patient.name} (You)
+                                            </SelectItem>
+                                        )}
+                                        {dependents.map(dependent => (
+                                            <SelectItem key={dependent.id} value={dependent.id}>
+                                                {dependent.name} (Dependent)
+                                            </SelectItem>
+                                        ))}
+                                    </>
+                                )}
+                            </SelectContent>
+                        </Select>
                         {inputErrors.patientId && (
                             <div aria-live="assertive" className="flex text-red-500 text-sm">
                                 <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.patientId}
                             </div>
                         )}
+                        </div>
                     </div>
 
                     <div className="grid gap-2">
