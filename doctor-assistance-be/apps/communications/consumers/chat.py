@@ -117,8 +117,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         profile_filter = Q(doctor=profile) if isinstance(profile, DoctorProfile) else Q(patient=profile)
 
         appointments = Appointment.objects.filter(
-            profile_filter, status='approved'
-        ).select_related('doctor__user', 'patient__user').distinct('doctor', 'patient', 'status')
+            profile_filter, 
+            status='approved',
+            patient__primary_patient__isnull=True
+        ).select_related(
+            'doctor__user', 
+            'patient__user'
+        ).distinct('doctor', 'patient', 'status')
 
         return appointments
     
@@ -153,10 +158,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         Fetch the user by DoctorProfile or PatientProfile. This function is run in a separate thread using database_sync_to_async.
         """
-        ProfileModel = PatientProfile if sender_role == 'doctor' else DoctorProfile
         try:
-            return ProfileModel.objects.select_related('user').get(id=receiver_id).user
-        except ProfileModel.DoesNotExist:
+            if sender_role == 'doctor':
+                profile = (
+                    PatientProfile.objects.select_related('user', 'primary_patient__user')
+                    .get(id=receiver_id)
+                )
+                return profile.primary_patient.user if profile.primary_patient else profile.user
+            return DoctorProfile.objects.select_related('user').get(id=receiver_id).user
+        except (PatientProfile.DoesNotExist, DoctorProfile.DoesNotExist):
             return None
 
     @database_sync_to_async

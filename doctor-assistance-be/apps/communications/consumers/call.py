@@ -61,9 +61,26 @@ class CallConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_consultation_and_receiver(self, user, consultation_id: int):
         try:
-            consultation = Consultation.objects.get(id=consultation_id)
-            receiver_id = consultation.doctor.user.id if user.role == 'patient' else consultation.patient.user.id
+            consultation = (
+                Consultation.objects.select_related(
+                    'doctor__user',
+                    'patient__user',
+                    'patient__primary_patient__user'
+                ).get(id=consultation_id)
+            )
+            
+            if user.role == 'patient':
+                receiver_id = consultation.doctor.user.id
+            else:
+                patient = consultation.patient
+                receiver_id = (
+                    patient.primary_patient.user.id 
+                    if patient.primary_patient 
+                    else patient.user.id
+                )
+                
             return consultation, receiver_id
+            
         except ObjectDoesNotExist:
             print(f"Consultation with id {consultation_id} does not exist")
             return None, None
