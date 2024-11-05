@@ -69,7 +69,7 @@ export default function AddDependent() {
                             id="name"
                             name='name'
                             type="text"
-                            placeholder="Enter your name..."
+                            placeholder="Enter dependent's name..."
                             onChange={handleChange}
                             onBlur={handleBlur}
                             value={inputValues.name}

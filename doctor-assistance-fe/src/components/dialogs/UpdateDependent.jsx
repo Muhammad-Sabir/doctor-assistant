@@ -78,7 +78,7 @@ const UpdateDependent = ({ selectedDependent }) => {
                             name='name'
                             type="text"
                             value={dependent.name}
-                            placeholder="Enter your name..."
+                            placeholder="Enter dependent's name..."
                             onChange={handleChange}
                             onBlur={handleBlur}
                             className={inputErrors.name ? 'border-red-500' : 'border-gray-300'}

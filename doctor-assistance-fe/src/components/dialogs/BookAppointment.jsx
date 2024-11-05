@@ -36,7 +36,7 @@ export default function BookAppointment({ doctorId, doctorName }) {
         },
     });
 
-    const { data: dependentsData, isFetching, isError, error } = useFetchQuery({
+    const { data: dependentsData, isFetching, isError } = useFetchQuery({
         url: `patients/`,
         queryKey: ['allRelatedPatientList'],
         fetchFunction: fetchWithAuth,
@@ -120,7 +120,7 @@ export default function BookAppointment({ doctorId, doctorName }) {
                                         )}
                                         {dependents.map(dependent => (
                                             <SelectItem key={dependent.id} value={dependent.id}>
-                                                {dependent.name} (Dependent)
+                                                {dependent.name}
                                             </SelectItem>
                                         ))}
                                     </>
