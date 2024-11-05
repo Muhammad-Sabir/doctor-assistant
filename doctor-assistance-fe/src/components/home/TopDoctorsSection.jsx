@@ -78,24 +78,40 @@ export default function TopDoctorsSection() {
                         <Slider {...settings}>
                             {topDoctors.map((doctor, index) => (
                                 <div key={index} className="border border-gray-300 rounded-md p-6 transition-all duration-500 hover:border-primary ml-2">
-                                    <div className="flex flex-row gap-4">
+                                    <div className="flex flex-col gap-4 items-center relative">
+                                        <p className="text-xs font-medium absolute -top-2 -right-4 flex items-center bg-orange-100 rounded-md px-2 py-1">
+                                            <FaStar className="text-yellow-500" />
+                                            <span className="ml-1 text-primary font-semibold">{doctor.average_rating}</span>
+                                            <span className="ml-1 text-gray-500">({doctor.total_reviews})</span>
+                                        </p>
                                         <img className="rounded-full object-cover w-28 h-28" src={getDoctorImageUrl(doctor.file_url)} alt={doctor.name} />
-                                        <div className="flex-col justify-start items-start">
-                                            <p className="w-72 sm:w-52 truncate block mx-auto">
-                                                <h4 className="text-primary text-sm font-medium leading-8">{doctor.name}</h4>
-                                            </p>
-                                            <p className="font-normal text-sm leading-6 text-gray-500 w-72 sm:w-52 truncate block mx-auto">
-                                                Specialities<span className='mx-1 inline'>-</span>{doctor.specialities.length > 0 ? doctor.specialities.map(s => s.name).join(', ') : 'N/A'}
-                                            </p>
-                                            <h6 className="text-green-600 text-sm leading-relaxed">
-                                                {doctor.date_of_experience ? `${new Date().getFullYear() - new Date(doctor.date_of_experience).getFullYear()} years of experience` : 'N/A'}
-                                            </h6>
-                                            <p className="flex items-center mt-2 text-yellow-500">
-                                                <FaStar />
-                                                <span className="text-primary text-sm font-normal leading-relaxed ml-1">{doctor.average_rating}
-                                                    <span className="ml-1">({doctor.total_reviews})</span>
-                                                </span>
-                                            </p>
+                                        <div className="text-center">
+                                            <div className="flex justify-center w-full">
+                                                <h4 className="text-center text-md font-semibold text-primary w-90 sm:w-60 truncate block">{doctor.name}</h4>
+                                            </div>
+                                            <div className="flex justify-center w-full">
+                                                <p className="font-normal text-sm leading-6 text-gray-500 w-90 sm:w-52 truncate block mx-auto">
+                                                    Specialities<span className='mx-1 inline'>-</span>{doctor.specialities.length > 0 ? doctor.specialities.map(s => s.name).join(', ') : 'N/A'}
+                                                </p>
+                                            </div>
+                                            <div className="flex justify-center w-full">
+                                                <p className="font-normal text-sm leading-6 text-gray-500 w-90 sm:w-52 truncate block mx-auto">
+                                                    Treats<span className='mx-1 inline'>-</span>{doctor.diseases.length > 0 ? doctor.diseases.map(d => d.name).join(', ') : 'N/A'}
+                                                </p>
+                                            </div>
+                                            <div className="flex justify-center w-full">
+                                                <p className="font-normal text-sm leading-6 text-gray-500 w-90 sm:w-52 truncate block mx-auto">
+                                                    Degrees<span className='mx-1 inline'>-</span>{doctor.degrees.length > 0 ? doctor.degrees.map(d => d.name).join(', ') : 'N/A'}
+                                                </p>
+                                            </div>
+
+                                            <div className="flex justify-center mt-4">
+                                                <p className="font-medium text-sm leading-6 whitespace-nowrap py-0.5 px-3 rounded-md bg-emerald-50 text-emerald-600">
+                                                    {doctor.date_of_experience ?
+                                                        `${new Date().getFullYear() - new Date(doctor.date_of_experience).getFullYear()} years of experience`
+                                                        : 'N/A'}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

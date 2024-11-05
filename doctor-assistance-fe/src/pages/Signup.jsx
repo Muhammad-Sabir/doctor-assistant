@@ -145,9 +145,9 @@ export default function SignUp() {
           )}
         </div>
         <Button type="submit" className="w-full">Sign Up</Button>
-        <Button type="button" variant="outline" className="w-full">
+       {/*  <Button type="button" variant="outline" className="w-full">
           <FcGoogle className="mr-2 text-xl" /> Sign Up with Google
-        </Button>
+        </Button> */}
       </form>
       <div className="mt-4 text-center text-sm">
         Already have an account?{' '}
