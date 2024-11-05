@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable } from 'react-native';
 import { Link } from 'expo-router'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { TriangleAlert } from 'lucide-react-native';
 
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,7 +10,7 @@ import AuthHeaderImage from '@/components/shared/AuthHeaderImage';
 
 const ForgetPassword = () => {
 
-    const { forgotPassword} = useAuth();
+    const { forgotPassword } = useAuth();
     const [inputErrors, setInputErrors] = useState({});
     const [email, setEmail] = useState('');
 
@@ -30,22 +30,21 @@ const ForgetPassword = () => {
         if (!hasNoFieldErrors(inputErrors)) {
             return;
         }
-        console.log(email);
         forgotPassword.mutate(JSON.stringify({ email }));
     };
 
     return (
         <CustomKeyboardView>
             <View className="flex-1 px-5 bg-white justify-center">
-                <AuthHeaderImage/>
+                <AuthHeaderImage />
 
                 <View className="gap-3">
                     <Text className="text-2xl font-bold text-primary">Forgot Password?</Text>
                     <Text className="text-balance text-gray-500 -mt-2">Please enter your email address below to{'\n'}receive a password reset link</Text>
 
                     <View className="gap-4 mt-4">
-                        <View className="gap-3">
-                            <Text className="text-black">Email</Text>
+                        <View className="gap-2">
+                            <Text className="text-gray-700">Email</Text>
                             <TextInput
                                 className={`w-full py-2 px-4 rounded-md border ${inputErrors.email ? 'border-red-500' : 'border-gray-300'}`}
                                 placeholder="Enter your Email"
@@ -54,8 +53,8 @@ const ForgetPassword = () => {
                                 onBlur={() => handleBlur(email)}
                             />
                             {inputErrors.email && (
-                                <View className="flex flex-row items-center text-red-500 text-sm -mt-2">
-                                    <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
+                                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                                    <TriangleAlert size={13} color="red" />
                                     <Text className='text-sm text-red-500'>{inputErrors.email} </Text>
                                 </View>
                             )}
@@ -70,9 +69,9 @@ const ForgetPassword = () => {
                     </Pressable>
 
                     <View className="mt-6 mb-8 flex-row justify-center items-center gap-2">
-                    <Text className="text-center text-gray-500">Want to Go Back to Login?</Text>
-                    <Link className='text-center text-[#045883] font-semibold ' href='/login'>Login</Link>
-                </View>
+                        <Text className="text-center text-gray-500">Want to Go Back to Login?</Text>
+                        <Link className='text-center text-[#045883] font-semibold ' href='/login'>Login</Link>
+                    </View>
 
                 </View>
             </View>

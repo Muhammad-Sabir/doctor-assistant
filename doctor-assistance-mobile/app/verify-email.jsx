@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { TriangleAlert } from 'lucide-react-native';
+import { Link } from 'expo-router';
 
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
@@ -33,7 +34,6 @@ const VerifyEmail = () => {
         }
         sendVerificationEmail.mutate(JSON.stringify({ email }));
         await AsyncStorage.removeItem('userEmail');
-        console.log(email);
     };
 
     useEffect(() => {
@@ -56,8 +56,8 @@ const VerifyEmail = () => {
                     <Text className="text-balance text-gray-500 -mt-2">{email ? "We have sent a verification link to:" : "Please enter your email address to \nreceive a verification link:"}</Text>
 
                     <View className="gap-4 mt-4">
-                        <View className="gap-3">
-                            <Text className="text-black">Email</Text>
+                        <View className="gap-2">
+                            <Text className="text-gray-700">Email</Text>
                             <TextInput
                                 className={`w-full py-2 px-4 rounded-md border ${inputErrors.email ? 'border-red-500' : 'border-gray-300'}`}
                                 placeholder="Enter your Email"
@@ -66,8 +66,8 @@ const VerifyEmail = () => {
                                 onBlur={() => handleBlur(email)}
                             />
                             {inputErrors.email && (
-                                <View className="flex flex-row items-center text-red-500 text-sm -mt-2">
-                                    <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
+                                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                                    <TriangleAlert size={13} color="red" />
                                     <Text className='text-sm text-red-500'>{inputErrors.email} </Text>
                                 </View>
                             )}
@@ -80,6 +80,11 @@ const VerifyEmail = () => {
                     >
                         <Text className="text-white font-bold">Resend Verification Email</Text>
                     </Pressable>
+
+                    <View className="mt-6 mb-8 flex-row justify-center items-center gap-2">
+                        <Text className="text-center text-gray-500">Want to Go Back to Login?</Text>
+                        <Link className='text-center text-[#045883] font-semibold ' href='/login'>Login</Link>
+                    </View>
 
                 </View>
             </View>

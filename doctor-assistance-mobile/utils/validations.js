@@ -54,7 +54,7 @@ const validationRules = {
     dependentbirthDate: {
         test: (value) => {
             if (!isDateSelected(value)) {
-                validationRules.dependentbirthDate.message = "Please selectrth.";
+                validationRules.dependentbirthDate.message = "Please select dependent date of birth.";
                 return false;
             }
             if (!isDateInPast(value)) {

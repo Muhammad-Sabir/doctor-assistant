@@ -2,11 +2,11 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner-native';
 
 import { getErrorMessage } from "@/utils/errors";
-import { fetchWithAuth } from "@/utils/fetchApis";
 
 export const useDeleteMutation = ({
     url,
     onSuccessMessage,
+    fetchFunction,
     onErrorMessage,
     headers = {},
     onSuccess = () => {},
@@ -16,7 +16,7 @@ export const useDeleteMutation = ({
         mutationFn: async () => {
             console.log(`Sending request to ${url}`);
             try {
-                const response = await fetchWithAuth(url, {
+                const response = await fetchFunction(url, {
                     method: 'DELETE',
                     headers: {
                         ...headers,

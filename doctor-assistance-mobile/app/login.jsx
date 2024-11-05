@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable} from 'react-native';
-import { Link } from 'expo-router';
-import Feather from '@expo/vector-icons/Feather';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import React, { useCallback, useState } from 'react';
+import { View, Text, TextInput, Pressable } from 'react-native';
+import { Link, useFocusEffect } from 'expo-router';
+import { Eye, EyeOff, TriangleAlert } from 'lucide-react-native';
 
 import GoogleLogo from '@/assets/images/SVG/GoogleLogo';
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
@@ -20,7 +19,7 @@ const Login = () => {
     });
 
     const { loginMutation } = useAuth();
-    const {username} = user;
+    const { username } = user;
     const { mutate: login } = loginMutation({ username });
 
     const handleChange = (id, value) => {
@@ -40,21 +39,28 @@ const Login = () => {
         if (!hasNoFieldErrors(inputErrors)) {
             return;
         }
-        login(JSON.stringify({...user, role: 'patient'}))
+        login(JSON.stringify({ ...user, role: 'patient' }))
     };
+
+    useFocusEffect(
+        useCallback(() => {
+            setInputErrors({});
+            setUser({ username: "", password: "" });
+        }, [])
+    );
 
     return (
         <CustomKeyboardView>
             <View className="flex-1 px-5 bg-white justify-center">
-                <AuthHeaderImage/>
+                <AuthHeaderImage />
 
                 <View className="gap-3">
                     <Text className="text-2xl font-bold text-primary">Login</Text>
                     <Text className="text-balance text-gray-500 -mt-2">Enter your credentials to login</Text>
 
                     <View className="gap-4 mt-4">
-                        <View className="gap-3">
-                            <Text className="text-black">Username</Text>
+                        <View className="gap-2">
+                            <Text className="text-gray-700">Username</Text>
                             <TextInput
                                 className={`w-full py-2 px-4 rounded-md border ${inputErrors.username ? 'border-red-500' : 'border-gray-300'}`}
                                 placeholder="Enter your Email or Phone No"
@@ -63,16 +69,16 @@ const Login = () => {
                                 onBlur={() => handleBlur("username", user.username)}
                             />
                             {inputErrors.username && (
-                                <View className="flex flex-row items-center text-red-500 text-sm -mt-2">
-                                    <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
+                                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                                    <TriangleAlert size={13} color="red" />
                                     <Text className='text-sm text-red-500'>{inputErrors.username} </Text>
                                 </View>
                             )}
                         </View>
 
-                        <View className="gap-3">
+                        <View className="gap-2">
                             <View className="flex-row justify-between items-center">
-                                <Text className="text-black">Password</Text>
+                                <Text className="text-gray-700">Password</Text>
                                 <Link className="text-sm text-gray-500" href='/forget-password'>Forgot Password?</Link>
                             </View>
                             <View className="relative">
@@ -85,16 +91,18 @@ const Login = () => {
                                     onBlur={() => handleBlur("password", user.password)}
                                 />
                                 {inputErrors.password && (
-                                    <View className="flex flex-row items-center text-red-500 text-sm mt-1">
-                                        <MaterialIcons name="error-outline" size={13} color="red" className='mr-2' />
+                                    <View className="flex flex-row items-center text-red-500 text-sm mt-2 gap-2">
+                                        <TriangleAlert size={13} color="red" />
                                         <Text className='text-sm text-red-500'>{inputErrors.password} </Text>
                                     </View>
                                 )}
-                                <Pressable
-                                    onPress={() => setPasswordVisible(!passwordVisible)}
-                                    className="absolute right-2 top-2"
-                                >
-                                    <Feather name={passwordVisible ? "eye-off" : "eye"} size={15} color="gray" className='mr-2 mt-2' />
+
+                                <Pressable onPress={() => setPasswordVisible(!passwordVisible)} className="mt-2 mr-2 absolute right-2 top-2">
+                                    {passwordVisible ? (
+                                        <EyeOff size={17} color="gray" />
+                                    ) : (
+                                        <Eye size={17} color="gray" />
+                                    )}
                                 </Pressable>
                             </View>
                         </View>
