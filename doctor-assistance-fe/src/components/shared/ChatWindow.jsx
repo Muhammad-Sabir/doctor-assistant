@@ -6,7 +6,6 @@ import { PiWechatLogoDuotone } from "react-icons/pi";
 import { Input } from '@/components/ui/input';
 import Loading from '@/components/shared/Loading';
 
-import { getAuthStatus } from '@/utils/auth';
 import { getChatSocket } from '@/utils/chatSocket';
 import { formatChatPreviewDate } from '@/utils/date';
 
@@ -19,7 +18,7 @@ export default function ChatWindow() {
     const [loading, setLoading] = useState(true);
     
     const currentChatMessagesEndRef = useRef(null);
-    const socketRef = useRef(getChatSocket(getAuthStatus().user.access_token));
+    const socketRef = useRef(getChatSocket());
 
     useEffect(() => {
         setupInitialSocketEvents();
@@ -30,10 +29,10 @@ export default function ChatWindow() {
     }, [currentChatMessages]);
 
     const setupInitialSocketEvents = () => {
+        socketRef.current.onmessage = handleSocketMessage;
+
         const messageData = { source: 'contact_list' };
         sendMessageToSocket(messageData);
-
-        socketRef.current.onmessage = handleSocketMessage;
     };
 
     const handleSocketMessage = (event) => {

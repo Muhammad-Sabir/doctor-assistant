@@ -36,6 +36,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         data_source = data.get('source')
+
+        print('recieving_data_chat', data)
         
         if data_source == 'message_send':
             await self.receive_message_send(data)
@@ -212,5 +214,5 @@ class ChatConsumer(AsyncWebsocketConsumer):
             - source: where it originated from
             - data: what ever you want to send as a dict
         '''
-        print(data)
+        print('sending_data_chat', data)
         await self.send(text_data=json.dumps(data))

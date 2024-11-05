@@ -5,11 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import RingingIcon from '@/components/shared/RingingIcon';
 import { useWebRTCContext } from '@/context/WebRTCContext';
+import useChatStore from '@/store/ChatStore';
 
 export default function IncomingCall() {
-    const {rejectCall} = useWebRTCContext();
+    
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(true); 
+    const { rejectCall } = useWebRTCContext();
+    const { recipientName } = useChatStore();
     
     const handleDecline = () => {
         console.log('Call Declined');
@@ -35,7 +38,7 @@ export default function IncomingCall() {
                     </DialogTitle>
                     <DialogDescription>
                         <span className='text-center block'>
-                            Dr. Amina Khan is calling you...
+                            {recipientName} is Calling You
                         </span>
                     </DialogDescription>
                 </DialogHeader>

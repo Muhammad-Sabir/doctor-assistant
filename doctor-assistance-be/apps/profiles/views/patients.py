@@ -33,6 +33,13 @@ class PrimaryPatientViewSet(ModelViewSet):
         serializer.save(user=self.request.user)
         self.request.user.is_profile_completed = True
         self.request.user.save(update_fields=['is_profile_completed'])
+    
+    def get_approved_appointments(self, profile):
+        appointments = Appointment.objects.filter(
+            doctor=profile, status='approved'
+        ).select_related('doctor__user', 'patient__user').distinct('doctor', 'patient', 'status')
+
+        return appointments
 
 
 class DependentProfileViewSet(ModelViewSet):

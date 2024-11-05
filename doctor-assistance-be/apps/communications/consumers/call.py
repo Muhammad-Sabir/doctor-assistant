@@ -8,7 +8,7 @@ from apps.consultations.models import Consultation
 
 
 class CallConsumer(AsyncWebsocketConsumer):
-    async def connect(self) -> None:
+    async def connect(self):
         user = self.scope['user']
 
         if not user.is_authenticated:
@@ -37,23 +37,22 @@ class CallConsumer(AsyncWebsocketConsumer):
         message = data.get('message')
         consultation_id = message.get('consultationId')
 
-        print('recieved_data', data)
         consultation, receiver_id = await self.get_consultation_and_receiver(user, consultation_id)
         
         if consultation:
+            if user.role == 'doctor':
+                message['sender'] = await self.get_doctor_details(user)
             await self.channel_layer.group_send(
                 self.get_room_group_name(receiver_id),
                 {
                     'type': 'webrtc_message',
                     'message': message,
-                    'consultationId': consultation_id,
                 }
             )
 
     async def webrtc_message(self, event: dict) -> None:
         await self.send(json.dumps({
             'message': event['message'],
-            'consultationId': event['consultationId']
         }))
 
     def get_room_group_name(self, user_id):
@@ -68,3 +67,11 @@ class CallConsumer(AsyncWebsocketConsumer):
         except ObjectDoesNotExist:
             print(f"Consultation with id {consultation_id} does not exist")
             return None, None
+    
+    @database_sync_to_async
+    def get_doctor_details(self, user):
+        return {
+            'name': user.doctor.name,
+            'id': user.doctor.id
+        }
+

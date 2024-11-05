@@ -1,6 +1,7 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
+
 import { getCallSocket } from "@/utils/callSocket";
-import { getAuthStatus } from "@/utils/auth";
+import useChatStore from "@/store/ChatStore";
 
 const pcConfig = {
     iceServers: [
@@ -36,6 +37,7 @@ const useWebRTC = () => {
     const peerConnection = useRef(null);
     const storedCandidates = useRef([]);
     const socket = useRef(null);
+    const { setRecipient } = useChatStore();
 
     const cleanup = () => {
         setLocalStream(null);
@@ -58,15 +60,17 @@ const useWebRTC = () => {
 
     const handleSocketMessage = async (event) => {
         const data = JSON.parse(event.data);
-        const { type, offer, answer, candidate, consultationId: incomingConsultationId } = data.message || {};
+        const { type, offer, answer, candidate, consultationId: incomingConsultationId, sender } = data.message || {};
 
         console.log('Received message:', type);
 
         switch (type) {
             case 'call_received':
-                setIsIncomingCall(true);
+                setRecipient(sender?.id, sender?.name);
+                console.log('sender_details', sender);
                 consultationId.current = incomingConsultationId;
                 incomingOffer.current = offer;
+                setIsIncomingCall(true);
                 break;
             case 'call_answered':
                 await setRemoteDescription(answer);

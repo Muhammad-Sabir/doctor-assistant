@@ -1,8 +1,11 @@
+import { getAuthStatus } from '@/utils/auth';
+
 let socketInstance = null;
 
-export const getChatSocket = (token) => {
+export const getChatSocket = () => {
   if (!socketInstance || socketInstance.readyState === WebSocket.CLOSED) {
-    socketInstance = new WebSocket(`ws://127.0.0.1:8000/ws/chat/?token=${token}`);
+	const { access_token } = getAuthStatus().user;
+    socketInstance = new WebSocket(`ws://127.0.0.1:8000/ws/chat/?token=${access_token}`);
 
     socketInstance.onopen = () => {
       console.log('WebSocket connected.');

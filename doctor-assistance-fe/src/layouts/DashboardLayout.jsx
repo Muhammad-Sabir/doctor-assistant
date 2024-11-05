@@ -6,6 +6,7 @@ import Header from '@/components/dashboard/Header.jsx';
 import IncomingCall from '@/components/dialogs/IncomingCall';
 import { getAuthStatus } from '@/utils/auth';
 import { getCallSocket } from '@/utils/callSocket';
+import { getChatSocket } from '@/utils/chatSocket';
 import { useWebRTCContext} from '@/context/WebRTCContext';
 
 export default function DashboardLayout() {
@@ -13,7 +14,8 @@ export default function DashboardLayout() {
 	const webRTCContext = user.role === 'patient' ? useWebRTCContext() : null;
 
 	useEffect(() => {
-		getCallSocket()
+		getCallSocket();
+		getChatSocket();
 	}, [user.role]);
 
 	return (

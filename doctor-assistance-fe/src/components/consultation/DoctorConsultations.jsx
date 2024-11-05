@@ -24,7 +24,11 @@ export default function DoctorConsultations() {
         <>
             {recentConsultations.length > 0 ? (
                 recentConsultations.map(consultation => (
-                    <Link key={consultation.id} to={`/doctor/consultation/${consultation.patient}/${consultation.id}`}>
+                    <Link 
+                        key={consultation.id} 
+                        to={`/doctor/consultation/${consultation.patient}/${consultation.id}`}
+                        state= {{ patientName: consultation.patient_name }}    
+                    >
                         <div className=" mb-5 p-4 bg-white border border-gray-300 rounded-lg hover:shadow-md hover:border-primary transition-shadow block">
                             <h3 className={`font-semibold text-sm text-primary mb-2 block w-56 truncate`}>
                                 {consultation.title}

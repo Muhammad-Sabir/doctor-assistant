@@ -4,6 +4,8 @@ from apps.consultations.models import Consultation, SOAPNotes, Prescription
 
 
 class ConsultationSerializer(serializers.ModelSerializer):
+    patient_name = serializers.CharField(source='patient.name', read_only=True)
+
     class Meta:
         model = Consultation
         fields = '__all__'
