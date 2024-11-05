@@ -54,7 +54,7 @@ export default function Sidebar() {
                                 </h2>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <div>
+                                <div className='w-44 px-1'>
                                     <div className="space-y-2">
                                         <PatientAllergies patientId={patientId} />
                                     </div>
