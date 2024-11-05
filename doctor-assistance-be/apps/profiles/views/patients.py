@@ -18,7 +18,6 @@ from apps.profiles.filters import AllergyFilter, PatientAllergyFilter
 
 
 class PrimaryPatientViewSet(ModelViewSet):
-    # queryset = PatientProfile.objects.filter(primary_patient__isnull=True)
     serializer_class = PatientProfileSerializer
     permission_classes = [IsPatientOrOwner]
 
