@@ -28,7 +28,10 @@ export default function PatientAllergies({ patientId }) {
                     </span>
                 ))
             ) : (
-                <p className="text-gray-600 text-sm">No allergies recorded for this patient.</p>
+                <p className="text-gray-600 ml-3 text-sm w-40 break-words">
+                    No allergies recorded for this patient.
+                </p>
+
             )}
         </>
     );

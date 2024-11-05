@@ -58,7 +58,7 @@ export default function Sidebar() {
                                     <div className="space-y-2">
                                         <PatientAllergies patientId={patientId} />
                                     </div>
-                                    <AddAllergy triggerElement={<span className='mt-6 cursor-pointer flex text-xs font-medium text-primary underline justify-start items-center'>
+                                    <AddAllergy triggerElement={<span className='mt-4 cursor-pointer flex text-xs font-medium text-primary underline justify-start items-center'>
                                         <RiAddLine className='mr-2' />Add Allergies
                                     </span>} patientId={patientId} />
                                 </div>
