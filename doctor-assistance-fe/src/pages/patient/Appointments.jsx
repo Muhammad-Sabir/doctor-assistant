@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
-
 import ProfileTabs from '@/components/shared/ProfileTabs';
 import AppoitmentCard from '@/components/shared/AppointmentCard';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
@@ -19,7 +18,7 @@ export default function Appointments() {
   const [filters, setFilters] = useState({ doctorName: '', mode: '' });
 
   const { data, isFetching, isError, error } = useFetchQuery({
-    url: `appointments/?page=${page}&status=${activeTab}`,
+    url: `appointments/?page=${page}${activeTab !== "all" ? `&status=${activeTab}` : ''}`,
     queryKey: ['patientAppointments', page, activeTab],
     fetchFunction: fetchWithAuth,
   });
@@ -47,6 +46,7 @@ export default function Appointments() {
   }, [activeTab]);
 
   const appointmentTabs = [
+    { label: "All", key: "all" },
     { label: "Approved", key: "approved" },
     { label: "Pending", key: "pending" },
     { label: "Rejected", key: "rejected" },
