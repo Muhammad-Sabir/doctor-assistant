@@ -1,49 +1,64 @@
 import React from 'react';
-import { FaCalendarAlt } from 'react-icons/fa';
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { CircleCheckBig, Info } from 'lucide-react';
 
 import { getAuthStatus } from '@/utils/auth';
 import { formatDate } from '@/utils/date';
+
 import RejectAppointment from '@/components/dialogs/RejectAppointment';
 import ApproveAppointment from '@/components/dialogs/ApproveAppointment';
 import DeleteItem from '@/components/dialogs/DeleteItem';
 import UpdateAppointment from '@/components/dialogs/UpdateAppointment';
+import CreateConsultation from '@/components/dialogs/CreateConsultation';
+import AppointmentRejectReason from '@/components/dialogs/AppointmentRejectReason';
 
 export default function AppointmentCard({ appointment }) {
 
     const { user } = getAuthStatus();
 
     return (
-        <div className="flex flex-col p-4 bg-white border border-gray-300 rounded-lg hover:shadow-md hover:border-primary transition-shadow">
+        <div className="relative flex flex-col p-4 bg-white border border-gray-300 rounded-lg hover:shadow-md hover:border-primary transition-shadow">
 
-            <div className="flex items-center gap-2">
-                <FaCalendarAlt className="text-gray-500" />
-                <p className="text-sm text-gray-500">{formatDate(appointment.date_of_appointment)}</p>
+            <div className='flex justify-between items-center'>
+                <div className="flex items-center gap-2">
+                    <CircleCheckBig size={15} className="text-green-600" />
+                    <p className="text-sm text-green-600">{appointment.appointment_mode.replace(/^\w/, (c) => c.toUpperCase())} Appointment</p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <p className="text-sm text-gray-500">{formatDate(appointment.date_of_appointment)}</p>
+                </div>
             </div>
 
-            <h4 className="text-sm font-medium text-primary mb-1 mt-2">{appointment.message}</h4>
+            <div>
+                <p className="mt-2 text-sm font-medium text-primary">Appointment {appointment.status.replace(/^\w/, (c) => c.toUpperCase())} </p>
+                {user.role === 'doctor' ? (
+                    <p className="text-sm text-gray-600 mb-1"> with {appointment.patient_name}</p>
+                ) : (
+                    <p className="text-sm mb-1 text-gray-600"> with {appointment.doctor_name}</p>
+                )}
+            </div>
 
-            {user.role === 'doctor' ? (
-                <p className="text-sm mb-1">Patient: {appointment.patient_name}</p>
-            ) : (
-                <p className="text-sm mb-1">Doctor: {appointment.doctor_name}</p>
-            )}
+            <div className='flex gap-2 items-center'>
+                <Info size={15} className='text-gray-500' />
+                <h4 className="text-sm font-medium text-gray-500">{appointment.message}</h4>
+            </div>
 
-            {user.role !== 'doctor' && appointment.cancellation_reason && (
-                <div className="flex text-sm mb-1 items-center text-red-500">
-                    <p>Reason of Rejection: {appointment.cancellation_reason}</p>
-                </div>
-            )}
-
-            <div className="flex justify-between items-center mt-2">
-                <span className="flex items-center py-1 px-2 bg-accent rounded-md text-xs font-medium max-w-fit text-primary text-center">
-                    <IoMdCheckmarkCircleOutline className='mr-1' />{appointment.appointment_mode}
-                </span>
+            <div className="absolute bottom-3 right-3 flex justify-between items-center mt-2">
+                {appointment.cancellation_reason && (
+                    <div className='flex items-center justify-end'>
+                        <AppointmentRejectReason reason = {appointment.cancellation_reason} />
+                    </div>
+                )}
 
                 {user.role === 'doctor' && appointment.status === 'pending' && (
                     <div className='flex items-center justify-end'>
                         <RejectAppointment appointment={appointment} />
                         <ApproveAppointment appointment={appointment} />
+                    </div>
+                )}
+
+                {user.role === 'doctor' && appointment.status === 'approved' && (
+                    <div className='flex items-center justify-end'>
+                        <CreateConsultation patientId={appointment.patient} />
                     </div>
                 )}
 

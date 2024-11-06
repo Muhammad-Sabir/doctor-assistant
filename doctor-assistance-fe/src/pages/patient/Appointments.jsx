@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
+
 import ProfileTabs from '@/components/shared/ProfileTabs';
 import AppoitmentCard from '@/components/shared/AppointmentCard';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
@@ -47,7 +48,7 @@ export default function Appointments() {
 
   const appointmentTabs = [
     { label: "All", key: "all" },
-    { label: "Approved", key: "approved" },
+    { label: "Upcoming", key: "approved" },
     { label: "Pending", key: "pending" },
     { label: "Rejected", key: "rejected" },
   ];
@@ -135,7 +136,13 @@ export default function Appointments() {
                 )}
               </>
             ) : (
-              <p className="text-gray-600 text-sm">No {activeTab} appointments found.</p>
+              <p className="text-gray-600 text-sm">
+                {activeTab === "approved"
+                  ? "No upcoming appointment found"
+                  : activeTab === "all"
+                    ? "No appointments found"
+                    : `No ${activeTab} appointments found.`}
+              </p>
             )}
           </>
         )}
