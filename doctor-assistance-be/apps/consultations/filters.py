@@ -1,7 +1,7 @@
 from django_filters import FilterSet
 from django_filters import CharFilter
 
-from apps.consultations.models import Consultation
+from apps.consultations.models import Consultation, Prescription
 
 
 class ConsultationFilter(FilterSet):
@@ -10,3 +10,11 @@ class ConsultationFilter(FilterSet):
     class Meta:
         model = Consultation
         fields = ['patient_id']
+
+
+class PrescriptionFilter(FilterSet):
+    consultation_id = CharFilter(field_name='consultation', lookup_expr='exact')
+    
+    class Meta:
+        model = Prescription
+        fields = ['consultation']

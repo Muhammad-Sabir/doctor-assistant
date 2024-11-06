@@ -78,7 +78,7 @@ class DoctorProfileSerializer(BaseSerializer):
 class DependentProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientProfile
-        fields = ['id', 'name', 'date_of_birth', 'gender']
+        fields = ['id', 'name', 'date_of_birth', 'gender', 'relationship']
 
 
 class PatientProfileSerializer(serializers.ModelSerializer):

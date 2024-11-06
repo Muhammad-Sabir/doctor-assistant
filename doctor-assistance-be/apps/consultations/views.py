@@ -10,7 +10,8 @@ from apps.consultations.serializers import (
     SOAPNotesSerializer,
     PrescriptionSerializer
 )
-from apps.consultations.filters import ConsultationFilter
+from apps.consultations.filters import ConsultationFilter, PrescriptionFilter
+
 
 class ConsultationsViewSet(ModelViewSet):
     serializer_class = ConsultationSerializer
@@ -19,17 +20,33 @@ class ConsultationsViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:
-            return [IsDoctor()]
+            return [IsAuthenticated()]
         
         return [IsDoctorOrOwner()]
     
     def get_queryset(self):
-        user = self.request.user
-        return Consultation.objects.filter(doctor=user.doctor)
+        return self.get_consultations(self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(doctor=self.request.user.doctor)
 
+    def get_consultations(self, user):
+        if user.role == 'patient':
+            return Consultation.objects.select_related(
+                'doctor__user',
+                'patient__user',
+                'patient__primary_patient__user'
+            ).filter(
+                Q(patient__user=user) | Q(patient__primary_patient__user=user)
+            )
+        
+        return Consultation.objects.select_related(
+            'doctor__user',
+            'patient__user',
+            'patient__primary_patient__user'
+        ).filter(
+            doctor__user=user
+        )
 
 class SOAPNotesViewSet(ModelViewSet):
     serializer_class = SOAPNotesSerializer
@@ -45,6 +62,8 @@ class SOAPNotesViewSet(ModelViewSet):
 class PrescriptionViewSet(ModelViewSet):
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = PrescriptionFilter
     
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:
@@ -54,19 +73,14 @@ class PrescriptionViewSet(ModelViewSet):
     
     def get_queryset(self):
         user = self.request.user
-        if user.role == 'doctor':
-            return Prescription.objects.select_related('consultation')\
-                .only('consultation', 'medicine_name', 'instruction', 'created_at', 'updated_at')\
-                .filter(consultation__doctor=user.doctor)
-        
-        return self.get_latest_prescriptions(user.patient)
-       
-    def get_latest_prescriptions(self, patient):
-        latest_consultations = Consultation.objects.filter(
-            Q(patient=patient) | Q(patient__in=patient.dependents.all())
-        ).order_by('patient', 'updated_at').distinct('patient').values_list('id', flat=True)
+        filters = (
+            Q(consultation__patient__user=user) |
+            Q(consultation__patient__primary_patient__user=user)
+        ) if user.role == 'patient' else Q(consultation__doctor__user=user)
 
-        return Prescription.objects.filter(
-            consultation__id__in=latest_consultations
-        )
+        return Prescription.objects.select_related(
+            'consultation__patient__user',
+            'consultation__patient__primary_patient__user',
+            'consultation__doctor__user'
+        ).filter(filters)
    

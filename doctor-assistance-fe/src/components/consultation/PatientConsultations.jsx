@@ -7,7 +7,6 @@ import { formatDate } from '@/utils/date';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 
 export default function PatientConsultations({ patientId, truncate = false }) {
-
     const { data, isFetching, isError, error } = useFetchQuery({
         url: `consultations?patient_id=${patientId}`,
         queryKey: ['patientConsultations'],
@@ -24,7 +23,11 @@ export default function PatientConsultations({ patientId, truncate = false }) {
         <>
             {patientConsultations && patientConsultations.length > 0 ? (
                 patientConsultations.map(consultation => (
-                    <Link key={consultation.id} to={`/doctor/consultation/${patientId}/${consultation.id}`}>
+                    <Link 
+                        key={consultation.id}
+                        to={`/doctor/consultation/${patientId}/${consultation.id}`}
+                        state= {{ patientName: consultation.patient_name }}
+                    >
                         <div className="p-4 bg-white border border-gray-300 rounded-lg hover:shadow-md hover:border-primary transition-shadow">
                             <h3 className={`font-semibold text-sm text-primary mb-2 ${truncate ? 'block w-32 truncate' : ''}`}>
                                 {consultation.title}

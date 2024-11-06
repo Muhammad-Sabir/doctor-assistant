@@ -3,36 +3,42 @@ import { TbUserCircle } from 'react-icons/tb';
 import { FaPaperPlane } from 'react-icons/fa';
 
 import { Input } from '@/components/ui/input';
+import useChatStore from '@/store/ChatStore';
 
 export default function ChatSection() {
-    const [messages, setMessages] = useState([
-        { id: 1, user: 'Amina Khan', message: "Hi! I'm looking to work with a designer." },
-        { id: 2, user: 'You', message: "That sounds interesting! I'd love to help." },
-    ]);
+ 
+    const {
+        recipientName,
+        messages,
+        initializeChat,
+        sendMessage,
+    } = useChatStore();
 
     const [newMessage, setNewMessage] = useState('');
     const messageEndRef = useRef(null);
 
-    const handleSendMessage = (e) => {
-        e.preventDefault();
-        if (newMessage.trim()) {
-            setMessages([...messages, { id: messages.length + 1, user: 'You', message: newMessage }]);
-            setNewMessage('');
-        }
-    };
-
+    useEffect(() => {
+        initializeChat();
+    }, [initializeChat]);
+ 
     useEffect(() => {
         messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const patientName = messages.find((msg) => msg.user !== 'You')?.user || 'Unknown User';
-
+    const handleSendMessage = (e) => {
+        e.preventDefault();
+        if (newMessage.trim()) {
+            sendMessage(newMessage);
+            setNewMessage('');
+        }
+    };
+    
     return (
         <div className="flex flex-col bg-white lg:w-1/3 lg:border-l border-gray-300">
-            <h2 className="text-md text-primary font-medium mb-4 mt-2 lg:hidden">Your Chat with {patientName}:</h2>
+            <h2 className="text-md text-primary font-medium mb-4 mt-2 lg:hidden">Your Chat with {recipientName}:</h2>
             <div className="flex items-center justify-start gap-3 border-b border-gray-300 pb-2 px-4 mb-4">
                 <TbUserCircle size={35} className='text-primary' />
-                <p className="font-medium text-primary">{patientName}</p>
+                <p className="font-medium text-primary">{recipientName}</p>
             </div>
             <div className="flex-1 overflow-y-auto p-4">
                 {messages.map((msg) => (

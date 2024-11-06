@@ -9,6 +9,25 @@ from apps.profiles.models import DoctorProfile
 User = get_user_model()
 
 
+class PatientRelationship(models.TextChoices):
+    SON = 'son', 'Son'
+    DAUGHTER = 'daughter', 'Daughter'
+    FATHER = 'father', 'Father'
+    MOTHER = 'mother', 'Mother'
+    SISTER = 'sister', 'Sister'
+    BROTHER = 'brother', 'Brother'
+    NEIGHBOR = 'neighbor', 'Neighbor'
+    LIFE_PARTNER = 'life_partner', 'Life Partner'
+    GRANDFATHER = 'grandfather', 'Grandfather'
+    GRANDMOTHER = 'grandmother', 'Grandmother'
+    GRANDSON = 'grandson', 'Grandson'
+    GRANDDAUGHTER = 'granddaughter', 'Granddaughter'
+    AUNT = 'aunt', 'Aunt'
+    UNCLE = 'uncle', 'Uncle'
+    NIECE = 'niece', 'Niece'
+    NEPHEW = 'nephew', 'Nephew'
+    FRIEND = 'friend', 'Friend'
+
 class PatientProfile(TimeStampedModel):
     user = models.OneToOneField(
         User,
@@ -26,6 +45,13 @@ class PatientProfile(TimeStampedModel):
         blank=True, 
         on_delete=models.SET_NULL, 
         related_name='dependents'
+    )
+    relationship = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        choices=PatientRelationship.choices,
+        default=PatientRelationship.SON
     )
 
     def clean(self):
