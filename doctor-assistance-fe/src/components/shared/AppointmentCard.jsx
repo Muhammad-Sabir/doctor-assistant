@@ -10,6 +10,7 @@ import DeleteItem from '@/components/dialogs/DeleteItem';
 import UpdateAppointment from '@/components/dialogs/UpdateAppointment';
 import CreateConsultation from '@/components/dialogs/CreateConsultation';
 import AppointmentRejectReason from '@/components/dialogs/AppointmentRejectReason';
+import { capitalizeWords } from '@/utils/strings';
 
 export default function AppointmentCard({ appointment }) {
 
@@ -21,7 +22,7 @@ export default function AppointmentCard({ appointment }) {
             <div className='flex justify-between items-center'>
                 <div className="flex items-center gap-2">
                     <CircleCheckBig size={15} className="text-green-600" />
-                    <p className="text-sm text-green-600">{appointment.appointment_mode.replace(/^\w/, (c) => c.toUpperCase())} Appointment</p>
+                    <p className="text-sm text-green-600">{capitalizeWords(appointment.appointment_mode)} Appointment</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <p className="text-sm text-gray-500">{formatDate(appointment.date_of_appointment)}</p>
@@ -29,7 +30,7 @@ export default function AppointmentCard({ appointment }) {
             </div>
 
             <div>
-                <p className="mt-2 text-sm font-medium text-primary">Appointment {appointment.status.replace(/^\w/, (c) => c.toUpperCase())} </p>
+                <p className="mt-2 text-sm font-medium text-primary">Appointment {capitalizeWords(appointment.status)} </p>
                 {user.role === 'doctor' ? (
                     <p className="text-sm text-gray-600 mb-1"> with {appointment.patient_name}</p>
                 ) : (

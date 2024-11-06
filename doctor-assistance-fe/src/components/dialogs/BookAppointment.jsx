@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
-import { validateField, hasNoFieldErrors } from '@/utils/validations';
+import { validateField, hasNoFieldErrors, validateAllFields } from '@/utils/validations';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 
 export default function BookAppointment({ doctorId, doctorName }) {
@@ -43,7 +43,7 @@ export default function BookAppointment({ doctorId, doctorName }) {
     });
 
     const dependents = dependentsData?.results[0].dependents || [];
-    const patient = dependentsData?.results[0]; 
+    const patient = dependentsData?.results[0];
 
     const handleBlur = (e) => {
         const { id, value } = e.target;
@@ -56,6 +56,12 @@ export default function BookAppointment({ doctorId, doctorName }) {
         setFormData((prev) => ({ ...prev, [id]: value }));
     };
 
+    const handleSelectChange = (value) => {
+        setFormData((prev) => ({ ...prev, patientId: value }));
+        const errors = validateField("patientId", value, inputErrors);
+        setInputErrors(errors);
+    };
+
     const setAppointmentMode = (mode) => {
         setFormData((prevData) => ({
             ...prevData,
@@ -64,19 +70,28 @@ export default function BookAppointment({ doctorId, doctorName }) {
     };
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
-        if (!hasNoFieldErrors(inputErrors)) {
-            return;
+
+        const errors = validateAllFields(formData, inputErrors);
+        setInputErrors(errors);
+
+        if (hasNoFieldErrors(errors)) {
+            const { patientId, date_of_appointment, message, appointment_mode } = formData;
+            bookAppointmentMutation.mutate(JSON.stringify({
+                doctor: doctorId, patient: patientId,
+                date_of_appointment, message, appointment_mode
+            }));
         }
-        const { patientId, date_of_appointment, message, appointment_mode } = formData;
-        bookAppointmentMutation.mutate(JSON.stringify({
-            doctor: doctorId, patient: patientId,
-            date_of_appointment, message, appointment_mode
-        }));
+    };
+
+    const handleDialogClose = () => {
+        setFormData((prev) => ({ ...prev, patientId: '', message: '', date_of_appointment: '', }));
+        setInputErrors({});
     };
 
     return (
-        <Dialog>
+        <Dialog onOpenChange={handleDialogClose}>
             <DialogTrigger asChild>
                 <Button variant='secondary' onClick={() => setAppointmentMode('online')}>Consult Online</Button>
             </DialogTrigger>
@@ -97,41 +112,41 @@ export default function BookAppointment({ doctorId, doctorName }) {
                     <div className="grid gap-2">
                         <Label htmlFor="patientId" className='text-gray-700 text-sm font-normal'>Patient</Label>
                         <div className="text-gray-500">
-                        <Select
-                            id="patientId"
-                            value={formData.patientId}
-                            onValueChange={(value) => setFormData({ ...formData, patientId: value })}
-                            required
-                        >
-                            <SelectTrigger className={`${inputErrors.patientId ? 'border-red-500' : ''}`}>
-                                <SelectValue placeholder="Select a patient for the appointment" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {isFetching ? (
-                                    <SelectItem value="loading" disabled>Loading...</SelectItem>
-                                ) : isError ? (
-                                    <SelectItem value="error" disabled>Error fetching dependents...</SelectItem>
-                                ) : (
-                                    <>
-                                        {patient && (
-                                            <SelectItem key={patient.id} value={patient.id}>
-                                                {patient.name} (You)
-                                            </SelectItem>
-                                        )}
-                                        {dependents.map(dependent => (
-                                            <SelectItem key={dependent.id} value={dependent.id}>
-                                                {dependent.name}
-                                            </SelectItem>
-                                        ))}
-                                    </>
-                                )}
-                            </SelectContent>
-                        </Select>
-                        {inputErrors.patientId && (
-                            <div aria-live="assertive" className="flex text-red-500 text-sm">
-                                <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.patientId}
-                            </div>
-                        )}
+                            <Select
+                                id="patientId"
+                                value={formData.patientId}
+                                onValueChange={handleSelectChange}
+                                required
+                            >
+                                <SelectTrigger className={`${inputErrors.patientId ? 'border-red-500' : ''}`}>
+                                    <SelectValue placeholder="Select a patient for the appointment" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {isFetching ? (
+                                        <SelectItem value="loading" disabled>Loading...</SelectItem>
+                                    ) : isError ? (
+                                        <SelectItem value="error" disabled>Error fetching dependents...</SelectItem>
+                                    ) : (
+                                        <>
+                                            {patient && (
+                                                <SelectItem key={patient.id} value={patient.id}>
+                                                    {patient.name} (You)
+                                                </SelectItem>
+                                            )}
+                                            {dependents.map(dependent => (
+                                                <SelectItem key={dependent.id} value={dependent.id}>
+                                                    {dependent.name}
+                                                </SelectItem>
+                                            ))}
+                                        </>
+                                    )}
+                                </SelectContent>
+                            </Select>
+                            {inputErrors.patientId && (
+                                <div aria-live="assertive" className="flex text-red-500 text-sm mt-2">
+                                    <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.patientId}
+                                </div>
+                            )}
                         </div>
                     </div>
 
