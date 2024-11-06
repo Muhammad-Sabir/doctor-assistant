@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from apps.accounts.utils import get_user_from_uid, check_token
-from apps.accounts.models import UserRole
+from apps.accounts.models import UserRole, OTP
 
 User = get_user_model()
 
@@ -128,6 +128,32 @@ class VerifyAccountSerializer(serializers.ModelSerializer):
             return get_user_from_uid(uid)
         except (ValueError, User.DoesNotExist):
             raise serializers.ValidationError('Invalid user.')  
+    
+    def save(self, **kwargs):
+        user = self.context['user']
+        user.is_account_verified = True
+        user.save(update_fields=['is_account_verified'])
+        return user
+
+
+class OTPVerifyAccountSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp_code = serializers.CharField()
+
+    def validate(self, data):
+        email = data.get('email')
+        otp_code = data.get('otp_code')
+
+        try:
+            user = User.objects.get(email=email)
+            otp = OTP.objects.filter(user=user).last()
+            if (otp and not otp.is_valid()) and otp.otp_code != otp_code:
+                raise serializers.ValidationError('Invalid or expired token.')
+        except User.DoesNotExist:
+            raise serializers.ValidationError('User does not exist')
+
+        self.context['user'] = user
+        return data
     
     def save(self, **kwargs):
         user = self.context['user']

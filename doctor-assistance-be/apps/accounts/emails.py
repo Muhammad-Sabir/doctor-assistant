@@ -22,3 +22,13 @@ def send_password_reset_email(user, uid, token):
         'to_email': [user.email]
     }
     send_email(data)
+
+def send_otp_email(user, otp_code):
+    subject = 'Your OTP Code'
+    body = f'Your OTP code is {otp_code}. It is valid for 5 minutes.'
+    data = {
+        'subject': 'Your OTP Code',
+        'body': body,
+        'to_email': [user.email]
+    }
+    send_email(data)
