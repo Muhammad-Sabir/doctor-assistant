@@ -1,14 +1,12 @@
 import React from 'react';
 
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
-    DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+    DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+    DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
-export default function UserProfileMenu({userName}) {
-
-    const getInitials = () => {
-        return userName.charAt(0).toUpperCase();
-    };
+export default function UserProfileMenu({ userImageUrl }) {
 
     const handleLogout = () => {
         localStorage.removeItem('user');
@@ -16,8 +14,8 @@ export default function UserProfileMenu({userName}) {
     };
 
     const menuItems = [
-        { label: 'Settings', onClick: () => {} },
-        { label: 'Support', onClick: () => {} },
+        { label: 'Settings', onClick: () => { } },
+        { label: 'Support', onClick: () => { } },
         { label: 'Logout', onClick: handleLogout },
     ];
 
@@ -25,20 +23,13 @@ export default function UserProfileMenu({userName}) {
         <div className='hidden sm:block'>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button
-                        variant="outline"
-                        size="smallIcon"
-                        className="overflow-hidden rounded-full p-2 bg-primary"
-                        aria-label="User profile menu"
-                    >
-                        <div className="flex items-center justify-center bg-primary">
-                            <span className="text-xs text-white">
-                                {getInitials()}
-                            </span>
-                        </div>
+                    <Button variant="outline" size="smallIcon" className="mt-1 rounded-full bg-primary overflow-hidden p-0 border-none"
+                        aria-label="User profile menu">
+                        <img src={userImageUrl} alt="user-image" className="rounded-full w-8 h-8 object-cover" />
                     </Button>
+
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                {/* <DropdownMenuContent align="end">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {menuItems.map((item, index) => (
@@ -46,7 +37,7 @@ export default function UserProfileMenu({userName}) {
                             {item.label}
                         </DropdownMenuItem>
                     ))}
-                </DropdownMenuContent>
+                </DropdownMenuContent> */}
             </DropdownMenu>
         </div>
     );
