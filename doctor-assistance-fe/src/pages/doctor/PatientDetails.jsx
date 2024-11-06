@@ -82,7 +82,7 @@ export default function PatientDetail() {
                 <div className="mt-4">
                     <h2 className="text-md font-semibold text-primary mb-4">Past Consultations</h2>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-2">
-                        <PatientConsultations patientId={id} />
+                        <PatientConsultations patientId={id}/>
                     </div>
                 </div>
             </div>

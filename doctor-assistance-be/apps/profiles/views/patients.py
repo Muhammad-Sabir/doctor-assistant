@@ -6,6 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.core.viewsets import BaseReadOnlyViewSet
 from apps.profiles.models import PatientProfile, PatientAllergy, Allergy
+from apps.appointments.models import AppointmentStatus
 from apps.profiles.serializers import (
     PatientProfileSerializer,
     DependentProfileSerializer,
@@ -17,14 +18,13 @@ from apps.profiles.filters import AllergyFilter, PatientAllergyFilter
 
 
 class PrimaryPatientViewSet(ModelViewSet):
-    queryset = PatientProfile.objects.filter(primary_patient__isnull=True)
     serializer_class = PatientProfileSerializer
     permission_classes = [IsPatientOrOwner]
 
     def get_queryset(self):
         if self.request.user.role == 'patient':
             return PatientProfile.objects.filter(user_id=self.request.user.id)
-        return super().get_queryset()
+        return self.get_approved_patients_for_doctor(self.request.user.doctor.id)
     
     def perform_create(self, serializer):
         if PatientProfile.objects.filter(user=self.request.user).exists():
@@ -33,6 +33,13 @@ class PrimaryPatientViewSet(ModelViewSet):
         serializer.save(user=self.request.user)
         self.request.user.is_profile_completed = True
         self.request.user.save(update_fields=['is_profile_completed'])
+    
+    def get_approved_patients_for_doctor(self, doctor_id):
+        patient_profiles = PatientProfile.objects.prefetch_related('appointments') \
+                                                .filter(appointments__doctor_id=doctor_id,
+                                                        appointments__status=AppointmentStatus.APPROVED) \
+                                                .distinct()
+        return patient_profiles
 
 
 class DependentProfileViewSet(ModelViewSet):
