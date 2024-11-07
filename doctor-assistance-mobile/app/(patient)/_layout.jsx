@@ -103,9 +103,9 @@ const PatientLayout = () => {
                     }}
                 />
                 <Drawer.Screen
-                    name="prescription"
+                    name="prescription/[id]"
                     options={{
-                        title: 'My Prescription',
+                        title: 'Prescription',
                         drawerItemStyle: { display: 'none' },
                         headerShown: false
                     }}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable} from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Link } from 'expo-router';
 
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useAuth } from '@/contexts/AuthContext';
@@ -115,6 +116,12 @@ const ResetPassword = () => {
                     >
                         <Text className="text-white font-bold">Submit</Text>
                     </Pressable>
+
+                    <View className="mt-6 mb-8 flex-row justify-center items-center gap-2">
+                        <Text className="text-center text-gray-500">Want to Go Back to Login?</Text>
+                        <Link className="text-center text-[#045883] font-semibold" href="/login">Login</Link>
+                    </View>
+
                 </View>
             </View>
         </CustomKeyboardView>
