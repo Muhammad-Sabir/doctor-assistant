@@ -11,10 +11,14 @@ import dummyNotifications from '@/assets/data/dummyNotifications';
 export default function Notifications() {
 
     const [notifications, setNotifications] = useState(dummyNotifications);
-
     const navigate = useNavigate();
 
-    const handleNotificationClick = (url) => {
+    const handleNotificationClick = (notification, url) => {
+        setNotifications((prevNotifications) =>
+            prevNotifications.map((notif) =>
+                notif.id === notification.id ? { ...notif, is_read: true } : notif
+            )
+        );
         navigate(url);
     };
 
@@ -24,9 +28,9 @@ export default function Notifications() {
                 <DropdownMenuTrigger asChild>
                     <Button variant='outline' className="focus-visible:ring-0 border-none relative mt-1 overflow-visible p-0" aria-label="Notifications">
                         <Bell className="h-5 w-5" />
-                        {notifications.length > 0 && (
+                        {notifications.some(n => !n.is_read) && (
                             <span className="absolute top-0 z-10 -right-1 text-xxs text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center">
-                                {notifications.length}
+                                {notifications.filter(n => !n.is_read).length}
                             </span>
                         )}
                     </Button>
@@ -50,17 +54,25 @@ export default function Notifications() {
                                 return (
                                     <DropdownMenuItem
                                         key={notification.id}
-                                        onClick={() => handleNotificationClick(url)}
-                                        className="flex items-center gap-3 px-4 group py-2 my-1 mx-1"
+                                        onClick={() => handleNotificationClick(notification, url)}
+                                        className={`relative flex items-center gap-3 px-4 group py-2 my-2 mx-2 ${
+                                            notification.is_read ? '' : 'bg-accent'
+                                        }`}
                                     >
-                                        <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-gray-200 group-hover:bg-white rounded-full">
+                                        <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center ${notification.is_read ? 'bg-gray-200' : 'bg-white'} group-hover:bg-white rounded-full`}>
                                             {icon}
                                         </div>
 
                                         <div className="flex-1 w-64 sm:w-94">
-                                            <p className="text-sm font-semibold text-gray-600">{notification.message}</p>
+                                            <p className="text-sm font-semibold text-gray-600">
+                                                {notification.message}
+                                            </p>
                                             <p className="text-xs text-gray-500">{notification.timestamp}</p>
                                         </div>
+
+                                        {!notification.is_read && (
+                                            <span className="absolute top-1/2 right-2 w-2 h-2 -mt-1 bg-blue-500 rounded-full"></span>
+                                        )}
                                     </DropdownMenuItem>
                                 );
                             })

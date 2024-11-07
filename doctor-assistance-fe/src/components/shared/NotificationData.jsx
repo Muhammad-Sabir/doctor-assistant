@@ -1,3 +1,4 @@
+import { CiMedicalCross } from "react-icons/ci";
 import { LuCalendarClock } from "react-icons/lu";
 import { TbReportMedical } from "react-icons/tb";
 
@@ -9,8 +10,12 @@ export function getNotificationData(type) {
             url: 'appointments',
         },
         prescription: {
-            icon: <TbReportMedical size={18} className=" text-green-500" />,
+            icon: <CiMedicalCross size={18} className=" text-green-500" />,
             url: 'prescription',
+        },
+        consultation: {
+            icon: <TbReportMedical size={18} className=" text-green-500" />,
+            url: 'consultation',
         },
     };
 
