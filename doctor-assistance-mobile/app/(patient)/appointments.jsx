@@ -26,12 +26,13 @@ export default function Appointments() {
   const { fetchWithUserAuth } = useAuth();
 
   const { data, isFetching, isError, error } = useFetchQuery({
-    url: `appointments/?page=${page}&status=${activeTab}`,
+    url: `appointments/?page=${page}${activeTab !== "all" ? `&status=${activeTab}` : ''}`,
     queryKey: ['patientAppointments', page, activeTab],
     fetchFunction: fetchWithUserAuth,
   });
 
   const appointmentTabs = [
+    { label: "All", key: "all" },
     { label: "Approved", key: "approved" },
     { label: "Pending", key: "pending" },
     { label: "Rejected", key: "rejected" },
