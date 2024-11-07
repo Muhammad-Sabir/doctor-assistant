@@ -106,6 +106,15 @@ const PatientLayout = () => {
                     name="prescription"
                     options={{
                         title: 'My Prescription',
+                        drawerItemStyle: { display: 'none' },
+                        headerShown: false
+                    }}
+                />
+
+                <Drawer.Screen
+                    name="consultations"
+                    options={{
+                        title: 'My Consultations',
                         drawerIcon: () => <Pill size={24} color='hsl(203, 87%, 30%)' />,
                         headerShown: false
                     }}

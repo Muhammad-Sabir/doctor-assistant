@@ -16,7 +16,7 @@ const AppointmentCard = ({ appointment }) => {
             <View className='flex-row justify-between items-end'>
                 <View className="flex-row items-center gap-2">
                     <CheckCircle color='green' size={15} />
-                    <Text className="text-green-600">{capitalizeWords(appointment.appointment_mode)} appointment</Text>
+                    <Text style={{color:'green'}}>{capitalizeWords(appointment.appointment_mode)} appointment</Text>
                 </View>
                 <View className="flex-row items-center gap-2">
                     <Text className="text-gray-500">{formatDate(appointment.date_of_appointment)}</Text>
