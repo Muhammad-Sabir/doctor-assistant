@@ -111,6 +111,10 @@ const validationRules = {
         test: (value) => value.trim().length >= 10,
         message: "Comment must be at least 10 characters long",
     },
+    relationship: {
+        test: (value) => value.trim() !== "",
+        message: "Please select how the dependent is related to you",
+    },
     patientId: {
         test: (value) => value.trim() !== "",
         message: "Patient ID is required",
@@ -159,8 +163,20 @@ export const validateField = (id, value, inputErrors, password = '') => {
     return errors;
 };
 
+
 export const hasNoFieldErrors = (inputErrors) => {
     return Object.keys(inputErrors).length === 0;
+};
+
+export const validateAllFields = (inputValues, inputErrors) => {
+    let errors = { ...inputErrors }; 
+
+    Object.keys(inputValues).forEach((key) => {
+        const value = inputValues[key];
+        errors = { ...errors, ...validateField(key, value, errors) };
+    });
+
+    return errors;
 };
 
 const isDateSelected = (value) => value !== "none" && value !== "";

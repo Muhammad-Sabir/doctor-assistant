@@ -3,6 +3,9 @@ import { View, Text, TextInput, TouchableOpacity, Modal, Pressable, Dimensions }
 import { CheckCircle, Circle, TriangleAlert, X, Plus } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useQueryClient } from '@tanstack/react-query';
+import { Picker } from '@react-native-picker/picker';
+
+import { relationshipOptions } from '@/assets/data/relationshipOptions';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
@@ -16,7 +19,7 @@ export default function AddDependent() {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [inputErrors, setInputErrors] = useState({});
-    const [userDetails, setUserDetails] = useState({ name: "", dob: "", gender: "M" });
+    const [userDetails, setUserDetails] = useState({ name: "", dob: "", gender: "M", relationship: "" });
 
     const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -57,16 +60,16 @@ export default function AddDependent() {
         if (!hasNoFieldErrors(inputErrors)) {
             return;
         }
-        const { name, dob, gender } = userDetails;
-        addDependentMutation.mutate(JSON.stringify({ name, date_of_birth: dob, gender }));
+        const { name, dob, gender, relationship } = userDetails;
+        addDependentMutation.mutate(JSON.stringify({ name, date_of_birth: dob, gender, relationship }));
         setIsModalVisible(false);
         resetForm();
     };
 
     const resetForm = () => {
-        setUserDetails({ name: "", dob: "", gender: "M" });
+        setUserDetails({ name: "", dob: "", gender: "M", relationship: "" });
         setInputErrors({});
-    }
+    };
 
     return (
         <View>
@@ -80,7 +83,7 @@ export default function AddDependent() {
                     resetForm();
                 }}
             >
-                <View className='flex-1 relative items-center justify-center' style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
+                <View className='flex-1 relative items-center justify-center' style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }} >
                     <View className="bg-white rounded-md p-5" style={{ width: screenWidth * 0.91, }} >
 
                         <View className='flex flex-row justify-between'>
@@ -161,6 +164,29 @@ export default function AddDependent() {
                                     </Pressable>
                                 </View>
                             </View>
+
+                            <View className="gap-2 mb-4">
+                                <Text className="text-gray-700">Relationship</Text>
+                                <View className='border border-gray-200 rounded-md'>
+                                    <Picker
+                                        selectedValue={userDetails.relationship}
+                                        style={{ height: 45, width: '100%', borderWidth: 1, borderColor: inputErrors.relationship ? 'red' : '#ccc' }}
+                                        onValueChange={(itemValue) => handleChange('relationship', itemValue)}
+                                    >
+                                        <Picker.Item style={{fontSize: 14, color: 'grey'}} label="Select dependent relation (dependent is the)" value="" />
+                                        {relationshipOptions.map((option) => (
+                                            <Picker.Item style={{fontSize: 14, color: 'grey'}} key={option.value} label={option.label} value={option.value} />
+                                        ))}
+                                    </Picker>
+                                </View>
+                                {inputErrors.relationship && (
+                                    <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                                        <TriangleAlert size={13} color="red" />
+                                        <Text className='text-sm text-red-500'>{inputErrors.relationship} </Text>
+                                    </View>
+                                )}
+                            </View>
+
                         </View>
 
                         <View className="flex-row justify-end mt-4">

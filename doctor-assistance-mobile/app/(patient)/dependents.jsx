@@ -11,6 +11,7 @@ import UpdateDependent from '@/components/modals/UpdateDependent';
 import DeleteItem from '@/components/modals/DeleteItem';
 import { HeaderBackButton } from '@/components/ui/HeaderBackButton';
 import Loading from '@/components/shared/Loading';
+import { capitalizeWords } from '@/utils/strings';
 
 export default function DependentPatientsDetails() {
 
@@ -64,8 +65,11 @@ export default function DependentPatientsDetails() {
                                     <Text className="mt-1 font-normal text-gray-500">
                                         <Text className="font-semibold">Date of Birth:</Text> {dependent.date_of_birth}
                                     </Text>
+                                    <Text className="mt-1 font-normal text-gray-500">
+                                        <Text className="font-semibold">Relation: </Text>{capitalizeWords(dependent.relationship)}
+                                    </Text>
 
-                                    <View className="mt-2 flex flex-row justify-between items-center">
+                                    <View className="mt-3 flex flex-row justify-between items-center">
                                         <View className="flex flex-row gap-2 items-center py-1 px-2 bg-accent rounded-md">
                                             <Text className='text-sm font-medium text-primary'>{dependent.gender === 'M' ? 'Male' : 'Female'}</Text>
                                         </View>
