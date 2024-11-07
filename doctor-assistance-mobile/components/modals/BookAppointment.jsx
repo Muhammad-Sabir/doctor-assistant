@@ -6,6 +6,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useAuth } from '@/contexts/AuthContext';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
+import { Picker } from '@react-native-picker/picker';
+import { useFetchQuery } from '@/hooks/useFetchQuery';
 
 export default function BookAppointment({ doctorId, doctorName }) {
 
@@ -21,6 +23,15 @@ export default function BookAppointment({ doctorId, doctorName }) {
         date_of_appointment: '',
         appointment_mode: '',
     });
+
+    const { data: dependentsData, isFetching, isError } = useFetchQuery({
+        url: 'patients/',
+        queryKey: ['allRelatedPatientList'],
+        fetchFunction: fetchWithUserAuth,
+    });
+
+    const dependents = dependentsData?.results[0].dependents || [];
+    const patient = dependentsData?.results[0];
 
     const bookAppointmentMutation = useCreateUpdateMutation({
         url: `appointments/`,
@@ -39,7 +50,7 @@ export default function BookAppointment({ doctorId, doctorName }) {
     };
 
     const resetForm = () => {
-        setFormData({ appointment_mode: '', date_of_appointment: '', patientId:'', message:'' });
+        setFormData({ appointment_mode: '', date_of_appointment: '', patientId: '', message: '' });
         setInputErrors({});
     };
 
@@ -55,13 +66,14 @@ export default function BookAppointment({ doctorId, doctorName }) {
     const onDateChange = (event, selectedDate) => {
         setShowDatePicker(false);
         if (event.type === 'set' && selectedDate) {
-          const formattedDate = selectedDate.toISOString().split('T')[0];
-          setFormData(prev => ({ ...prev, date_of_appointment: formattedDate }));
-          handleBlur("date_of_appointment", formattedDate);
+            const formattedDate = selectedDate.toISOString().split('T')[0];
+            setFormData(prev => ({ ...prev, date_of_appointment: formattedDate }));
+            handleBlur("date_of_appointment", formattedDate);
         }
-      };
+    };
 
     const handleSubmit = () => {
+        console.log(formData)
         if (!hasNoFieldErrors(inputErrors)) {
             return;
         }
@@ -116,21 +128,26 @@ export default function BookAppointment({ doctorId, doctorName }) {
 
                         <Text className="text-md text-gray-500 mb-4 wrap" style={{ width: 310 }}>Schedule {formData.appointment_mode} appointment with {doctorName}</Text>
 
-                        <View className='mb-3 mt-3'>
-                            <Text className="text-gray-700 text-base mb-2">Patient ID</Text>
-                            <TextInput
-                                keyboardType="numeric"
-                                value={formData.patientId}
-                                onChangeText={(value) => handleChange("patientId", value)}
-                                onBlur={() => handleBlur("patientId", formData.patientId)}
-                                placeholder="Enter Patient ID"
-                                className={`border p-2 px-3 rounded-md mb-2 ${inputErrors.patientId ? 'border-red-500' : 'border-gray-300'}`}
-                            />
+                        <View className="my-4 gap-2">
+                            <Text className='text-gray-700'>Patient</Text>
+                            <View className='border border-gray-200 rounded-md'>
+                                <Picker selectedValue={formData.patientId} style={{ height: 45, width: '100%', borderWidth: 1, borderColor: inputErrors.relationship ? 'red' : '#ccc' }}
+                                    onValueChange={(value) => handleChange('patientId', value)}>
+                                    <Picker.Item style={{ fontSize: 14, color: 'grey' }} value='' label='Select a Patient for the apppointment' />
+
+                                    {patient && (
+                                        <Picker.Item style={{ fontSize: 14, color: 'grey' }} key={patient.id} label={`${patient.name} (You)`} value={patient.id} />
+                                    )}
+                                    {dependents && dependents.length > 0 && dependents.map(dependent => (
+                                        <Picker.Item style={{ fontSize: 14, color: 'grey' }} key={dependent.id} label={dependent.name} value={dependent.id} />
+                                    ))}
+
+                                </Picker>
+                            </View>
                             {inputErrors.patientId && (
-                                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
-                                    <TriangleAlert size={13} color="red"/>
-                                    <Text className='text-sm text-red-500'>{inputErrors.patientId} </Text>
-                                </View>
+                                <Text style={{ color: 'red', fontSize: 12 }}>
+                                    <TriangleAlert size={16} color="red" /> {inputErrors.patientId}
+                                </Text>
                             )}
                         </View>
 
@@ -146,7 +163,7 @@ export default function BookAppointment({ doctorId, doctorName }) {
                             />
                             {inputErrors.message && (
                                 <View className="flex flex-row items-center text-red-500 text-sm gap-2">
-                                    <TriangleAlert size={13} color="red"/>
+                                    <TriangleAlert size={13} color="red" />
                                     <Text className='text-sm text-red-500'>{inputErrors.message} </Text>
                                 </View>
                             )}
@@ -169,7 +186,7 @@ export default function BookAppointment({ doctorId, doctorName }) {
                             )}
                             {inputErrors.date_of_appointment && (
                                 <View className="flex flex-row items-center text-red-500 text-sm gap-2 mt-2">
-                                    <TriangleAlert size={13} color="red"/>
+                                    <TriangleAlert size={13} color="red" />
                                     <Text className='text-sm text-red-500'>{inputErrors.date_of_appointment}</Text>
                                 </View>
                             )}

@@ -18,9 +18,8 @@ const MainLayout = () => {
                 <Stack.Screen name="login" />
                 <Stack.Screen name="register" />
                 <Stack.Screen name="forget-password" />
-                <Stack.Screen name="reset-password/[uid]/[token]" />
+                <Stack.Screen name="reset-password" />
                 <Stack.Screen name="verify-email" />
-                <Stack.Screen name="verify-account/[uid]/[token]" />
                 <Stack.Screen name="complete-profile" />
                 <Stack.Screen name="(patient)" />
             </Stack>

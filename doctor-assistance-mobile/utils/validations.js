@@ -7,6 +7,10 @@ const validationRules = {
         test: (value) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value) || /^(?:\+92|0)?\d{10}$/.test(value),
         message: "Username must be a valid email or phone number",
     },
+    otp: {
+        test: (value) => /^\d{6}$/.test(value),
+        message: "OTP must be a 6-digit number",
+    },
     email: {
         test: (value) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value),
         message: "Email is invalid",
@@ -107,8 +111,12 @@ const validationRules = {
         test: (value) => value.trim().length >= 10,
         message: "Comment must be at least 10 characters long",
     },
-    patientId: {
+    relationship: {
         test: (value) => value.trim() !== "",
+        message: "Please select how the dependent is related to you",
+    },
+    patientId: {
+        test: (value) => typeof value === 'number' && value > 0, 
         message: "Patient ID is required",
     },
     message: {
@@ -155,8 +163,20 @@ export const validateField = (id, value, inputErrors, password = '') => {
     return errors;
 };
 
+
 export const hasNoFieldErrors = (inputErrors) => {
     return Object.keys(inputErrors).length === 0;
+};
+
+export const validateAllFields = (inputValues, inputErrors) => {
+    let errors = { ...inputErrors }; 
+
+    Object.keys(inputValues).forEach((key) => {
+        const value = inputValues[key];
+        errors = { ...errors, ...validateField(key, value, errors) };
+    });
+
+    return errors;
 };
 
 const isDateSelected = (value) => value !== "none" && value !== "";

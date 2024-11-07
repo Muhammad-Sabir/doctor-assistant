@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
-import { useRouter } from 'expo-router';
+import { useRouter, usePathname } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchApi, fetchWithAuth } from '@/utils/fetchApis';
@@ -8,23 +9,27 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const router = useRouter();
+    const pathname = usePathname();
     const [user, setUser] = useState(null);
 
     const fetchWithUserAuth = (url, options) => {
         return fetchWithAuth(url, options, user, setUser, router);
     };
 
-    const signupMutation = useCreateUpdateMutation({
-        url: 'user/register/',
-        method: 'POST',
-        fetchFunction: fetchApi,
-        headers: { 'Content-Type': 'application/json' },
-        onSuccessMessage: 'A verification email has been sent to your email address.',
-        onErrorMessage: 'Signup failed',
-        onSuccess: () => {
-            router.push('/verify-email');
-        },
-    });
+    const signupMutation = ({ email }) => {
+        return useCreateUpdateMutation({
+            url: 'user/register/',
+            method: 'POST',
+            fetchFunction: fetchApi,
+            headers: { 'Content-Type': 'application/json' },
+            onSuccessMessage: 'A verification email has been sent to your email address.',
+            onErrorMessage: 'Signup failed',
+            onSuccess: async () => {
+                await AsyncStorage.setItem('userEmail', email);
+                router.push('/verify-email');
+            },
+        });
+    };
 
     const loginMutation = ({ username }) => {
         return useCreateUpdateMutation({
@@ -51,54 +56,53 @@ export const AuthProvider = ({ children }) => {
                     router.replace('(patient)');
             },
             onError: (error) => {
-                if (error.status === 400 && error.message === "Account is not verified.") {
+                if (error.status === 400 && error.message === "Account is not verified. OTP sent to your email.") {
                     router.push('/verify-email');
                 }
             },
         });
     };
 
-    const sendVerificationEmail = useCreateUpdateMutation({
-        url: 'user/send-verify-email/',
+    const sendOTPVerification = useCreateUpdateMutation({
+        url: 'user/send-otp/',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         fetchFunction: fetchApi,
-        onSuccessMessage: 'Verification email sent.',
-        onErrorMessage: 'Failed to send verification email',
-    });
+        onSuccessMessage: 'OTP Code sent has been sent on your email.',
+        onErrorMessage: 'Failed to send OTP Code',
+        onSuccess: () => {
+            if (pathname === '/login') {
+                router.push('/forget-password');
+            }
+        }
+    })
 
-    const verifyAccount = ({ uid, token }) => {
-        return useCreateUpdateMutation({
-            url: `user/verify-account/${uid}/${token}`,
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            fetchFunction: fetchApi,
-            onSuccessMessage: 'Your account has been verified successfully.',
-            onErrorMessage: 'Verification failed',
-        });
-    };
-
-    const resetPassword = ({ uid, token }) => {
-        return useCreateUpdateMutation({
-            url: `user/reset-password-confirm/${uid}/${token}`,
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            fetchFunction: fetchApi,
-            onSuccessMessage: 'Password reset successfully.',
-            onErrorMessage: 'Failed to reset password',
-            onSuccess: () => {
+    const verifyOTP = useCreateUpdateMutation({
+        url: `user/verify-otp/`,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        fetchFunction: fetchApi,
+        onSuccessMessage: 'Your account has been verified successfully.',
+        onErrorMessage: 'Verification failed',
+        onSuccess: () => {
+            if (pathname === '/forget-password') {
+                router.push('/reset-password');
+            } else {
                 router.push('/login');
-            },
-        });
-    };
+            }
+        }
+    })
 
-    const forgotPassword = useCreateUpdateMutation({
-        url: 'user/send-reset-password/',
+    const resetPassword = useCreateUpdateMutation({
+        url: `user/change-password/`,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         fetchFunction: fetchApi,
-        onSuccessMessage: 'Password reset email sent.',
-        onErrorMessage: 'Failed to send reset email',
+        onSuccessMessage: 'Password reset successfully.',
+        onErrorMessage: 'Failed to reset password',
+        onSuccess: () => {
+            router.push('/login');
+        },
     });
 
     const completeProfile = useCreateUpdateMutation({
@@ -122,7 +126,7 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             user, signupMutation, loginMutation, logout, completeProfile,
-            verifyAccount, resetPassword, sendVerificationEmail, forgotPassword, fetchWithUserAuth
+            verifyOTP, resetPassword, sendOTPVerification, fetchWithUserAuth
         }}>
             {children}
         </AuthContext.Provider>

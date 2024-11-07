@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, TextInput, Pressable } from 'react-native';
 import { Link, useFocusEffect } from 'expo-router';
 import { Eye, EyeOff, TriangleAlert } from 'lucide-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import GoogleLogo from '@/assets/images/SVG/GoogleLogo';
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
@@ -12,13 +13,14 @@ import AuthHeaderImage from '@/components/shared/AuthHeaderImage';
 const Login = () => {
 
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [email, setEmail] = useState('');
     const [inputErrors, setInputErrors] = useState({});
     const [user, setUser] = useState({
         username: "",
         password: ""
     });
 
-    const { loginMutation } = useAuth();
+    const { loginMutation, sendOTPVerification } = useAuth();
     const { username } = user;
     const { mutate: login } = loginMutation({ username });
 
@@ -34,11 +36,16 @@ const Login = () => {
         setInputErrors(errors);
     };
 
+    const handleForgetPassword = ()=> {
+        sendOTPVerification.mutate(JSON.stringify({ email }));
+    }
+
     const handleLoginIn = (e) => {
         e.preventDefault();
         if (!hasNoFieldErrors(inputErrors)) {
             return;
         }
+        
         login(JSON.stringify({ ...user, role: 'patient' }))
     };
 
@@ -48,6 +55,16 @@ const Login = () => {
             setUser({ username: "", password: "" });
         }, [])
     );
+
+    useEffect(() => {
+        const fetchEmail = async () => {
+            const storedEmail = await AsyncStorage.getItem('userEmail');
+            if (storedEmail) {
+                setEmail(storedEmail);
+            }
+        };
+        fetchEmail();
+    }, []);
 
     return (
         <CustomKeyboardView>
@@ -79,7 +96,7 @@ const Login = () => {
                         <View className="gap-2">
                             <View className="flex-row justify-between items-center">
                                 <Text className="text-gray-700">Password</Text>
-                                <Link className="text-sm text-gray-500" href='/forget-password'>Forgot Password?</Link>
+                                <Text className="text-sm text-gray-500" onPress={handleForgetPassword}>Forgot Password?</Text>
                             </View>
                             <View className="relative">
                                 <TextInput
