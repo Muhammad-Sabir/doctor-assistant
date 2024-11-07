@@ -30,7 +30,7 @@ export default function Consultations() {
                 <div className="grid gap-4 lg:grid-cols-2 mt-2">
                     {patientConsultations.map(consultation => (
                         <div key={consultation.id} className="relative p-4 bg-white border border-gray-300 rounded-lg hover:shadow-md transition-shadow">
-                            <div className="absolute top-3 right-2">
+                            <div className="absolute top-3 right-4">
                                 <Link to={`/patient/prescription/${consultation.id}`} className="text-primary flex underline items-center gap-2 text-xs">
                                     <FiEye /> View Prescription
                                 </Link>
