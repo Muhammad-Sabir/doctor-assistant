@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.consultations.models import Consultation, SOAPNotes, Prescription
+from apps.consultations.models import Consultation, SOAPNotes, Prescription, Transcription
 
 
 class ConsultationSerializer(serializers.ModelSerializer):
@@ -26,6 +26,12 @@ class BaseConsultationSerializer(serializers.ModelSerializer):
 class SOAPNotesSerializer(BaseConsultationSerializer):
     class Meta:
         model = SOAPNotes
+        fields = '__all__'
+
+
+class TranscriptionSerializer(BaseConsultationSerializer):
+    class Meta:
+        model = Transcription
         fields = '__all__'
 
 

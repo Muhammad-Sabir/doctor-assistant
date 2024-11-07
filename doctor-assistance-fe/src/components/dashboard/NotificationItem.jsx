@@ -21,7 +21,9 @@ export const NotificationItem = ({ notification, onMarkAsRead }) => {
     });
 
     const handleClick = () => {
-        markAsRead(notification.id);
+        if (!notification.is_read){ 
+            markAsRead(notification.id);
+        }
         navigate(url);
     };
 

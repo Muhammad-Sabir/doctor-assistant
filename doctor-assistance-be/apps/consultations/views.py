@@ -4,11 +4,12 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.profiles.permissions import IsDoctor, IsDoctorOrOwner
-from apps.consultations.models import Consultation, SOAPNotes, Prescription
+from apps.consultations.models import Consultation, SOAPNotes, Prescription, Transcription
 from apps.consultations.serializers import (
     ConsultationSerializer,
     SOAPNotesSerializer,
-    PrescriptionSerializer
+    PrescriptionSerializer,
+    TranscriptionSerializer
 )
 from apps.consultations.filters import ConsultationFilter, PrescriptionFilter
 
@@ -56,6 +57,17 @@ class SOAPNotesViewSet(ModelViewSet):
         user = self.request.user
         return SOAPNotes.objects.select_related('consultation')\
             .only('consultation', 'subject', 'description', 'created_at', 'updated_at')\
+            .filter(consultation__doctor=user.doctor)
+
+
+class TranscriptionViewSet(ModelViewSet):
+    serializer_class = TranscriptionSerializer
+    permission_classes = [IsDoctor]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Transcription.objects.select_related('consultation')\
+            .only('consultation', 'transcription_text', 'created_at', 'updated_at')\
             .filter(consultation__doctor=user.doctor)
 
 
