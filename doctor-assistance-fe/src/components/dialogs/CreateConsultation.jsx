@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiSolidError } from "react-icons/bi";
+import { FolderPlus } from 'lucide-react';
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -57,7 +58,9 @@ export default function CreateConsultation({ patientId }) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant='secondary' className='ml-3'>Create Consultation</Button>
+                <span >
+                    <FolderPlus className='text-green-500 mt-0.5 ml-1' size={18} />
+                </span>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

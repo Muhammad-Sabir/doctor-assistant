@@ -39,7 +39,7 @@ export default function Prescription() {
     <div className="px-2 h-[84vh]">
       <div id="patient-prescription" className="h-[74vh] mb-5 overflow-y-scroll">
 
-        <h3 className="my-1 text-primary text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Your latest prescription:</h3>
+        <h3 className="my-1 text-primary text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Prescription:</h3>
 
         <h3 className="mt-5 mb-3 text-primary text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Medications:</h3>
         <MedicationTable medications={formData.medications} setMedications={(medications) => setFormData(prev => ({ ...prev, medications }))} />

@@ -31,14 +31,14 @@ export default function FeatureSection() {
 
             <div className="flex justify-center items-center gap-x-5 gap-y-8 lg:gap-y-0 flex-wrap md:flex-wrap lg:flex-nowrap lg:flex-row lg:justify-between lg:gap-x-8 ">
                 {features.map((feature, index) => (
-                    <div key={index} className="relative w-full text-center max-md:max-w-sm max-md:mx-auto group md:w-2/5 lg:w-1/4 pb-4 rounded-md border-b shadow-lg">
+                    <div key={index} className="p-3 w-full sm:w-64 h-52 relative text-center group md:w-2/5 lg:w-1/4 rounded-md border-b shadow-lg">
                         <div className="bg-indigo-50 rounded-lg text-primary flex justify-center items-center mb-5 w-20 h-20 mx-auto cursor-pointer transition-all duration-500 group-hover:bg-primary group-hover:text-white">
                             {feature.icon}
                         </div>
                         <h4 className="text-lg font-medium text-gray-900 mb-3 capitalize">
                             {feature.title}
                         </h4>
-                        <p className="text-sm font-normal text-gray-500">
+                        <p className="text-sm font-normal text-gray-500 line-clamp-2">
                             {feature.description}
                         </p>
                     </div>

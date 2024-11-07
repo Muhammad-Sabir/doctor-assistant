@@ -11,7 +11,6 @@ import { useFetchQuery } from '@/hooks/useFetchQuery';
 
 import Loading from '@/components/shared/Loading';
 import AddAllergy from '@/components/dialogs/AddAllergy';
-import CreateConsultation from '@/components/dialogs/CreateConsultation';
 
 import userIcon from "@/assets/images/webp/userIcon.webp";
 import banner from "@/assets/images/webp/profileBanner.webp";
@@ -62,9 +61,6 @@ export default function PatientDetail() {
                         </div>
                     </div>
 
-                    <div className="flex gap-2">
-                        <CreateConsultation patientId={id} />
-                    </div>
                 </div>
 
                 <hr className="border-t border-gray-300 mt-4" />

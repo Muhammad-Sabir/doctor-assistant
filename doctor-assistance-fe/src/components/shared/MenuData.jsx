@@ -17,7 +17,7 @@ export const menuItems = {
         { icon: <RiUserSearchLine className="h-5 w-5" />, url: "/patient/doctors", name: "Doctors" },
         { icon: <FaRegComments className="h-5 w-5" />, url: "/patient/reviews", name: "My Reviews" },
         { icon: <LuCalendarClock className="h-5 w-5" />, url: "/patient/appointments", name: "Appointments" },
-        { icon: <TbReportMedical className="h-5 w-5" />, url: "/patient/prescription", name: "Prescription" },
+        { icon: <TbReportMedical className="h-5 w-5" />, url: "/patient/consultations", name: "Consultations" },
         { icon: <TbBrandHipchat className="h-5 w-5" />, url: "/patient/chats", name: "Chats" },
     ],
 };

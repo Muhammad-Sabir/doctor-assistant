@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import UpdateDependent from '@/components/dialogs/UpdateDependent';
 import DeleteItem from '@/components/dialogs/DeleteItem';
 import AddDependent from '@/components/dialogs/AddDependent';
+import { capitalizeWords } from '@/utils/strings';
 
 export default function DependentPatientsDetails({ patientData }) {
     const [dependentDetails, setDependentDetails] = useState([]);
@@ -22,18 +23,19 @@ export default function DependentPatientsDetails({ patientData }) {
 
             {dependentDetails.length > 0 ? (
                 <>
-                    <div className="hidden sm:grid grid-cols-5 gap-4 border-b border-gray-200 pb-3">
+                    <div className="hidden sm:grid grid-cols-6 gap-4 border-b border-gray-200 pb-3">
                         <div className="text-sm font-medium text-gray-700">ID</div>
                         <div className="text-sm font-medium text-gray-700">Name</div>
                         <div className="text-sm font-medium text-gray-700">Date of Birth</div>
                         <div className="text-sm font-medium text-gray-700">Gender</div>
+                        <div className="text-sm font-medium text-gray-700">Relation</div>
                         <div className="text-sm font-medium text-gray-700">Actions</div>
                     </div>
 
                     {dependentDetails.map((dependent) => (
                         <div
                             key={dependent.id}
-                            className="grid grid-cols-1 sm:grid-cols-5 gap-0 sm:gap-4 border sm:border-t 
+                            className="grid grid-cols-1 sm:grid-cols-6 gap-0 sm:gap-4 border sm:border-t 
                             sm:border-l-0 sm:border-r-0 sm:border-b-0 border-gray-300 py-3 px-4 sm:px-0 rounded-md sm:rounded-none my-5 sm:my-0"
                         >
                             <div className="text-sm font-normal text-gray-500 flex items-center">
@@ -47,6 +49,9 @@ export default function DependentPatientsDetails({ patientData }) {
                             </div>
                             <div className="text-sm font-normal text-blue-500 sm:text-gray-500 flex items-center">
                                 {dependent.gender === 'M' ? 'Male' : 'Female'}
+                            </div>
+                            <div className="text-sm font-normal text-gray-500 flex items-center mt-2 sm:mt-0">
+                                <span className="block sm:hidden mr-1">Relation:</span>{capitalizeWords(dependent.relationship)}
                             </div>
 
                             <div className="flex justify-end sm:justify-start items-center">

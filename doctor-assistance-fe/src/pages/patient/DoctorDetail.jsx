@@ -56,9 +56,16 @@ export default function DoctorDetail() {
                                 </p>
                                 <div className="flex items-center mt-2 lg:mt-0 justify-center sm:justify-normal">
                                     <FaStar className="text-yellow-500" />
-                                    <span className="ml-1 text-primary">{data.average_rating}</span>
-                                    <span className="ml-1 text-gray-500 ">({data.total_reviews} reviews)</span>
+                                    {data.total_reviews > 0 ? (
+                                        <>
+                                            <span className="ml-1 text-primary">{data.average_rating}</span>
+                                            <span className="ml-1 text-gray-500">({data.total_reviews} reviews)</span>
+                                        </>
+                                    ) : (
+                                        <span className="ml-1 text-gray-500">No reviews yet</span>
+                                    )}
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -129,7 +136,7 @@ export default function DoctorDetail() {
                             ))}
                         </div>
                     ) : (
-                        <p className="text-gray-600 text-sm">Not reviewed yet.</p>
+                        <p className="text-gray-600 text-sm">No reviews yet.</p>
                     )}
                 </div>
             </div>

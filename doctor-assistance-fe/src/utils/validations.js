@@ -54,7 +54,7 @@ const validationRules = {
     dependentbirthDate: {
         test: (value) => {
             if (!isDateSelected(value)) {
-                validationRules.dependentbirthDate.message = "Please selectrth.";
+                validationRules.dependentbirthDate.message = "Please select dependent date of birth.";
                 return false;
             }
             if (!isDateInPast(value)) {
@@ -107,8 +107,12 @@ const validationRules = {
         test: (value) => value.trim().length >= 10,
         message: "Comment must be at least 10 characters long",
     },
-    patientId: {
+    relationship: {
         test: (value) => value.trim() !== "",
+        message: "Please select how the dependent is related to you",
+    },
+    patientId: {
+        test: (value) => typeof value === 'number' && value > 0, 
         message: "Patient ID is required",
     },
     message: {
@@ -169,6 +173,17 @@ export const validateField = (id, value, inputErrors, password = '') => {
 
 export const hasNoFieldErrors = (inputErrors) => {
     return Object.keys(inputErrors).length === 0;
+};
+
+export const validateAllFields = (inputValues, inputErrors) => {
+    let errors = { ...inputErrors }; 
+
+    Object.keys(inputValues).forEach((key) => {
+        const value = inputValues[key];
+        errors = { ...errors, ...validateField(key, value, errors) };
+    });
+
+    return errors;
 };
 
 const isDateSelected = (value) => value !== "none" && value !== "";

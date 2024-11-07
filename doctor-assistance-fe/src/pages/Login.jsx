@@ -142,9 +142,9 @@ export default function Login() {
                     )}
                 </div>
                 <Button type="submit" className="w-full">Login</Button>
-                <Button type="button" variant="outline" className="w-full">
+               {/*  <Button type="button" variant="outline" className="w-full">
                     <FcGoogle className="mr-2 text-xl" /> Login with Google
-                </Button>
+                </Button> */}
             </form>
             <div className="mt-4 text-center text-sm">
                 Don&apos;t have an account? <Link to="/signup" className="underline text-primary">Sign up</Link>
