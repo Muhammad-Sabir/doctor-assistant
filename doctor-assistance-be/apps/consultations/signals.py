@@ -5,7 +5,7 @@ from apps.consultations.models import Consultation
 from apps.notifications.models import Notification, NotificationType
 
 
-def appointment_notification(sender, instance, created, **kwargs):
+def consultation_notification(sender, instance, created, **kwargs):
     if created:
         patient_user = instance.patient.user
         Notification.objects.create(
@@ -14,4 +14,4 @@ def appointment_notification(sender, instance, created, **kwargs):
             notification_type=NotificationType.CONSULTATION
         )
 
-post_save.connect(appointment_notification, sender=Consultation)
+post_save.connect(consultation_notification, sender=Consultation)
