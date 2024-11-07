@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable} from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
@@ -11,10 +10,7 @@ import AuthHeaderImage from '@/components/shared/AuthHeaderImage';
 
 const ResetPassword = () => {
 
-    const { uid, token } = useLocalSearchParams();
-
     const { resetPassword } = useAuth();
-    const { mutate: reset } = resetPassword({ uid, token });
 
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [inputErrors, setInputErrors] = useState({});
@@ -42,7 +38,7 @@ const ResetPassword = () => {
             return;
         }
         
-        reset(JSON.stringify({ password: formData.password}));
+        resetPassword.mutate(JSON.stringify({ password: formData.password}));
     };
 
     return (

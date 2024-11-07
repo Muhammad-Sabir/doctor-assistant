@@ -7,6 +7,10 @@ const validationRules = {
         test: (value) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value) || /^(?:\+92|0)?\d{10}$/.test(value),
         message: "Username must be a valid email or phone number",
     },
+    otp: {
+        test: (value) => /^\d{6}$/.test(value),
+        message: "OTP must be a 6-digit number",
+    },
     email: {
         test: (value) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value),
         message: "Email is invalid",

@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, TextInput, Pressable } from 'react-native';
 import { Link, useFocusEffect } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Eye, EyeOff, TriangleAlert } from 'lucide-react-native';
 
 import GoogleLogo from '@/assets/images/SVG/GoogleLogo';
@@ -21,6 +20,9 @@ const Register = () => {
         password: "",
         phoneNo: "",
     });
+
+    const {email} = userDetails;
+    const { mutate: signup } = signupMutation({ email });
 
     const handleChange = (id, value) => {
         setUserDetails(prev => ({
@@ -42,8 +44,7 @@ const Register = () => {
         }
 
         const { email, password, phoneNo } = userDetails;
-        await AsyncStorage.setItem('userEmail', email);
-        signupMutation.mutate(JSON.stringify({ email, password, phone_number: phoneNo, role: 'patient' }));
+        signup(JSON.stringify({ email, password, phone_number: phoneNo, role: 'patient' }));
     };
 
     useFocusEffect(
