@@ -1,6 +1,9 @@
+import random
+
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.utils import timezone
 
 from apps.accounts.managers import UserManager
 from apps.core.models import TimeStampedModel
@@ -45,3 +48,15 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
     def __str__(self):
         return self.email or self.phone_number
+
+
+class OTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    otp_code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        return (self.created_at >= timezone.now() - timezone.timedelta(minutes=5))
+
+    def generate_otp(self):
+        return random.randint(100000, 999999)
