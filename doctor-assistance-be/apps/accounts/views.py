@@ -32,7 +32,7 @@ class UserRegistration(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
-        if is_pc_request(self.request):
+        if not is_pc_request(self.request):
             self.send_otp_email(user)
         else:
             self.send_verification_email(user)

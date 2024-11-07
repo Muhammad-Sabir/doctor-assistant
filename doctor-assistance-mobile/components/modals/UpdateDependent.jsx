@@ -3,10 +3,12 @@ import { View, Text, TextInput, TouchableOpacity, Modal, Pressable, Dimensions }
 import { CheckCircle, Circle, Pencil, TriangleAlert, X } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useQueryClient } from '@tanstack/react-query';
+import { Picker } from '@react-native-picker/picker';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
+import { relationshipOptions } from '@/assets/data/relationshipOptions';
 
 export default function UpdateDependent({ selectedDependent }) {
 
@@ -58,7 +60,7 @@ export default function UpdateDependent({ selectedDependent }) {
         if (event.type === 'set' && selectedDate) {
             const formattedDate = selectedDate.toISOString().split('T')[0];
             setDependent(prev => ({ ...prev, date_of_birth: formattedDate }));
-            handleBlur("birthDate", formattedDate);
+            handleBlur("dependentbirthDate", formattedDate);
         }
     };
 
@@ -66,8 +68,8 @@ export default function UpdateDependent({ selectedDependent }) {
         if (!hasNoFieldErrors(inputErrors)) {
             return;
         }
-        const { name, date_of_birth, gender } = dependent;
-        updateDependentMutation.mutate(JSON.stringify({ name, date_of_birth, gender }));
+        const { name, date_of_birth, gender, relationship } = dependent;
+        updateDependentMutation.mutate(JSON.stringify({ name, date_of_birth, gender, relationship }));
     };
 
     return (
@@ -118,7 +120,7 @@ export default function UpdateDependent({ selectedDependent }) {
                             <View className="gap-2">
                                 <Text className="text-gray-700">Date of Birth</Text>
                                 <Pressable onPress={() => setShowDatePicker(true)}>
-                                    <View className={`w-full py-3 px-4 rounded-md border ${inputErrors.birthDate ? 'border-red-500' : 'border-gray-300'}`}>
+                                    <View className={`w-full py-3 px-4 rounded-md border ${inputErrors.dependentbirthDate ? 'border-red-500' : 'border-gray-300'}`}>
                                         <Text className={dependent.date_of_birth ? "text-black" : "text-gray-400"}>{dependent.date_of_birth || `Select dependent's Date of Birth`} </Text>
                                     </View>
                                 </Pressable>
@@ -162,6 +164,27 @@ export default function UpdateDependent({ selectedDependent }) {
                                         </View>
                                     </Pressable>
                                 </View>
+                            </View>
+
+                            <View className="gap-2 mb-4">
+                                <Text className="text-gray-700">Relationship</Text>
+                                <View className='border border-gray-200 rounded-md'>
+                                    <Picker
+                                        selectedValue={dependent.relationship}
+                                        style={{ height: 45, width: '100%', borderWidth: 1, borderColor: inputErrors.relationship ? 'red' : '#ccc' }}
+                                        onValueChange={(itemValue) => handleChange('relationship', itemValue)}
+                                    >
+                                        {relationshipOptions.map((option) => (
+                                            <Picker.Item style={{ fontSize: 14, color: 'black' }} key={option.value} label={option.label} value={option.value} />
+                                        ))}
+                                    </Picker>
+                                </View>
+                                {inputErrors.relationship && (
+                                    <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                                        <TriangleAlert size={13} color="red" />
+                                        <Text className='text-sm text-red-500'>{inputErrors.relationship} </Text>
+                                    </View>
+                                )}
                             </View>
                         </View>
 
