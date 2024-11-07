@@ -8,11 +8,12 @@ from apps.notifications.models import Notification, NotificationType
 def appointment_notification(sender, instance, created, **kwargs):
     if created:
         doctor_user = instance.doctor.user
-        Notification.objects.create(
-            user=doctor_user,
-            message=f"New appointment created by {instance.patient.name} on {instance.date_of_appointment}.",
-            notification_type=NotificationType.APPOINTMENT
-        )
+        if doctor_user:
+            Notification.objects.create(
+                user=doctor_user,
+                message=f"New appointment created by {instance.patient.name} on {instance.date_of_appointment}.",
+                notification_type=NotificationType.APPOINTMENT
+            )
     else:
         if instance.status in [AppointmentStatus.APPROVED, AppointmentStatus.REJECTED]:
             patient_user = instance.patient.user
