@@ -116,7 +116,7 @@ const validationRules = {
         message: "Please select how the dependent is related to you",
     },
     patientId: {
-        test: (value) => value.trim() !== "",
+        test: (value) => typeof value === 'number' && value > 0, 
         message: "Patient ID is required",
     },
     message: {
