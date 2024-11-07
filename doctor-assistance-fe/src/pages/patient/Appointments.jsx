@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FaAnglesLeft, FaAnglesRight } from 'react-icons/fa6';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import ProfileTabs from '@/components/shared/ProfileTabs';
@@ -9,29 +8,34 @@ import AppoitmentCard from '@/components/shared/AppointmentCard';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import Loading from '@/components/shared/Loading';
+import { getPaginationItems } from '@/utils/pagination';
 
 export default function Appointments() {
+
   const [page, setPage] = useState(1);
+  const [resultPerPage, setResultPerPage] = useState(10);
+
   const [activeTab, setActiveTab] = useState("approved");
   const [filters, setFilters] = useState({ doctorName: '', mode: '' });
 
   const { data, isFetching, isError, error } = useFetchQuery({
-    url: `appointments/?page=${page}&status=${activeTab}`,
+    url: `appointments/?page=${page}${activeTab !== "all" ? `&status=${activeTab}` : ''}`,
     queryKey: ['patientAppointments', page, activeTab],
     fetchFunction: fetchWithAuth,
   });
 
   const appointments = data?.results || [];
+  const dataCount = data?.count || 0;
   const nextPage = data?.next;
   const prevPage = data?.previous;
 
-  const handleNextPage = () => {
-    setPage((prev) => prev + 1);
-  };
+  const totalPages = resultPerPage ? Math.ceil(dataCount / resultPerPage) : 0;
 
-  const handlePrevPage = () => {
-    setPage((prev) => prev - 1);
-  };
+  const handleNextPage = () => setPage((prev) => prev + 1);
+  const handlePrevPage = () => setPage((prev) => prev - 1);
+  const handlePageClick = (pageNumber) => setPage(pageNumber);
+
+  const paginationItems = getPaginationItems(page, totalPages);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,7 +47,8 @@ export default function Appointments() {
   }, [activeTab]);
 
   const appointmentTabs = [
-    { label: "Approved", key: "approved" },
+    { label: "All", key: "all" },
+    { label: "Upcoming", key: "approved" },
     { label: "Pending", key: "pending" },
     { label: "Rejected", key: "rejected" },
   ];
@@ -103,17 +108,41 @@ export default function Appointments() {
                     <AppoitmentCard key={appointment.id} appointment={appointment} />
                   ))}
                 </div>
-                <div className="flex justify-center gap-4 my-6">
-                  <Button variant='outline' onClick={handlePrevPage} disabled={!prevPage}>
-                    <FaAnglesLeft className='mr-1' />Prev
-                  </Button>
-                  <Button variant='outline' onClick={handleNextPage} disabled={!nextPage}>
-                    Next <FaAnglesRight className='ml-1 mt-0.5' />
-                  </Button>
-                </div>
+
+                {(prevPage || nextPage) && (
+                  <div className="flex gap-1 justify-center items-center mt-7">
+                    <button className="px-2 py-2 rounded-md border border-gray-300" onClick={handlePrevPage} disabled={!prevPage}>
+                      <ChevronLeft size={18} color={!prevPage ? 'lightgrey' : 'grey'} />
+                    </button>
+
+                    <div className="flex flex-row">
+                      {paginationItems.map((pg, index) => (
+                        <button key={index}
+                          className={`px-3 py-2 border border-gray-300 ${page === pg ? 'bg-primary text-white' : 'text-gray-700'} rounded-md mx-1 font-semibold text-sm`}
+                          onClick={() => {
+                            if (pg !== '...') {
+                              handlePageClick(pg);
+                            }
+                          }} >
+                          {pg}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button className="px-2 py-2 rounded-md border border-gray-300" onClick={handleNextPage} disabled={!nextPage} >
+                      <ChevronRight size={18} color={!nextPage ? 'lightgrey' : 'grey'} />
+                    </button>
+                  </div>
+                )}
               </>
             ) : (
-              <p className="text-gray-600 text-sm">No {activeTab} appointments found.</p>
+              <p className="text-gray-600 text-sm">
+                {activeTab === "approved"
+                  ? "No upcoming appointment found"
+                  : activeTab === "all"
+                    ? "No appointments found"
+                    : `No ${activeTab} appointments found.`}
+              </p>
             )}
           </>
         )}

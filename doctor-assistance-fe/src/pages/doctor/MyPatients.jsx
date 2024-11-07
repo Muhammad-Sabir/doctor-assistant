@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MdOutlineStart } from "react-icons/md";
-import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import Loading from '@/components/shared/Loading';
 import { calculateAge } from '@/utils/date';
+import { getPaginationItems } from '@/utils/pagination';
 
 export default function MyPatients() {
+
     const [currentPage, setCurrentPage] = useState(1);
+    const [resultPerPage, setResultPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState("");
 
     const { data, isFetching, isError, error } = useFetchQuery({
@@ -30,20 +32,22 @@ export default function MyPatients() {
     }
 
     const patients = data?.results || [];
+    const dataCount = data?.count || 0;
     const nextPage = data?.next;
     const prevPage = data?.previous;
+
+    const totalPages = resultPerPage ? Math.ceil(dataCount / resultPerPage) : 0;
+
+    const handleNextPage = () => setCurrentPage((prev) => prev + 1);
+    const handlePrevPage = () => setCurrentPage((prev) => prev - 1);
+    const handlePageClick = (pageNumber) => setCurrentPage(pageNumber);
+
+    const paginationItems = getPaginationItems(currentPage, totalPages);
 
     const filteredPatients = patients.filter(patient =>
         patient.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleNextClick = () => {
-        setCurrentPage((prev) => prev + 1);
-    };
-
-    const handlePrevClick = () => {
-        setCurrentPage((prev) => prev - 1);
-    };
 
     return (
         <div className="mx-2 pb-2">
@@ -95,9 +99,28 @@ export default function MyPatients() {
                             </div>
                         ))}
 
-                        <div className="flex justify-center gap-3.5 mt-8">
-                            <Button variant='outline' onClick={handlePrevClick} disabled={!prevPage}><FaAnglesLeft className='mr-1' />Prev </Button>
-                            <Button variant='outline' onClick={handleNextClick} disabled={!nextPage}>Next <FaAnglesRight className='ml-1 mt-0.5' /></Button>
+                        <div className="flex gap-1 justify-center items-center mt-7">
+                            <button className="px-2 py-2 rounded-md border border-gray-300" onClick={handlePrevPage} disabled={!prevPage}>
+                                <ChevronLeft size={18} color={!prevPage ? 'lightgrey' : 'grey'} />
+                            </button>
+
+                            <div className="flex flex-row">
+                                {paginationItems.map((pg, index) => (
+                                    <button key={index}
+                                        className={`px-3 py-2 border border-gray-300 ${currentPage === pg ? 'bg-primary text-white' : 'text-gray-700'} rounded-md mx-1 font-semibold text-sm`}
+                                        onClick={() => {
+                                            if (pg !== '...') {
+                                                handlePageClick(pg);
+                                            }
+                                        }} >
+                                        {pg}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <button className="px-2 py-2 rounded-md border border-gray-300" onClick={handleNextPage} disabled={!nextPage} >
+                                <ChevronRight size={18} color={!nextPage ? 'lightgrey' : 'grey'} />
+                            </button>
                         </div>
                     </>
                 ) : (

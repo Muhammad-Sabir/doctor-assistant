@@ -3,15 +3,18 @@ import { BiSolidError } from "react-icons/bi";
 import { AiTwotoneEdit } from 'react-icons/ai';
 
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { validateField, hasNoFieldErrors } from '@/utils/validations';
+import { validateField, hasNoFieldErrors, validateAllFields } from '@/utils/validations';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
+import { relationshipOptions } from '@/assets/data/relationshipOptions';
 
 const UpdateDependent = ({ selectedDependent }) => {
+    
     const [inputErrors, setInputErrors] = useState({});
     const [dependent, setDependent] = useState(selectedDependent);
 
@@ -25,7 +28,7 @@ const UpdateDependent = ({ selectedDependent }) => {
         onSuccess: () => {
             setTimeout(() => {
                 window.location.reload();
-            }, 300); 
+            }, 300);
         }
     });
 
@@ -47,13 +50,23 @@ const UpdateDependent = ({ selectedDependent }) => {
         setInputErrors(errors);
     };
 
+    const handleSelectChange = (value) => {
+        setDependent((prev) => ({ ...prev, relationship: value }));
+        const errors = validateField("relationship", value, inputErrors);
+        setInputErrors(errors);
+    };
+
     const handleSubmit = (e) => {
+
         e.preventDefault();
-        if (!hasNoFieldErrors(inputErrors)) {
-            return;
+
+        const errors = validateAllFields(dependent, inputErrors);
+        setInputErrors(errors);
+
+        if (hasNoFieldErrors(errors)) {
+            const { name, date_of_birth, gender, relationship } = dependent;
+            updateDependentMutation.mutate(JSON.stringify({ name, date_of_birth, gender, relationship }));
         }
-        const { name, date_of_birth, gender } = dependent;
-        updateDependentMutation.mutate(JSON.stringify({ name, date_of_birth, gender }));
     };
 
     return (
@@ -78,7 +91,7 @@ const UpdateDependent = ({ selectedDependent }) => {
                             name='name'
                             type="text"
                             value={dependent.name}
-                            placeholder="Enter your name..."
+                            placeholder="Enter dependent's name..."
                             onChange={handleChange}
                             onBlur={handleBlur}
                             className={inputErrors.name ? 'border-red-500' : 'border-gray-300'}
@@ -131,6 +144,28 @@ const UpdateDependent = ({ selectedDependent }) => {
                             />
                             <Label htmlFor="F" className='ml-2 font-normal'>Female</Label>
                         </div>
+                        <div className="grid gap-2 mt-0.5">
+                        <Label htmlFor="relationship" className='text-gray-700 font-normal'>Relationship</Label>
+                        <div className="text-gray-500">
+                            <Select value={dependent.relationship} onValueChange={handleSelectChange}>
+                                <SelectTrigger id="relationship" className={`${inputErrors.relationship ? 'border-red-500' : ''}`}>
+                                    <SelectValue placeholder="Select dependent relationship (dependent is the)" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {relationshipOptions.map((option) => (
+                                        <SelectItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {inputErrors.relationship && (
+                                <div aria-live="assertive" className="flex text-red-500 text-sm mt-2">
+                                    <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.relationship}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                     </div>
                     <DialogFooter>
                         <Button type="button" onClick={handleSubmit}>Save changes</Button>

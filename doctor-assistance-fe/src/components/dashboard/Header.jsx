@@ -7,6 +7,9 @@ import { getAuthStatus } from '@/utils/auth';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { formatDate } from '@/utils/date';
+import userIcon from "@/assets/images/webp/userIcon.webp";
+
+const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
 
 export default function Header() {
     const { user } = getAuthStatus();
@@ -18,11 +21,15 @@ export default function Header() {
         fetchFunction: fetchWithAuth,
     });
 
-    const userName = role === 'doctor' 
-        ? data?.name || 'Loading...' 
-        : role === 'patient' 
-        ? data?.results[0]?.name || 'Loading...' 
-        : 'Loading...';
+    const userName = role === 'doctor'
+        ? data?.name || 'Loading...'
+        : role === 'patient'
+            ? data?.results[0]?.name || 'Loading...'
+            : 'Loading...';
+
+    const userImageUrl = role === 'doctor' && data?.file_url
+        ? `${baseUrl}${data.file_url}`
+        : userIcon;
 
     return (
         <header className="flex h-14 items-center gap-4 px-4 lg:h-[60px] lg:px-6 bg-white border-b shadow-sm sticky top-0 left-0 z-50">
@@ -36,7 +43,7 @@ export default function Header() {
             </div>
             <p className="hidden sm:block text-sm font-medium text-gray-500">{formatDate(new Date())}</p>
             <Notifications />
-            <UserProfileMenu userName={userName} />
+            <UserProfileMenu userImageUrl={userImageUrl}  />
         </header>
     );
 }

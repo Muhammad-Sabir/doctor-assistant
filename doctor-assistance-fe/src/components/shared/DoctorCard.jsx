@@ -20,10 +20,15 @@ const DoctorCard = ({ doctor }) => {
             <Link to={`/patient/doctor/${doctor.id}`} >
                 <div className="text-xs font-medium absolute top-3 right-3 flex items-center bg-orange-100 rounded-md px-2 py-1">
                     <FaStar className="text-yellow-500" />
-                    <span className="ml-1 text-primary font-semibold">{doctor.average_rating}</span>
-                    <span className="ml-1 text-gray-500">({doctor.total_reviews})</span>
+                    {doctor.total_reviews > 0 && doctor.average_rating > 0 ? (
+                        <>
+                            <span className="ml-1 text-primary font-semibold">{doctor.average_rating}</span>
+                            <span className="ml-1 text-gray-500">({doctor.total_reviews})</span>
+                        </>
+                    ) : (
+                        <span className="ml-1 text-gray-500">N/A</span>
+                    )}
                 </div>
-
                 <div className="flex justify-center mb-4 mt-4">
                     <img
                         className="rounded-full shadow-lg w-24 h-24 object-cover"
