@@ -10,6 +10,7 @@ import VideoCall from '@/components/consultation/VideoCall';
 export default function Consultation() {
 
   const [activeTab, setActiveTab] = useState("consultationTranscript");
+  const [notes, setNotes] = useState(null);
   const { consultationId } = useParams();
 
   const consultationTabs = [
@@ -20,10 +21,10 @@ export default function Consultation() {
   ];
 
   const tabComponents = {
-    videoCall: <VideoCall/>,
-    consultationTranscript: <Transcript consultationId={consultationId} />,
-    consultationNotes: <Notes/>,
-    consultationPrescriptions: <Prescriptions/>
+    videoCall: <VideoCall />,
+    consultationTranscript: <Transcript consultationId={consultationId} setNotes={setNotes} />,
+    consultationNotes: notes ? <Notes notes={notes} /> : <></>,
+    consultationPrescriptions: <Prescriptions />
   };
 
   return (
