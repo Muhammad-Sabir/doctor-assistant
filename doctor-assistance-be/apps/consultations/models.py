@@ -10,6 +10,11 @@ class Consultation(TimeStampedModel):
     title = models.CharField(max_length=255)
 
 
+class Transcription(TimeStampedModel):
+    consultation = models.ForeignKey(Consultation, on_delete=models.CASCADE, related_name='transcription')
+    transcription_text = models.TextField()
+
+
 class SOAPNotes(TimeStampedModel):
     consultation = models.ForeignKey(Consultation, on_delete=models.CASCADE, related_name='soap_notes')
     subject = models.CharField(max_length=255)

@@ -15,7 +15,7 @@ export function getNotificationData(type) {
         },
         consultation: {
             icon: <TbReportMedical size={18} className=" text-green-500" />,
-            url: 'consultation',
+            url: 'consultations',
         },
     };
 
