@@ -30,6 +30,7 @@ const pcConfig = {
 const useWebRTC = () => {
     const [isCallActive, setIsCallActive] = useState(false);
     const [isIncomingCall, setIsIncomingCall] = useState(false);
+    const [isEndCall, setIsEndCall] = useState(false);
     const [localStream, setLocalStream] = useState(null);
     const [remoteStream, setRemoteStream] = useState(null);
     const consultationId = useRef(null);
@@ -51,6 +52,10 @@ const useWebRTC = () => {
         if (isIncomingCall) {
             setIsIncomingCall(false);
         }
+        if (isEndCall) {
+            setIsEndCall(false); 
+        }
+
     };
 
     useEffect(() => {
@@ -81,6 +86,8 @@ const useWebRTC = () => {
                 }
                 break;
             case 'call_ended':
+                setIsEndCall(true);
+                break;
             case 'call_rejected':
                 cleanup();
                 setIsCallActive(false);
@@ -229,6 +236,7 @@ const useWebRTC = () => {
         sendMessage('call_ended');
         cleanup();
         setIsCallActive(false);
+        setIsEndCall(true);
         incomingOffer.current = null;
         consultationId.current = null;
     };
@@ -238,6 +246,7 @@ const useWebRTC = () => {
         remoteStream,
         isCallActive,
         isIncomingCall,
+        isEndCall,
         startCall,
         answerCall,
         rejectCall,

@@ -8,8 +8,10 @@ import { getAuthStatus } from '@/utils/auth';
 import { getCallSocket } from '@/utils/callSocket';
 import { getChatSocket } from '@/utils/chatSocket';
 import { useWebRTCContext} from '@/context/WebRTCContext';
+import CallEndedDialog from '@/components/dialogs/CallEndedDialog';
 
 export default function DashboardLayout() {
+
 	const { user } = getAuthStatus();
 	const webRTCContext = user.role === 'patient' ? useWebRTCContext() : null;
 
@@ -29,6 +31,7 @@ export default function DashboardLayout() {
 					{user.role === 'patient' && webRTCContext?.isIncomingCall && (
 						<IncomingCall />
 					)}
+					{user.role === 'patient' && webRTCContext?.isEndCall && <CallEndedDialog />}
 					<Outlet />
 				</main>
 			</div>

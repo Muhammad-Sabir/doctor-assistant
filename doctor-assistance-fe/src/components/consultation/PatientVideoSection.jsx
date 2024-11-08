@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { PiVideoCameraLight, PiVideoCameraSlash } from "react-icons/pi";
 import { CiMicrophoneOn, CiMicrophoneOff } from "react-icons/ci";
 import { FiPhone, FiPhoneOff } from "react-icons/fi";
@@ -7,7 +6,7 @@ import { MdOutlineVideoCameraFront } from "react-icons/md";
 import { useWebRTCContext } from '@/context/WebRTCContext';
 
 export default function PatientVideoSection() {
-    const navigate = useNavigate();
+
     const [isMuted, setIsMuted] = useState(false);
     const [isVideoOn, setIsVideoOn] = useState(true);
 
@@ -42,7 +41,6 @@ export default function PatientVideoSection() {
     const toggleCall = () => {
         if (isCallActive) {
             endCall();
-            navigate('/patient/home');
         }
         answerCall();
     }
