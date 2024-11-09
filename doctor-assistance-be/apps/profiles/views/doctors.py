@@ -1,3 +1,5 @@
+from django.db.models import F, FloatField
+from django.db.models.expressions import RawSQL
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import action
@@ -6,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.core.mixins import FileUploadMixin
 from apps.core.viewsets import BaseReadOnlyViewSet
+from apps.facilities.models import Hospital
 from apps.profiles.models import Speciality, Degree, Disease, DoctorProfile
 from apps.profiles.serializers import (
     DoctorProfileSerializer,
@@ -60,6 +63,17 @@ class DoctorProfileViewSet(FileUploadMixin, ModelViewSet):
         
         return queryset
 
+    @action(detail=False, methods=['get'], url_path='nearby-doctors')
+    def nearby_doctors(self, request):
+        coordinates = self._validate_location_params(request)
+        if isinstance(coordinates, Response):
+            return coordinates
+            
+        latitude, longitude = coordinates
+        doctors = self._get_nearby_doctors(latitude, longitude)
+        
+        return self._paginate_and_serialize_response(doctors)
+
     @action(detail=False, methods=['get', 'put', 'patch'], url_path='me')
     def me(self, request):
         doctor_profile = self.get_queryset().get(user=request.user)
@@ -89,3 +103,59 @@ class DoctorProfileViewSet(FileUploadMixin, ModelViewSet):
         file = self.request.FILES.get('image_file')
         if file:
             doctor_instance.save_file(file)
+    
+    def _get_nearby_doctors(self, user_latitude, user_longitude, radius_km=5):
+        EARTH_RADIUS_KM = 6371.0
+
+        distance_formula = """
+            %s * acos(
+                cos(radians(%s)) * cos(radians(latitude)) *
+                cos(radians(longitude) - radians(%s)) +
+                sin(radians(%s)) * sin(radians(latitude))
+            )
+        """
+
+        hospitals = Hospital.objects.annotate(
+            distance=RawSQL(
+                distance_formula,
+                (EARTH_RADIUS_KM, user_latitude, user_longitude, user_latitude),
+                output_field=FloatField()
+            )
+        ).filter(distance__lte=radius_km)
+
+        return self.get_queryset().filter(hospitals__in=hospitals).distinct()
+
+    def _validate_location_params(self, request):
+        """
+        Validate location parameters from request.
+        """
+        latitude = request.query_params.get('latitude')
+        longitude = request.query_params.get('longitude')
+        
+        if not all([latitude, longitude]):
+            return Response(
+                {'detail': 'Latitude and Longitude are required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            return float(latitude), float(longitude)
+        except ValueError:
+            return Response(
+                {'detail': 'Invalid Latitude or Longitude format'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def _paginate_and_serialize_response(self, queryset):
+        """
+        Handle pagination and serialization of queryset.
+        """
+        filtered_queryset = self.filter_queryset(queryset)
+
+        page = self.paginate_queryset(filtered_queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
+        serializer = self.get_serializer(filtered_queryset, many=True)
+        return Response(serializer.data)
