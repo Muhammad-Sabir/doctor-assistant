@@ -70,7 +70,17 @@ class DoctorProfileViewSet(FileUploadMixin, ModelViewSet):
             return coordinates
             
         latitude, longitude = coordinates
-        doctors = self._get_nearby_doctors(latitude, longitude)
+        radius = request.query_params.get('radius', 5)
+        
+        try:
+            radius = float(radius)
+        except ValueError:
+            return Response(
+                {'detail': 'Invalid radius format. Must be a number.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        doctors = self._get_nearby_doctors(latitude, longitude, radius)
         
         return self._paginate_and_serialize_response(doctors)
 
