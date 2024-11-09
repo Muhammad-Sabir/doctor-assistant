@@ -62,28 +62,12 @@ class DoctorProfileViewSet(FileUploadMixin, ModelViewSet):
         if self.action in ['retrieve', 'me']:
             queryset = queryset.prefetch_related('reviews')
         
+        location_params = self._get_location_params()
+        if location_params:
+            latitude, longitude, radius = location_params
+            queryset = self._filter_by_location(queryset, latitude, longitude, radius)
+        
         return queryset
-
-    @action(detail=False, methods=['get'], url_path='nearby-doctors')
-    def nearby_doctors(self, request):
-        coordinates = self._validate_location_params(request)
-        if isinstance(coordinates, Response):
-            return coordinates
-            
-        latitude, longitude = coordinates
-        radius = request.query_params.get('radius', 5)
-        
-        try:
-            radius = float(radius)
-        except ValueError:
-            return Response(
-                {'detail': 'Invalid radius format. Must be a number.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        doctors = self._get_nearby_doctors(latitude, longitude, radius)
-        
-        return self._paginate_and_serialize_response(doctors)
 
     @action(detail=False, methods=['get', 'put', 'patch'], url_path='me')
     def me(self, request):
@@ -115,7 +99,24 @@ class DoctorProfileViewSet(FileUploadMixin, ModelViewSet):
         if file:
             doctor_instance.save_file(file)
     
-    def _get_nearby_doctors(self, user_latitude, user_longitude, radius_km=5):
+    def _get_location_params(self):
+        params = self.request.query_params
+        latitude = params.get('latitude')
+        longitude = params.get('longitude')
+        radius = params.get('radius', 5)
+        
+        if not all([latitude, longitude]):
+            return None
+            
+        try:
+            latitude = float(latitude)
+            longitude = float(longitude)
+            radius = float(radius)
+            return latitude, longitude, radius
+        except ValueError:
+            return None
+
+    def _filter_by_location(self, queryset, latitude, longitude, radius_km=5):
         EARTH_RADIUS_KM = 6371.0
 
         distance_formula = """
@@ -129,44 +130,9 @@ class DoctorProfileViewSet(FileUploadMixin, ModelViewSet):
         hospitals = Hospital.objects.annotate(
             distance=RawSQL(
                 distance_formula,
-                (EARTH_RADIUS_KM, user_latitude, user_longitude, user_latitude),
+                (EARTH_RADIUS_KM, latitude, longitude, latitude),
                 output_field=FloatField()
             )
         ).filter(distance__lte=radius_km)
 
-        return self.get_queryset().filter(hospitals__in=hospitals).distinct()
-
-    def _validate_location_params(self, request):
-        """
-        Validate location parameters from request.
-        """
-        latitude = request.query_params.get('latitude')
-        longitude = request.query_params.get('longitude')
-        
-        if not all([latitude, longitude]):
-            return Response(
-                {'detail': 'Latitude and Longitude are required'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-            return float(latitude), float(longitude)
-        except ValueError:
-            return Response(
-                {'detail': 'Invalid Latitude or Longitude format'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-    def _paginate_and_serialize_response(self, queryset):
-        """
-        Handle pagination and serialization of queryset.
-        """
-        filtered_queryset = self.filter_queryset(queryset)
-
-        page = self.paginate_queryset(filtered_queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        
-        serializer = self.get_serializer(filtered_queryset, many=True)
-        return Response(serializer.data)
+        return queryset.filter(hospitals__in=hospitals).distinct()
