@@ -11,8 +11,11 @@ import Appointments from '@/pages/doctor/Appointments';
 import Chats from '@/pages/doctor/Chats';
 import MyPatients from '@/pages/doctor/MyPatients';
 import PatientDetails from '@/pages/doctor/PatientDetails';
+import { WebRTCProvider } from '@/context/WebRTCContext';
+
 export default function DoctorRoutes() {
     return (
+        <WebRTCProvider>
         <Routes>
             <Route element={<ProtectedRoute permission="doctor" />}>
                 <Route element={<DashboardLayout />}>
@@ -30,5 +33,6 @@ export default function DoctorRoutes() {
                 </Route>
             </Route>
         </Routes>
+        </WebRTCProvider>
     );
 }
