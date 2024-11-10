@@ -6,9 +6,13 @@ import { TbUserCircle } from "react-icons/tb";
 
 import { Button } from "@/components/ui/button";
 import Pulse from "@/components/shared/Pulse";
-import { dummyTranscript } from "@/assets/data/dummyChats";
 import { useAudioTranscription } from "@/hooks/useAudioTranscription";
-import { getAuthStatus } from '@/utils/auth';
+import { getAuthStatus } from "@/utils/auth";
+
+const LABEL_SPEAKER = {
+  spk_0: "Doctor",
+  spk_1: "Patient",
+};
 
 export default function TranscriptionPage({ consultationId, setNotes }) {
   const [additionalInfo, setAdditionalInfo] = useState("");
@@ -16,35 +20,34 @@ export default function TranscriptionPage({ consultationId, setNotes }) {
   const [isPaused, setIsPaused] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isCopied, setIsCopied] = useState(false);
-  const [chatMessages, setChatMessages] = useState(
-    processTranscripts(dummyTranscript)
-  );
+  const [chatMessages, setChatMessages] = useState([]);
 
-  function processTranscripts(transcript) {
-    const entries = [];
-    let id = 1;
+  function processTranscripts(transcripts) {
+    return transcripts
+      .map((entry) => {
+        const label =
+          entry.speaker_label === "spk_0" ? "[doctor]" : "[patient]";
 
-    const lines = transcript.split(/(?=\[doctor\]|\[patient\])/);
-
-    lines.forEach((line) => {
-      const senderMatch = line.match(/^\[(doctor|patient)\]/i);
-      if (senderMatch) {
-        const sender =
-          senderMatch[1].charAt(0).toUpperCase() + senderMatch[1].slice(1);
-        const text = line.replace(/^\[(doctor|patient)\]/i, "").trim();
-
-        entries.push({ id, text, sender, time: "" });
-        id++;
-      }
-    });
-
-    return entries;
+        return `${label} ${entry.transcript}`;
+      })
+      .join(" ");
   }
 
   const transcriptEndRef = useRef(null);
 
-  const { startRecording, pauseRecording, resumeRecording, stopRecording } =
-    useAudioTranscription(consultationId);
+  const {
+    startRecording,
+    pauseRecording,
+    resumeRecording,
+    stopRecording,
+    transcription,
+  } = useAudioTranscription(consultationId);
+
+  useEffect(() => {
+    if (transcription) {
+      setChatMessages(transcription);
+    }
+  }, [transcription]);
 
   const scrollToEnd = (ref) => {
     if (ref.current) {
@@ -73,32 +76,34 @@ export default function TranscriptionPage({ consultationId, setNotes }) {
   };
 
   const handleNotesGeneration = () => {
-	const { user } = getAuthStatus();
+    const { user } = getAuthStatus();
     let accessToken = user.access_token;
-	
-	fetch("http://localhost:8000/api/transcriptions/", {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			"Authorization": `Bearer ${accessToken}`
-		},
-		body: JSON.stringify({
-			consultation: consultationId,
-			transcription_text: dummyTranscript
-		})
-	})
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('Network response was not ok');
-		}
-		return response.json();
-	})
-	.then(data => {
-		setNotes(data.soap_notes.description);
-	})
-	.catch(error => {
-		console.error("Error:", error);
-	});
+
+    const transcript = processTranscripts(chatMessages);
+
+    fetch("http://localhost:8000/api/transcriptions/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        consultation: consultationId,
+        transcription_text: transcript,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setNotes(data.soap_notes.description);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const handleStart = () => {
@@ -149,7 +154,6 @@ export default function TranscriptionPage({ consultationId, setNotes }) {
         msg.id === id ? { ...msg, text: updatedText } : msg
       )
     );
-    console.log(`Message ${id} updated to:`, updatedText);
   };
 
   return (
@@ -159,39 +163,32 @@ export default function TranscriptionPage({ consultationId, setNotes }) {
           <div
             key={msg.id}
             className={`flex ${
-              msg.sender === "Doctor" ? "justify-end" : "justify-start"
+              msg.speaker_label === "spk_0" ? "justify-end" : "justify-start"
             } mb-10`}
           >
             <div
               className={`flex items-center ${
-                msg.sender === "Doctor" ? "flex-row-reverse" : ""
+                msg.speaker_label === "spk_0" ? "flex-row-reverse" : ""
               } gap-3`}
             >
               <TbUserCircle size={30} className="text-gray-400" />
 
               <div
                 className={`${
-                  msg.sender === "Doctor" ? "bg-blue-100" : "bg-gray-200"
+                  msg.speaker_label === "spk_0" ? "bg-blue-100" : "bg-gray-200"
                 } max-w-lg px-4 py-2 rounded-md shadow-md relative`}
               >
                 <div className="flex gap-1 text-sm text-gray-800">
-                  <span>{msg.sender}:</span>
+                  <span>{LABEL_SPEAKER[msg.speaker_label]}:</span>
                   <div
                     contentEditable
                     suppressContentEditableWarning={true}
                     onBlur={(e) => handleEditMessage(e, msg.id)}
                     className="break-words focus:text-primary focus:outline-none"
                   >
-                    {msg.text}
+                    {msg.transcript}
                   </div>
                 </div>
-                <p
-                  className={`text-xs text-gray-500 absolute -bottom-6 ${
-                    msg.sender === "Doctor" ? "right-2" : "left-2"
-                  }`}
-                >
-                  {msg.time}
-                </p>
               </div>
             </div>
           </div>
@@ -199,13 +196,9 @@ export default function TranscriptionPage({ consultationId, setNotes }) {
         <div ref={transcriptEndRef} />
       </div>
 
-	  <div className="relative flex items-center justify-center w-full h-5 my-2 text-sm">
-		{isTranscribing && !isPaused ? (
-			<Pulse/>
-		) : (
-			<></>
-		)}
-	</div>
+      <div className="relative flex items-center justify-center w-full h-5 my-2 text-sm">
+        {isTranscribing && !isPaused ? <Pulse /> : <></>}
+      </div>
 
       <div className="flex items-center px-2 py-2 bg-gray-50">
         <textarea
@@ -226,6 +219,7 @@ export default function TranscriptionPage({ consultationId, setNotes }) {
             <Button
               onClick={handleNotesGeneration}
               className="flex items-center gap-2"
+              disabled={transcription.length === 0}
             >
               Generate Notes
             </Button>
