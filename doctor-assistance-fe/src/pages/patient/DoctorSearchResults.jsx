@@ -11,21 +11,36 @@ import Loading from '@/components/shared/Loading';
 import { getPaginationItems } from '@/utils/pagination';
 
 export default function DoctorSearchResults() {
-
   const [searchParams, setSearchParams] = useSearchParams();
-
   const [page, setPage] = useState(1);
   const [resultPerPage, setResultPerPage] = useState(10);
-
   const [filters, setFilters] = useState({
-    name: '', average_rating_min: '',
-    average_rating_max: '', years_of_experience: '', gender: 'all',
+    name: '', average_rating_min: '', average_rating_max: '',
+    years_of_experience: '', gender: 'all', distance: '',
   });
+
+  const [location, setLocation] = useState({ latitude: '', longitude: '' });
 
   useEffect(() => {
     searchParams.set('page', page);
     setSearchParams(searchParams);
   }, [page, setSearchParams, searchParams]);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    }
+  }, []);
 
   const queryString = searchParams.toString();
 
@@ -63,6 +78,12 @@ export default function DoctorSearchResults() {
       delete newParams[name];
     } else {
       newParams[name] = value;
+    }
+
+    if (location.latitude && location.longitude && filters.distance) {
+      newParams.latitude = location.latitude;
+      newParams.longitude = location.longitude;
+      newParams.radius = filters.distance;
     }
 
     setPage(1);
@@ -116,13 +137,26 @@ export default function DoctorSearchResults() {
               <option value="F">Gender: Female</option>
             </select>
           </div>
+          <div className="flex flex-col">
+            <select name="distance" value={filters.distance} onChange={handleFilterChange} onBlur={handleBlur}
+              className="flex text-gray-500 h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm">
+              <option value="">Select Distance</option>
+              <option value="1">1 km</option>
+              <option value="2">2 km</option>
+              <option value="3">3 km</option>
+              <option value="4">4 km</option>
+              <option value="5">5 km</option>
+              <option value="10">10 km</option>
+              <option value="20">20 km</option>
+            </select>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-2 mt-4">
           {Object.keys(filters).map((key) =>
             filters[key] && !(key === 'gender' && filters[key] === 'all') && (
               <span key={key} className="m-1 py-1 px-2 bg-accent rounded-md inline-block text-xs font-medium text-primary text-center">
-                {`${key}: ${filters[key]}`}
+                {key}: {key === 'distance' ? `${filters[key]} km` : filters[key]}
                 <button type="button" onClick={() => removeFilter(key)} className="ml-2 text-destructive">
                   &times;
                 </button>
@@ -172,7 +206,7 @@ export default function DoctorSearchResults() {
           </div>
         </>
       ) : (
-        <p className='text-sm text-gray-600'>No doctors found.</p>
+        <p className="text-primary">No doctors found</p>
       )}
     </div>
   );
