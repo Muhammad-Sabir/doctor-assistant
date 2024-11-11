@@ -1,12 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Tabs } from 'expo-router';
 import { CircleUser, House, MessageCircleMore, UserSearch } from 'lucide-react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import { TabIcon } from '@/components/shared/TabIcon';
+import { useAuth } from '@/contexts/AuthContext';
+import { getChatSocket } from '../../../utils/getChatSocket';
 
 const PatientTabs = () => {
 
+    const { user } = useAuth();
+
+    useEffect(()=> {
+        getChatSocket(user.access_token);
+    }, [getChatSocket])
+    
     return (
         <>
             <StatusBar style='light' backgroundColor="hsl(203, 87%, 30%)" />
