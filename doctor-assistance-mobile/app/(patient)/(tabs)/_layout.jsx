@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { TabIcon } from '@/components/shared/TabIcon';
 import { useAuth } from '@/contexts/AuthContext';
-import { getChatSocket } from '../../../utils/getChatSocket';
+import { getChatSocket } from '@/utils/getChatSocket';
 
 const PatientTabs = () => {
 
