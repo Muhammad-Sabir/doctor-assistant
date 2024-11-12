@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { toast } from 'sonner';
 
 import { getCallSocket } from "@/utils/callSocket";
 import useChatStore from "@/store/ChatStore";
@@ -85,6 +86,11 @@ const useWebRTC = () => {
                 cleanup();
                 break;
             case 'call_rejected':
+                toast.error('Call rejected by user', {
+                    style: {
+                        backgroundColor: '#ffffff'
+                    }
+                });
                 cleanup();
                 break;
             default:
