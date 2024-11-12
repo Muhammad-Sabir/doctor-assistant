@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
-import { RTCView, mediaDevices } from 'react-native-webrtc';
-import { useFocusEffect } from '@react-navigation/native';
+import { RTCView} from 'react-native-webrtc';
 import { Mic, Video, VideoOff, PhoneOff, MicOff, SwitchCamera, Phone } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 
@@ -21,7 +20,6 @@ const VideoCallScreen = () => {
         setIsMuted((prev) => !prev);
         if (localStream) {
             const audioTrack = localStream.getAudioTracks()[0]; 
-            console.log('audio-track--------------', audioTrack);
             if (audioTrack) {
                 audioTrack.enabled = isMuted;
             } 
