@@ -16,23 +16,23 @@ import { WebRTCProvider } from '@/context/WebRTCContext';
 export default function DoctorRoutes() {
     return (
         <WebRTCProvider>
-        <Routes>
-            <Route element={<ProtectedRoute permission="doctor" />}>
-                <Route element={<DashboardLayout />}>
-                    <Route path="home" element={<Home />} />
-                    <Route path="profile" element={<Profile />} />
-                    <Route path="patients" element={<MyPatients />} />
-                    <Route path="patient/:id" element={<PatientDetails />} />
-                    <Route path="appointments" element={<Appointments />} />
-                    <Route path="chats" element={<Chats />} />
-                    <Route path="*" element={<Navigate to="home" replace />} />
-                </Route>
+            <Routes>
+                <Route element={<ProtectedRoute permission="doctor" />}>
+                    <Route element={<DashboardLayout />}>
+                        <Route path="home" element={<Home />} />
+                        <Route path="profile" element={<Profile />} />
+                        <Route path="patients" element={<MyPatients />} />
+                        <Route path="patient/:id" element={<PatientDetails />} />
+                        <Route path="appointments" element={<Appointments />} />
+                        <Route path="chats" element={<Chats />} />
+                        <Route path="*" element={<Navigate to="home" replace />} />
+                    </Route>
 
-                <Route element={<ConsultationLayout />}>
-                    <Route path="consultation/:patientId/:consultationId" element={<Consultation />} />
+                    <Route element={<ConsultationLayout />}>
+                        <Route path="consultation/:patientId/:consultationId" element={<Consultation />} />
+                    </Route>
                 </Route>
-            </Route>
-        </Routes>
+            </Routes>
         </WebRTCProvider>
     );
 }

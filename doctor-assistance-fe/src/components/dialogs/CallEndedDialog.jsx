@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 
 import { getAuthStatus } from '@/utils/auth';
+import { useWebRTCContext } from '@/context/WebRTCContext';
 
 export default function CallEndedDialog() {
 
     const {user} = getAuthStatus();
     const role = user.role;
 
-    const [isOpen, setIsOpen] = useState(true); 
+    const {isEndCall, setIsEndCall} = useWebRTCContext();
 
     const navigate = useNavigate();
 
     const handleSubmit = () => {
-        setIsOpen(false);
+        setIsEndCall(false);
         if (role === 'doctor') {
             navigate('/doctor/home');
         } else if (role === 'patient') {
@@ -25,7 +26,7 @@ export default function CallEndedDialog() {
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isEndCall} onOpenChange={setIsEndCall}>
             <DialogContent className="sm:max-w-[425px] p-6 [&>button]:hidden">
                 <DialogHeader>
                     <DialogTitle>Video Call Ended</DialogTitle>
