@@ -7,6 +7,7 @@ import { Pill, Bell, ClipboardPlus, Info, BadgeHelp } from 'lucide-react-native'
 import { StatusBar } from 'expo-status-bar';
 
 import CustomDrawerContent from '@/components/ui/CustomDrawerContent';
+import { WebRTCProvider } from '@/contexts/WebRTCContext';
 
 const PatientLayout = () => {
 
@@ -19,7 +20,7 @@ const PatientLayout = () => {
     const screenWidth = Dimensions.get('window').width;
 
     return (
-        <>
+        <WebRTCProvider>
             <StatusBar style='light' backgroundColor="hsl(203, 87%, 30%)" />
             <Drawer
                 drawerContent={(props) => <CustomDrawerContent {...props} />}
@@ -173,7 +174,7 @@ const PatientLayout = () => {
                     }}
                 />
             </Drawer>
-        </>
+        </WebRTCProvider>
     )
 }
 export default PatientLayout
