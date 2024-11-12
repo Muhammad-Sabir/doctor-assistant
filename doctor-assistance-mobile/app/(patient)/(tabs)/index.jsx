@@ -3,6 +3,7 @@ import { View, Text, Alert, BackHandler, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { useWebRTCContext } from '@/contexts/WebRTCContext';
 import HospitalSearchBar from '@/components/dashboard/HospitalSearchBar';
 import Banner from '@/components/dashboard/Banner';
 import SpecialityList from '@/components/dashboard/SpecialityList';
@@ -16,6 +17,7 @@ const Home = () => {
 
     const { user, fetchWithUserAuth } = useAuth();
     const [isModalVisible, setModalVisible] = useState(true);
+    const { isIncomingCall, setIsIncomingCall } = useWebRTCContext();
 
     const { data } = useFetchQuery({
         url: 'patients/',
@@ -97,8 +99,8 @@ const Home = () => {
             </View >
 
             <IncomingCallModal
-                visible={isModalVisible}
-                onClose={() => setModalVisible(false)}
+                visible={isIncomingCall}
+                onClose={() => setIsIncomingCall(false)}
             />
         </CustomKeyboardView>
     );
