@@ -1,5 +1,11 @@
 import { useEffect, useState, useRef } from "react";
-import { RTCPeerConnection, RTCIceCandidate, RTCSessionDescription, mediaDevices } from 'react-native-webrtc';
+import {
+    RTCPeerConnection, 
+    RTCIceCandidate, 
+    RTCSessionDescription, 
+    mediaDevices 
+} from 'react-native-webrtc';
+import { useRouter } from 'expo-router';
 
 import { getCallSocket } from "@/utils/getCallSocket";
 import { useAuth } from '@/contexts/AuthContext';
@@ -30,6 +36,7 @@ const pcConfig = {
 
 const useWebRTC = () => {
     const { user } = useAuth();
+    const router = useRouter();
     const [isCallActive, setIsCallActive] = useState(false);
     const [isIncomingCall, setIsIncomingCall] = useState(false);
     const [localStream, setLocalStream] = useState(null);
@@ -66,11 +73,8 @@ const useWebRTC = () => {
 
         switch (type) {
             case 'call_received':
-                console.log('sender_details', sender);
-                console.log('sender_Offferrrrrrrrr', offer);
                 consultationId.current = incomingConsultationId;
                 incomingOffer.current = offer;
-                console.log('incoming -ffrrr', incomingOffer.current);
                 setSenderName(sender.name);
                 setIsIncomingCall(true);
                 break;
@@ -82,6 +86,7 @@ const useWebRTC = () => {
             case 'call_ended':
                 cleanup();
                 setIsCallActive(false);
+                router.push('(patient)/');
                 break;
             default:
                 console.log('Unexpected event:', type);
