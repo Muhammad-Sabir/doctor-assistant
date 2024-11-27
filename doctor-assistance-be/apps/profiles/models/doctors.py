@@ -36,6 +36,7 @@ class DoctorProfile(BaseFileUpload):
     date_of_birth = models.DateField(blank=True, null=True)
     date_of_experience = models.DateField(blank=True)
     pmdc_no = models.CharField(max_length=255, unique=True)
+    pmdc_file = models.FileField(upload_to='pmdc_files/', blank=True, null=True)
     gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')])
 
     hospitals = models.ManyToManyField(Hospital, related_name='doctors')
