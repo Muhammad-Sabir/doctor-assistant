@@ -3,6 +3,7 @@ from apps.profiles.views.doctors import (
     DegreeViewSet,
     DiseaseViewSet,
     DoctorProfileViewSet,
+    VerifyPMDCView,
 )
 
 from apps.profiles.views.patients import (

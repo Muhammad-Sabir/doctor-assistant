@@ -1,5 +1,7 @@
+import requests
 from django.db.models import F, FloatField
 from django.db.models.expressions import RawSQL
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import action
@@ -16,6 +18,7 @@ from apps.profiles.serializers import (
     SpecialitySerializer,
     DegreeSerializer,
     DiseaseSerializer,
+    PMDCVerificationSerializer
 )
 from apps.profiles.filters import (
     SpecialityFilter, 
@@ -43,6 +46,36 @@ class DiseaseViewSet(BaseReadOnlyViewSet):
     serializer_class = DiseaseSerializer
     filterset_class = DiseaseFilter
 
+
+class VerifyPMDCView(APIView):
+    def post(self, request):
+        serializer = PMDCVerificationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        response = self.verify_pmdc(serializer.validated_data['pmdc_no'])
+        if not response.get('status') and 'data' not in response:
+            return Response(
+                {"error": "Invalid PMDC number or verification failed."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        return Response(
+            {
+                "message": "PMDC number is valid.",
+                "details": response['data']
+            },
+            status=status.HTTP_200_OK
+        )
+
+    def verify_pmdc(self, pmdc_no):
+        url = "https://pmc.gov.pk/api/DRC/GetQualifications"
+        try:
+            response = requests.post(url, json={"RegistrationNo": pmdc_no})
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException:
+            return {"status": False}
+        
 
 class DoctorProfileViewSet(FileUploadMixin, ModelViewSet):
     serializer_class = DoctorProfileSerializer
