@@ -13,6 +13,18 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email', 'phone_number', 'password', 'role']
         extra_kwargs = {'password': {'write_only': True}}
+    
+    def validate(self, attrs):
+        email = attrs.get('email')
+        phone_number = attrs.get('phone_number')
+
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError({"email": "This email is already registered."})
+
+        if User.objects.filter(phone_number=phone_number).exists():
+            raise serializers.ValidationError({"phone_number": "This phone number is already registered."})
+
+        return attrs
 
 
 class RoleBasedTokenObtainPairSerializer(TokenObtainPairSerializer):
