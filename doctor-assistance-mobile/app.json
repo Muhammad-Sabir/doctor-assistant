@@ -39,8 +39,8 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "@config-plugins/react-native-webrtc",
-      "expo-router"
+      "expo-router",
+      "@config-plugins/react-native-webrtc"
     ],
     "experiments": {
       "typedRoutes": true
@@ -50,7 +50,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "57505bb8-56bc-4338-b71d-da3e76fd4bd2"
+        "projectId": "1843f03a-26a6-4f91-a93b-0e6e8116cf36"
       }
     }
   }
