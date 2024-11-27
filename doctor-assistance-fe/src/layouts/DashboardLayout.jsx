@@ -31,7 +31,7 @@ export default function DashboardLayout() {
 					{user.role === 'patient' && webRTCContext?.isIncomingCall && (
 						<IncomingCall />
 					)}
-					{user.role === 'patient' && webRTCContext?.isEndCall && <CallEndedDialog />}
+					{user.role === 'patient' && <CallEndedDialog />}
 					<Outlet />
 				</main>
 			</div>
