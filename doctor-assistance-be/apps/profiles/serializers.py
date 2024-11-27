@@ -34,6 +34,15 @@ class DiseaseSerializer(BaseSerializer):
         model = Disease
 
 
+class PMDCVerificationSerializer(serializers.Serializer):
+    pmdc_no = serializers.CharField(max_length=255, required=True)
+
+    def validate_pmdc_no(self, value):
+        if DoctorProfile.objects.filter(pmdc_no=value).exists():
+            raise serializers.ValidationError("This PMDC number is already registered.")
+        return value
+
+
 class DoctorProfileSerializer(BaseSerializer):
     specialities = SpecialitySerializer(many=True, read_only=True)
     degrees = DegreeSerializer(many=True, read_only=True)
