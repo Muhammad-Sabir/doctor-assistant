@@ -55,8 +55,9 @@ export const AuthProvider = ({ children }) => {
                 else
                     router.replace('(patient)');
             },
-            onError: (error) => {
+            onError: async (error) => {
                 if (error.status === 400 && error.message === "Account is not verified. OTP sent to your email.") {
+                    await AsyncStorage.setItem('userEmail', username);
                     router.push('/verify-email');
                 }
             },
