@@ -27,7 +27,7 @@ const Notifications = () => {
 
       <CustomKeyboardView>
         <View className='bg-white flex-1 px-5 py-5'>
-          <Text className="text-gray-700 mb-4"> You have {notifications.length > 0 ? `total of ${notifications.length}` : 'no'} Notifications</Text>
+          <Text className={`text-gray-700 mb-4 ${notifications.length > 0 ? '': 'text-center'}`}> You have {notifications.length > 0 ? `total of ${notifications.length}` : 'no'} Notifications</Text>
           <ScrollView className="flex-1 bg-white">
             {notifications.map((item) => (
               <NotificationItem key={item.id} notification={item} onMarkAsRead={markAsRead} />
