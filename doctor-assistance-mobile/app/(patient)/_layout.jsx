@@ -1,23 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
-import { Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Pill, Bell, ClipboardPlus, Info, BadgeHelp } from 'lucide-react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import CustomDrawerContent from '@/components/ui/CustomDrawerContent';
 import { WebRTCProvider } from '@/contexts/WebRTCContext';
+import { useNotifications } from '@/hooks/useNotifications';
 
 const PatientLayout = () => {
 
     const router = useRouter();
+    const screenWidth = Dimensions.get('window').width;
+
+    const { unreadCount, refreshNotifications } = useNotifications();
+
+    useEffect(() => {
+        refreshNotifications();
+    }, [unreadCount, refreshNotifications]);
 
     const handleNotificationPress = () => {
         router.push('/(patient)/notifications');
     };
-
-    const screenWidth = Dimensions.get('window').width;
 
     return (
         <WebRTCProvider>
@@ -34,8 +40,13 @@ const PatientLayout = () => {
                         title: 'Doctor Assistance',
                         drawerItemStyle: { display: 'none' },
                         headerRight: () => (
-                            <TouchableOpacity className='mr-4' onPress={handleNotificationPress}>
+                            <TouchableOpacity className='mr-4' onPress={handleNotificationPress} style={{ position: 'relative' }}>
                                 <Bell size={24} color="hsl(203, 87%, 30%)" />
+                                {unreadCount > 0 && (
+                                    <View className="absolute -top-1 -right-1 bg-red-500 rounded-full w-5 h-5 flex items-center justify-center">
+                                        <Text className="text-white text-xs font-bold">{unreadCount}</Text>
+                                    </View>
+                                )}
                             </TouchableOpacity>
                         ),
                         headerTitleAlign: 'center',
