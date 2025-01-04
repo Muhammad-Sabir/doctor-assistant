@@ -7,6 +7,8 @@ import uuid  # Import the uuid module
 from channels.generic.websocket import AsyncWebsocketConsumer
 from decouple import config
 
+from apps.consultations.models import Transcription
+
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 AWS_DEFAULT_REGION = config('AWS_DEFAULT_REGION')
@@ -30,7 +32,6 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         elif text_data:
             data = json.loads(text_data)
             if data.get('action') == 'stop_recording':
-                # Start the transcription process
                 await self.handle_transcription()
 
     async def audio_transcription(self, event):
@@ -123,6 +124,10 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         # Extract the detailed transcript
         audio_segments = transcript_json.get("results", {}).get("audio_segments", [])
 
+        Transcription.objects.create(
+            consultation=self.consultation_id, 
+            transcription_text=audio_segments
+        )
         # Send transcription to the client
         await self.send(text_data=json.dumps({
             'message': 'Transcription completed',
