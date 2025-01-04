@@ -23,11 +23,20 @@ def send_password_reset_email(user, uid, token):
     }
     send_email(data)
 
-def send_otp_email(user, otp_code):
-    subject = 'Your OTP Code'
-    body = f'Your OTP code is {otp_code}. It is valid for 5 minutes.'
+def send_otp_email(user, otp_code, purpose='Account verification'):
+    """
+    Send OTP email for different purposes (verification, password reset, etc.)
+    
+    Args:
+        user: User instance
+        otp_code: Generated OTP code
+        purpose: String indicating the purpose of OTP (default: Account verification)
+    """
+    subject = f'{purpose} OTP'
+    body = f'Your OTP code for {purpose.lower()} is {otp_code}. It is valid for 5 minutes.'
+    
     data = {
-        'subject': 'Your OTP Code',
+        'subject': subject,
         'body': body,
         'to_email': [user.email]
     }

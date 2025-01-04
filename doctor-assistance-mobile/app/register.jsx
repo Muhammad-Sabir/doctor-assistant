@@ -56,12 +56,12 @@ const Register = () => {
 
     return (
         <CustomKeyboardView>
-            <View className="flex-1 px-5 bg-white justify-center">
+            <View className="justify-center flex-1 px-5 bg-white">
                 <AuthHeaderImage />
 
                 <View className="gap-3">
                     <Text className="text-2xl font-bold text-primary">Signup</Text>
-                    <Text className="text-balance text-gray-500 -mt-2">Enter your information to create an account</Text>
+                    <Text className="-mt-2 text-gray-500 text-balance">Enter your information to create an account</Text>
 
                     <View className="gap-4 mt-4">
                         <View className="gap-2">
@@ -74,7 +74,7 @@ const Register = () => {
                                 onBlur={() => handleBlur("email", userDetails.email)}
                             />
                             {inputErrors.email && (
-                                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                                <View className="flex flex-row items-center gap-2 text-sm text-red-500">
                                     <TriangleAlert size={13} color="red" />
                                     <Text className='text-sm text-red-500'>{inputErrors.email} </Text>
                                 </View>
@@ -82,7 +82,7 @@ const Register = () => {
                         </View>
 
                         <View className="gap-2">
-                            <View className="flex-row justify-between items-center">
+                            <View className="flex-row items-center justify-between">
                                 <Text className="text-gray-700">Password</Text>
                             </View>
                             <View className="relative">
@@ -95,12 +95,12 @@ const Register = () => {
                                     onBlur={() => handleBlur("password", userDetails.password)}
                                 />
                                 {inputErrors.password && (
-                                    <View className="flex flex-row items-center text-red-500 text-sm gap-2 mt-2">
+                                    <View className="flex flex-row items-center gap-2 mt-2 text-sm text-red-500">
                                         <TriangleAlert size={13} color="red" />
                                         <Text className='text-sm text-red-500'>{inputErrors.password} </Text>
                                     </View>
                                 )}
-                                <Pressable onPress={() => setPasswordVisible(!passwordVisible)} className="mt-2 mr-2 absolute right-2 top-2">
+                                <Pressable onPress={() => setPasswordVisible(!passwordVisible)} className="absolute mt-2 mr-2 right-2 top-2">
                                     {passwordVisible ? (
                                         <EyeOff size={17} color="gray" />
                                     ) : (
@@ -120,7 +120,7 @@ const Register = () => {
                                 onBlur={() => handleBlur("phoneNo", userDetails.phoneNo)}
                             />
                             {inputErrors.phoneNo && (
-                                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                                <View className="flex flex-row items-center gap-2 text-sm text-red-500">
                                     <TriangleAlert size={13} color="red" />
                                     <Text className='text-sm text-red-500'>{inputErrors.phoneNo} </Text>
                                 </View>
@@ -129,26 +129,26 @@ const Register = () => {
                     </View>
 
                     <Pressable
-                        className="mt-7 w-full bg-primary border border-gray-300 justify-center items-center h-14 rounded-md p-3"
+                        className="items-center justify-center w-full p-3 border border-gray-300 rounded-md mt-7 bg-primary h-14"
                         onPress={handleSignup}
                     >
-                        <Text className="text-white font-bold">SignUp</Text>
+                        <Text className="font-bold text-white">SignUp</Text>
                     </Pressable>
                 </View>
 
-                <View className="gap-0.5">
+                {/* <View className="gap-0.5">
                     <View className="flex-row items-center justify-center my-5">
                         <View className="flex-1 h-px bg-gray-500"></View>
-                        <Text className="px-3 text-xs text-gray-500 font-semibold">OR</Text>
+                        <Text className="px-3 text-xs font-semibold text-gray-500">OR</Text>
                         <View className="flex-1 h-px bg-gray-500"></View>
                     </View>
-                    <Pressable className="flex flex-row items-center justify-center w-full border border-gray-300 h-14 rounded-md p-3">
+                    <Pressable className="flex flex-row items-center justify-center w-full p-3 border border-gray-300 rounded-md h-14">
                         <GoogleLogo className="w-6 h-6" />
                         <Text className="ml-4">Signup with Google</Text>
                     </Pressable>
-                </View>
+                </View> */}
 
-                <View className="mt-8 mb-8 flex-row justify-center items-center gap-2">
+                <View className="flex-row items-center justify-center gap-2 mt-8 mb-8">
                     <Text className="text-center text-gray-500">Already have an account?</Text>
                     <Link className='text-center text-[#045883] font-semibold ' href='/login'>Login</Link>
                 </View>

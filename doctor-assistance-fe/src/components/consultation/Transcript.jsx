@@ -1,174 +1,259 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FaPaperPlane } from 'react-icons/fa';
-import { IoCopyOutline, IoCopy, IoPlayOutline } from 'react-icons/io5';
-import { PiPauseLight, PiStop  } from "react-icons/pi";
-import { TbUserCircle } from 'react-icons/tb';
+import React, { useState, useEffect, useRef } from "react";
+import { FaPaperPlane } from "react-icons/fa";
+import { IoCopyOutline, IoCopy, IoPlayOutline } from "react-icons/io5";
+import { PiPauseLight, PiStop } from "react-icons/pi";
+import { TbUserCircle } from "react-icons/tb";
 
-import { Button } from '@/components/ui/button';
-import Pulse from '@/components/shared/Pulse';
-import { dummyTranscript } from '@/assets/data/dummyChats';
-import { useAudioTranscription } from '@/hooks/useAudioTranscription';
+import { Button } from "@/components/ui/button";
+import Pulse from "@/components/shared/Pulse";
+import { useAudioTranscription } from "@/hooks/useAudioTranscription";
+import { getAuthStatus } from "@/utils/auth";
 
-export default function TranscriptionPage({ consultationId }) {
-	const [additionalInfo, setAdditionalInfo] = useState('');
-	const [isTranscribing, setIsTranscribing] = useState(false);
-	const [isPaused, setIsPaused] = useState(false);
-	const [elapsedTime, setElapsedTime] = useState(0);
-	const [isCopied, setIsCopied] = useState(false);
-	const [chatMessages, setChatMessages] = useState(dummyTranscript);
-	
-	const transcriptEndRef = useRef(null);
+const LABEL_SPEAKER = {
+  spk_0: "Doctor",
+  spk_1: "Patient",
+};
 
-	const {
-		startRecording,
-		pauseRecording,
-		resumeRecording,
-		stopRecording,
-	} = useAudioTranscription(consultationId); 
+export default function TranscriptionPage({ consultationId, setNotes }) {
+  const [additionalInfo, setAdditionalInfo] = useState("");
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [isCopied, setIsCopied] = useState(false);
+  const [chatMessages, setChatMessages] = useState([]);
 
-	const scrollToEnd = (ref) => {
-		if (ref.current) {
-			ref.current.scrollIntoView({ behavior: "smooth" });
-		}
-	};
+  function processTranscripts(transcripts) {
+    return transcripts
+      .map((entry) => {
+        const label =
+          entry.speaker_label === "spk_0" ? "[doctor]" : "[patient]";
 
-	useEffect(() => {
-		let timer;
-		if (isTranscribing && !isPaused) {
-			timer = setInterval(() => {
-				setElapsedTime((prevTime) => prevTime + 1);
-			}, 1000);
-		}
-		return () => clearInterval(timer);
-	}, [isTranscribing, isPaused]);
+        return `${label} ${entry.transcript}`;
+      })
+      .join(" ");
+  }
 
-	useEffect(() => {
-		scrollToEnd(transcriptEndRef);
-	}, [chatMessages]);
+  const transcriptEndRef = useRef(null);
 
-	const formatTime = (seconds) => {
-		const minutes = String(Math.floor(seconds / 60)).padStart(2, '0');
-		const secs = String(seconds % 60).padStart(2, '0');
-		return `${minutes}:${secs}`;
-	};
+  const {
+    startRecording,
+    pauseRecording,
+    resumeRecording,
+    stopRecording,
+    transcription,
+  } = useAudioTranscription(consultationId);
 
-	const handleStart = () => {
-		setIsTranscribing(true);
-		setElapsedTime(0);
-		startRecording();
-	};
+  useEffect(() => {
+    if (transcription) {
+      setChatMessages(transcription);
+    }
+  }, [transcription]);
 
-	const handleStop = () => {
-		setIsTranscribing(false);
-		setIsPaused(false);
-		setElapsedTime(0);
-		stopRecording();
-	};
+  const scrollToEnd = (ref) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
-	const togglePauseResume = () => {
-		isPaused ? resumeRecording() : pauseRecording(); 
-		setIsPaused((prev) => !prev);
-	};
+  useEffect(() => {
+    let timer;
+    if (isTranscribing && !isPaused) {
+      timer = setInterval(() => {
+        setElapsedTime((prevTime) => prevTime + 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isTranscribing, isPaused]);
 
-	const handleCopy = () => {
-		const textToCopy = chatMessages.map(msg => `${msg.sender}: ${msg.text} (${msg.time})`).join('\n');
-		navigator.clipboard.writeText(textToCopy).then(() => {
-			setIsCopied(true);
-			setTimeout(() => setIsCopied(false), 1000);
-		});
-	};
+  useEffect(() => {
+    scrollToEnd(transcriptEndRef);
+  }, [chatMessages]);
 
-	const handleSend = () => {
-		if (additionalInfo.trim()) {
-			const newMessage = {
-				id: chatMessages.length + 1,
-				text: additionalInfo,
-				sender: 'Doctor',
-				time: formatTime(elapsedTime),
-			};
-			setChatMessages((prevMessages) => [...prevMessages, newMessage]);
-			setAdditionalInfo('');
-		}
-	};
+  const formatTime = (seconds) => {
+    const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const secs = String(seconds % 60).padStart(2, "0");
+    return `${minutes}:${secs}`;
+  };
 
-	const handleEditMessage = (e, id) => {
-		const updatedText = e.target.textContent;
-		setChatMessages((prevMessages) =>
-			prevMessages.map((msg) =>
-				msg.id === id ? { ...msg, text: updatedText } : msg
-			)
-		);
-		console.log(`Message ${id} updated to:`, updatedText);
-	};
+  const handleNotesGeneration = () => {
+    const { user } = getAuthStatus();
+    let accessToken = user.access_token;
 
-	return (
-		<div className="mx-2 flex flex-col h-[76vh]">
-			<div className="flex-grow overflow-y-auto bg-gray-50">
-				{chatMessages.map((msg) => (
-					<div key={msg.id} className={`flex ${msg.sender === 'Doctor' ? 'justify-end' : 'justify-start'} mb-10`}>
-						<div className={`flex items-center ${msg.sender === 'Doctor' ? 'flex-row-reverse' : ''} gap-3`}>
-							<TbUserCircle size={30} className="text-gray-400" />
-							
-							<div className={`${msg.sender === 'Doctor' ? 'bg-blue-100' : 'bg-gray-200'} max-w-lg px-4 py-2 rounded-md shadow-md relative`}>
-								<div className='flex text-sm text-gray-800 gap-1'>
-									<span>{msg.sender}:</span>
-									<div contentEditable suppressContentEditableWarning={true}  onBlur={(e) => handleEditMessage(e, msg.id)} className="break-words focus:text-primary focus:outline-none">
-										{msg.text}
-									</div>
-								</div>
-								<p className={`text-xs text-gray-500 absolute -bottom-6 ${msg.sender === 'Doctor' ? 'right-2' : 'left-2'}`}>{msg.time}</p>
-							</div>
-						
-						</div>
-					</div>
-				))}
-				<div ref={transcriptEndRef} />
-			</div>
+    const transcript = processTranscripts(chatMessages);
 
-			<div className="w-full h-5 text-sm my-2 flex items-center justify-center relative">
-				{isTranscribing && !isPaused ? (
-					<Pulse/>
-				) : (
-					<span className="text-gray-400">Waiting for transcription...</span>
-				)}
-			</div>
+    fetch("http://localhost:8000/api/transcriptions/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        consultation: consultationId,
+        transcription_text: transcript,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setNotes(data.soap_notes.description);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
 
-			<div className="px-2 py-2 bg-gray-50 flex items-center">
-				<textarea
-					className="w-full"
-					rows="2"
-					placeholder="Add additional Info..."
-					value={additionalInfo}
-					onChange={(e) => setAdditionalInfo(e.target.value)}
-				/>
-				<button onClick={handleSend}>
-					<FaPaperPlane className="text-primary cursor-pointer ml-3" />
-				</button>
-			</div>
+  const handleStart = () => {
+    setIsTranscribing(true);
+    setElapsedTime(0);
+    startRecording();
+  };
 
-			<div className="px-2 pt-2 bg-white flex justify-end gap-3">
-				{!isTranscribing ? (
-					<Button onClick={handleStart} className="flex items-center gap-2">
-						<IoPlayOutline /> Start
-					</Button>
-				) : (
-					<div className="flex items-center gap-3">
-						<Button onClick={handleStop} className="bg-red-600 hover:bg-red-600/90 flex items-center gap-2">
-							<PiStop /> Stop
-						</Button>
-						<Button
-							onClick={togglePauseResume}
-							className={`flex items-center gap-2 ${isPaused ? 'bg-green-500 hover:bg-green-500/90' : 'bg-yellow-500 hover:bg-yellow-500/90'} text-white px-4 py-2 rounded-lg`}
-						>
-							{isPaused ? <IoPlayOutline /> : <PiPauseLight />} {isPaused ? 'Resume' : 'Pause'}
-						</Button>
-					</div>
-				)}
+  const handleStop = () => {
+    setIsTranscribing(false);
+    setIsPaused(false);
+    setElapsedTime(0);
+    stopRecording();
+  };
 
-				<Button onClick={handleCopy} variant='outline'>
-					{isCopied ? <IoCopy /> : <IoCopyOutline />}
-				</Button>
-			</div>
-		</div>
-	);
+  const togglePauseResume = () => {
+    isPaused ? resumeRecording() : pauseRecording();
+    setIsPaused((prev) => !prev);
+  };
+
+  const handleCopy = () => {
+    const textToCopy = chatMessages
+      .map((msg) => `${msg.sender}: ${msg.text} (${msg.time})`)
+      .join("\n");
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 1000);
+    });
+  };
+
+  const handleSend = () => {
+    if (additionalInfo.trim()) {
+      const newMessage = {
+        id: chatMessages.length + 1,
+        text: additionalInfo,
+        sender: "Doctor",
+        time: formatTime(elapsedTime),
+      };
+      setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+      setAdditionalInfo("");
+    }
+  };
+
+  const handleEditMessage = (e, id) => {
+    const updatedText = e.target.textContent;
+    setChatMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.id === id ? { ...msg, text: updatedText } : msg
+      )
+    );
+  };
+
+  return (
+    <div className="mx-2 flex flex-col h-[76vh]">
+      <div className="flex-grow overflow-y-auto bg-gray-50">
+        {chatMessages.map((msg) => (
+          <div
+            key={msg.id}
+            className={`flex ${
+              msg.speaker_label === "spk_0" ? "justify-end" : "justify-start"
+            } mb-10`}
+          >
+            <div
+              className={`flex items-center ${
+                msg.speaker_label === "spk_0" ? "flex-row-reverse" : ""
+              } gap-3`}
+            >
+              <TbUserCircle size={30} className="text-gray-400" />
+
+              <div
+                className={`${
+                  msg.speaker_label === "spk_0" ? "bg-blue-100" : "bg-gray-200"
+                } max-w-lg px-4 py-2 rounded-md shadow-md relative`}
+              >
+                <div className="flex gap-1 text-sm text-gray-800">
+                  <span>{LABEL_SPEAKER[msg.speaker_label]}:</span>
+                  <div
+                    contentEditable
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => handleEditMessage(e, msg.id)}
+                    className="break-words focus:text-primary focus:outline-none"
+                  >
+                    {msg.transcript}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+        <div ref={transcriptEndRef} />
+      </div>
+
+      <div className="relative flex items-center justify-center w-full h-5 my-2 text-sm">
+        {isTranscribing && !isPaused ? <Pulse /> : <></>}
+      </div>
+
+      <div className="flex items-center px-2 py-2 bg-gray-50">
+        <textarea
+          className="w-full"
+          rows="2"
+          placeholder="Add additional Info..."
+          value={additionalInfo}
+          onChange={(e) => setAdditionalInfo(e.target.value)}
+        />
+        <button onClick={handleSend}>
+          <FaPaperPlane className="ml-3 cursor-pointer text-primary" />
+        </button>
+      </div>
+
+      <div className="flex justify-end gap-3 px-2 pt-2 bg-white">
+        {!isTranscribing ? (
+          <>
+            <Button
+              onClick={handleNotesGeneration}
+              className="flex items-center gap-2"
+              disabled={transcription.length === 0}
+            >
+              Generate Notes
+            </Button>
+
+            <Button onClick={handleStart} className="flex items-center gap-2">
+              <IoPlayOutline /> Start
+            </Button>
+          </>
+        ) : (
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleStop}
+              className="flex items-center gap-2 bg-red-600 hover:bg-red-600/90"
+            >
+              <PiStop /> Stop
+            </Button>
+            <Button
+              onClick={togglePauseResume}
+              className={`flex items-center gap-2 ${
+                isPaused
+                  ? "bg-green-500 hover:bg-green-500/90"
+                  : "bg-yellow-500 hover:bg-yellow-500/90"
+              } text-white px-4 py-2 rounded-lg`}
+            >
+              {isPaused ? <IoPlayOutline /> : <PiPauseLight />}{" "}
+              {isPaused ? "Resume" : "Pause"}
+            </Button>
+          </div>
+        )}
+
+        <Button onClick={handleCopy} variant="outline">
+          {isCopied ? <IoCopy /> : <IoCopyOutline />}
+        </Button>
+      </div>
+    </div>
+  );
 }

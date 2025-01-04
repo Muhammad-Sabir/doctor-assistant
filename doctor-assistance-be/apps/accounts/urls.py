@@ -13,7 +13,9 @@ from apps.accounts.views import (
     VerifyAccount,
     RoleBasedObtainPairView,
     OTPGenerationView,
-    VerifyOTPView
+    VerifyOTPView,
+    PasswordResetOTPView,
+    PasswordResetOTPConfirmView
 )
 
 urlpatterns = [
@@ -28,4 +30,6 @@ urlpatterns = [
     path('verify-account/<uid>/<token>', VerifyAccount.as_view()),
     path('send-otp/', OTPGenerationView.as_view()),
     path('verify-otp/', VerifyOTPView.as_view()),
+    path('send-reset-password-otp/', PasswordResetOTPView.as_view()),
+    path('reset-password-otp/', PasswordResetOTPConfirmView.as_view()),
 ]

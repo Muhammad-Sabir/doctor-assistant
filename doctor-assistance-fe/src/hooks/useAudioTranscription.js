@@ -2,87 +2,95 @@ import { useState, useRef } from 'react';
 
 const RECORDING_TIMEOUT = 5000; // milliseconds
 
-
 export const useAudioTranscription = (consultationId) => {
-	const [transcription, setTranscription] = useState('');
-	const mediaRecorderRef = useRef(null);
-	const websocketRef = useRef(null);
+  const [transcription, setTranscription] = useState([]);
+  const mediaRecorderRef = useRef(null);
+  const websocketRef = useRef(null);
 
-	const appendTranscription = (message) => {
-		setTranscription((prev) => `${prev}${message}\n`);
-	};
+  const appendTranscription = (message) => {
+    setTranscription((prev) => `${prev}${message}\n`);
+  };
 
-	const initializeWebSocket = () => {
-		const websocket = new WebSocket(`ws://localhost:8000/ws/consultation/${consultationId}/`);
-		websocket.onopen = () => console.log('WebSocket connected.');
-		websocket.onmessage = (event) => {
-			const { message } = JSON.parse(event.data);
-			appendTranscription(message);
-		};
-		return websocket;
-	};
+  const initializeWebSocket = () => {
+    const websocket = new WebSocket(`ws://localhost:8000/ws/consultation/${consultationId}/`);
+    websocket.onopen = () => console.log('WebSocket connected.');
+    websocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.transcription) {
+        setTranscription(data.transcription);
+        websocket.close();
+      } else if (data.message) {
+        appendTranscription(data.message);
+      } else if (data.error) {
+        console.error('Error from server:', data.error);
+      }
+    };
+    websocket.onclose = () => {
+      console.log('WebSocket connection closed.');
+    };
+    websocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+    return websocket;
+  };
 
-	const startRecording = async () => {
-		try {
-			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-			const mediaRecorder = new MediaRecorder(stream);
-			const websocket = initializeWebSocket();
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      const websocket = initializeWebSocket();
 
-			mediaRecorder.ondataavailable = (event) => {
-				if (websocket.readyState === WebSocket.OPEN) {
-					websocket.send(event.data);
-					console.log('Audio chunk sent');
-				}
-			};
+      mediaRecorder.ondataavailable = (event) => {
+        if (websocket.readyState === WebSocket.OPEN) {
+          websocket.send(event.data);
+        }
+      };
 
-			mediaRecorder.start(RECORDING_TIMEOUT);
-			mediaRecorderRef.current = mediaRecorder;
-			websocketRef.current = websocket;
-		} catch (error) {
-			console.error('Error accessing microphone:', error);
-		}
-	};
+      mediaRecorder.start(RECORDING_TIMEOUT);
+      mediaRecorderRef.current = mediaRecorder;
+      websocketRef.current = websocket;
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+    }
+  };
 
-	const pauseRecording = () => {
-		if (isRecording()) {
-			mediaRecorderRef.current.pause();
-		}
-	};
+  const pauseRecording = () => {
+    if (isRecording()) {
+      mediaRecorderRef.current.pause();
+    }
+  };
 
-	const resumeRecording = () => {
-		if (isPaused()) {
-			mediaRecorderRef.current.resume();
-		}
-	};
+  const resumeRecording = () => {
+    if (isPaused()) {
+      mediaRecorderRef.current.resume();
+    }
+  };
 
-	const stopRecording = () => {
-		if (!isRecording() && !isPaused()) return;
+  const stopRecording = () => {
+    if (!isRecording() && !isPaused()) return;
 
-		mediaRecorderRef.current.stop();
-		closeWebSocketAfterDelay(RECORDING_TIMEOUT);
-	};
+    mediaRecorderRef.current.stop();
 
-	const isRecording = () => {
-		return mediaRecorderRef.current?.state === 'recording';
-	};
+    const websocket = websocketRef.current;
+    if (websocket?.readyState === WebSocket.OPEN) {
+      websocket.send(JSON.stringify({ action: 'stop_recording' }));
+    }
+    // Do not close the WebSocket here
+  };
 
-	const isPaused = () => {
-		return mediaRecorderRef.current?.state === 'paused';
-	};
+  const isRecording = () => {
+    return mediaRecorderRef.current?.state === 'recording';
+  };
 
-	const closeWebSocketAfterDelay = (delay) => {
-		setTimeout(() => {
-			const websocket = websocketRef.current;
-			if (websocket?.readyState === WebSocket.OPEN) {
-				websocket.close();
-			}
-		}, delay);
-	};
+  const isPaused = () => {
+    return mediaRecorderRef.current?.state === 'paused';
+  };
 
-	return {
-		startRecording,
-		pauseRecording,
-		resumeRecording,
-		stopRecording,
-	};
+  return {
+    startRecording,
+    pauseRecording,
+    resumeRecording,
+    stopRecording,
+    transcription,
+  };
 };

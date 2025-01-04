@@ -1,7 +1,14 @@
 from rest_framework import serializers
 from django.utils import timezone
+from datetime import datetime
 
-from apps.appointments.models import Appointment
+from apps.appointments.models import (
+    Appointment, 
+    TimeSlot, 
+    DoctorSchedule, 
+    DoctorDateOverride
+)
+from apps.appointments.utils import generate_time_slots
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
@@ -40,3 +47,154 @@ class AppointmentSerializer(serializers.ModelSerializer):
         if value < timezone.now().date():
             raise serializers.ValidationError("The appointment date cannot be in the past.")
         return value
+
+
+class TimeSlotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimeSlot
+        fields = ['id', 'start_time', 'end_time']
+
+
+class DoctorScheduleSerializer(serializers.ModelSerializer):
+    time_slots = TimeSlotSerializer(many=True, read_only=True)
+    day_name = serializers.CharField(source='get_day_of_week_display', read_only=True)
+    slot_duration = serializers.IntegerField(write_only=True)
+    start_time = serializers.TimeField(write_only=True)
+    end_time = serializers.TimeField(write_only=True)
+
+    class Meta:
+        model = DoctorSchedule
+        fields = ['id', 'doctor', 'hospital', 'day_of_week', 'day_name', 
+                 'time_slots', 'is_available', 'slot_duration', 
+                 'start_time', 'end_time']
+        read_only_fields = ['doctor']
+
+    def validate(self, data):
+        if not all(key in data for key in ['slot_duration', 'start_time', 'end_time']):
+            raise serializers.ValidationError(
+                "slot_duration, start_time, and end_time are required"
+            )
+        
+        if data['start_time'] >= data['end_time']:
+            raise serializers.ValidationError("Start time must be before end time")
+
+        doctor = self.context.get('doctor')
+        if not doctor:
+            raise serializers.ValidationError("Doctor context is required")
+
+        hospital = data.get('hospital')
+        if hospital and not doctor.hospitals.filter(id=hospital.id).exists():
+            raise serializers.ValidationError(
+                f"Doctor {doctor.name} is not associated with the selected hospital"
+            )
+
+        existing_schedule = DoctorSchedule.objects.filter(
+            doctor=doctor,
+            hospital=hospital,
+            day_of_week=data['day_of_week']
+        ).exists()
+        
+        if existing_schedule:
+            raise serializers.ValidationError(
+                "A schedule already exists for this doctor at this hospital on this day"
+            )
+            
+        return data
+
+    def create(self, validated_data):
+        slot_duration = validated_data.pop('slot_duration')
+        start_time = validated_data.pop('start_time')
+        end_time = validated_data.pop('end_time')
+        
+        slots_data = generate_time_slots(
+            datetime.combine(datetime.today(), start_time),
+            datetime.combine(datetime.today(), end_time),
+            slot_duration
+        )
+        
+        schedule = DoctorSchedule.objects.create(**validated_data)
+        
+        for slot_data in slots_data:
+            time_slot, _ = TimeSlot.objects.get_or_create(**slot_data)
+            schedule.time_slots.add(time_slot)
+        
+        return schedule
+
+
+class DoctorDateOverrideSerializer(serializers.ModelSerializer):
+    time_slots = TimeSlotSerializer(many=True, read_only=True)
+    slot_duration = serializers.IntegerField(write_only=True)
+    start_time = serializers.TimeField(write_only=True)
+    end_time = serializers.TimeField(write_only=True)
+
+    class Meta:
+        model = DoctorDateOverride
+        fields = ['id', 'doctor', 'hospital', 'date', 'time_slots', 
+                 'is_available', 'reason', 'slot_duration', 
+                 'start_time', 'end_time']
+        read_only_fields = ['doctor']
+
+    def validate(self, data):
+        if not all(key in data for key in ['slot_duration', 'start_time', 'end_time']):
+            raise serializers.ValidationError(
+                "slot_duration, start_time, and end_time are required"
+            )
+        
+        if data['start_time'] >= data['end_time']:
+            raise serializers.ValidationError("Start time must be before end time")
+
+        doctor = self.context.get('doctor')
+        if not doctor:
+            raise serializers.ValidationError("Doctor context is required")
+
+        hospital = data.get('hospital')
+        if hospital and not doctor.hospitals.filter(id=hospital.id).exists():
+            raise serializers.ValidationError(
+                f"Doctor {doctor.name} is not associated with the selected hospital"
+            )
+
+        if data['date'] < timezone.now().date():
+            raise serializers.ValidationError("Cannot create override for past dates")
+        
+        return data
+
+    def create(self, validated_data):
+        slot_duration = validated_data.pop('slot_duration')
+        start_time = validated_data.pop('start_time')
+        end_time = validated_data.pop('end_time')
+        
+        override = DoctorDateOverride.objects.create(**validated_data)
+        
+        slots_data = generate_time_slots(
+            datetime.combine(override.date, start_time),
+            datetime.combine(override.date, end_time),
+            slot_duration
+        )
+    
+        for slot_data in slots_data:
+            time_slot, _ = TimeSlot.objects.get_or_create(**slot_data)
+            override.time_slots.add(time_slot)
+        
+        return override
+
+    def update(self, instance, validated_data):
+        instance.is_available = validated_data.get('is_available', instance.is_available)
+        instance.reason = validated_data.get('reason', instance.reason)
+        instance.hospital = validated_data.get('hospital', instance.hospital)
+        instance.date = validated_data.get('date', instance.date)
+        
+        if all(key in validated_data for key in ['slot_duration', 'start_time', 'end_time']):
+            instance.time_slots.clear()
+            
+            slots_data = generate_time_slots(
+                datetime.combine(instance.date, validated_data['start_time']),
+                datetime.combine(instance.date, validated_data['end_time']),
+                validated_data['slot_duration']
+            )
+            
+            for slot_data in slots_data:
+                time_slot, _ = TimeSlot.objects.get_or_create(**slot_data)
+                instance.time_slots.add(time_slot)
+        
+        instance.save()
+        return instance
