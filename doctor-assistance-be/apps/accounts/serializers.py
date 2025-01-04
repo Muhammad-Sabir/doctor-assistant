@@ -136,7 +136,7 @@ class VerifyAccountSerializer(serializers.ModelSerializer):
         return user
 
 
-class OTPVerifyAccountSerializer(serializers.Serializer):
+class BaseOTPSerializer(serializers.Serializer):
     email = serializers.EmailField()
     otp_code = serializers.CharField()
 
@@ -147,16 +147,30 @@ class OTPVerifyAccountSerializer(serializers.Serializer):
         try:
             user = User.objects.get(email=email)
             otp = OTP.objects.filter(user=user).last()
-            if (otp and not otp.is_valid()) and otp.otp_code != otp_code:
-                raise serializers.ValidationError('Invalid or expired token.')
+            
+            if not otp or not otp.is_valid() or otp.otp_code != otp_code:
+                raise serializers.ValidationError('Invalid or expired OTP code.')
+                
         except User.DoesNotExist:
             raise serializers.ValidationError('User does not exist')
 
         self.context['user'] = user
         return data
-    
+
+
+class OTPVerifyAccountSerializer(BaseOTPSerializer):
     def save(self, **kwargs):
         user = self.context['user']
         user.is_account_verified = True
         user.save(update_fields=['is_account_verified'])
+        return user
+
+
+class OTPPasswordResetSerializer(BaseOTPSerializer):
+    password = serializers.CharField(write_only=True)
+    
+    def save(self, **kwargs):
+        user = self.context['user']
+        user.set_password(self.validated_data['password'])
+        user.save(update_fields=['password'])
         return user
