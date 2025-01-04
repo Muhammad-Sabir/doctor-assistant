@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { toast } from 'sonner';
 
 import { getCallSocket } from "@/utils/callSocket";
 import useChatStore from "@/store/ChatStore";
@@ -30,6 +31,7 @@ const pcConfig = {
 const useWebRTC = () => {
     const [isCallActive, setIsCallActive] = useState(false);
     const [isIncomingCall, setIsIncomingCall] = useState(false);
+    const [isEndCall, setIsEndCall] = useState(false);
     const [localStream, setLocalStream] = useState(null);
     const [remoteStream, setRemoteStream] = useState(null);
     const consultationId = useRef(null);
@@ -48,9 +50,8 @@ const useWebRTC = () => {
             peerConnection.current = null;
         }
 
-        if (isIncomingCall) {
-            setIsIncomingCall(false);
-        }
+        setIsIncomingCall(false);
+        setIsCallActive(false);
     };
 
     useEffect(() => {
@@ -81,9 +82,16 @@ const useWebRTC = () => {
                 }
                 break;
             case 'call_ended':
-            case 'call_rejected':
+                setIsEndCall(true);
                 cleanup();
-                setIsCallActive(false);
+                break;
+            case 'call_rejected':
+                toast.error('Call rejected by user', {
+                    style: {
+                        backgroundColor: '#ffffff'
+                    }
+                });
+                cleanup();
                 break;
             default:
                 console.log('Unexpected event:', type);
@@ -228,7 +236,7 @@ const useWebRTC = () => {
     const endCall = () => {
         sendMessage('call_ended');
         cleanup();
-        setIsCallActive(false);
+        setIsEndCall(true);
         incomingOffer.current = null;
         consultationId.current = null;
     };
@@ -238,6 +246,8 @@ const useWebRTC = () => {
         remoteStream,
         isCallActive,
         isIncomingCall,
+        isEndCall,
+        setIsEndCall,
         startCall,
         answerCall,
         rejectCall,

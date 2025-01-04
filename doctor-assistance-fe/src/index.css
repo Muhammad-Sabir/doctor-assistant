@@ -67,6 +67,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -84,28 +85,46 @@
 
 .slick-slide div {
   width: 98% !important;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 .slick-list {
-  padding-bottom: 2rem; 
+  padding-bottom: 2rem;
 }
 
-input[type='date']{
+input[type='date'] {
   @apply relative
 }
 
-::-webkit-datetime-edit { padding: 0.5em; }
-::-webkit-datetime-edit-fields-wrapper { color: rgb(118, 115, 115);  }
-::-webkit-datetime-edit-text { padding: 0 0.3em; }
+::-webkit-datetime-edit {
+  padding: 0.5em;
+}
+
+::-webkit-datetime-edit-fields-wrapper {
+  color: rgb(118, 115, 115);
+}
+
+::-webkit-datetime-edit-text {
+  padding: 0 0.3em;
+}
+
 ::-webkit-calendar-picker-indicator {
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 24 24"><path fill="rgb(118, 115, 115)" d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>');
   position: absolute;
   right: 10px;
 }
-::-webkit-datetime-edit-month-field { text-transform: uppercase; }
-::-webkit-datetime-edit-day-field { text-transform: uppercase; }
-::-webkit-datetime-edit-year-field { text-transform: uppercase; }
+
+::-webkit-datetime-edit-month-field {
+  text-transform: uppercase;
+}
+
+::-webkit-datetime-edit-day-field {
+  text-transform: uppercase;
+}
+
+::-webkit-datetime-edit-year-field {
+  text-transform: uppercase;
+}
 
 input[type='radio'] {
   accent-color: #2c378d;
@@ -116,7 +135,7 @@ input[type=file]::file-selector-button {
 }
 
 ::-webkit-scrollbar {
-  @apply w-2.5 h-1; 
+  @apply w-2.5 h-1;
 }
 
 ::-webkit-scrollbar-track {
@@ -135,9 +154,15 @@ svg {
   cursor: pointer;
 }
 
-textarea{
-  @apply border resize-none rounded-md p-2
-  flex border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors 
-  file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground
-  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50
+textarea {
+  @apply border resize-none rounded-md p-2 flex border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50
 }
+
+select option:checked {
+  @apply bg-accent !important
+}
+
+select:hover, select:focus {
+  @apply border-primary border-[0.12rem]
+} 
+ 

@@ -11,24 +11,28 @@ import Appointments from '@/pages/doctor/Appointments';
 import Chats from '@/pages/doctor/Chats';
 import MyPatients from '@/pages/doctor/MyPatients';
 import PatientDetails from '@/pages/doctor/PatientDetails';
+import { WebRTCProvider } from '@/context/WebRTCContext';
+
 export default function DoctorRoutes() {
     return (
-        <Routes>
-            <Route element={<ProtectedRoute permission="doctor" />}>
-                <Route element={<DashboardLayout />}>
-                    <Route path="home" element={<Home />} />
-                    <Route path="profile" element={<Profile />} />
-                    <Route path="patients" element={<MyPatients />} />
-                    <Route path="patient/:id" element={<PatientDetails />} />
-                    <Route path="appointments" element={<Appointments />} />
-                    <Route path="chats" element={<Chats />} />
-                    <Route path="*" element={<Navigate to="home" replace />} />
-                </Route>
+        <WebRTCProvider>
+            <Routes>
+                <Route element={<ProtectedRoute permission="doctor" />}>
+                    <Route element={<DashboardLayout />}>
+                        <Route path="home" element={<Home />} />
+                        <Route path="profile" element={<Profile />} />
+                        <Route path="patients" element={<MyPatients />} />
+                        <Route path="patient/:id" element={<PatientDetails />} />
+                        <Route path="appointments" element={<Appointments />} />
+                        <Route path="chats" element={<Chats />} />
+                        <Route path="*" element={<Navigate to="home" replace />} />
+                    </Route>
 
-                <Route element={<ConsultationLayout />}>
-                    <Route path="consultation/:patientId/:consultationId" element={<Consultation />} />
+                    <Route element={<ConsultationLayout />}>
+                        <Route path="consultation/:patientId/:consultationId" element={<Consultation />} />
+                    </Route>
                 </Route>
-            </Route>
-        </Routes>
+            </Routes>
+        </WebRTCProvider>
     );
 }

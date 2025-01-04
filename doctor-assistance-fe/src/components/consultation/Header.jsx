@@ -10,6 +10,8 @@ import Notifications from '@/components/dashboard/Notifications';
 import UserProfileMenu from '@/components/dashboard/UserProfileMenu';
 import MobileOverlay from '@/components/consultation/MobileOverlay';
 
+const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
+
 export default function Header() {
     const { consultationId } = useParams();
     const { user } = getAuthStatus();
@@ -22,7 +24,12 @@ export default function Header() {
         enabled: role === 'doctor',
     });
 
-    const userName = doctorData?.name || 'Loading...';
+    const getDoctorImageUrl = (file_url) => {
+        if (file_url?.startsWith('/media')) {
+            return `${baseUrl}${file_url}`;
+        }
+        return file_url;
+    };
 
     return (
         <header className="flex h-14 items-center gap-4 px-4 lg:h-[60px] lg:px-6 bg-white border-b shadow-sm sticky top-0 left-0 z-50">
@@ -32,7 +39,7 @@ export default function Header() {
             </div>
             <p className="hidden sm:block text-sm font-medium text-gray-500">{formatDate(new Date())}</p>
             <Notifications />
-            <UserProfileMenu userName={userName} />
+            <UserProfileMenu userImageUrl={getDoctorImageUrl(doctorData?.file_url)} />
         </header>
     );
 }
