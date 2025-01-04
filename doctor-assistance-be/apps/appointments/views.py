@@ -162,6 +162,9 @@ class DoctorScheduleViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(doctor=self.request.user.doctor)
 
+    def perform_update(self, serializer):
+        serializer.save()
+
     @action(detail=False, methods=['post'])
     def copy_schedule(self, request):
         """Copy schedule from one day to other selected days."""
