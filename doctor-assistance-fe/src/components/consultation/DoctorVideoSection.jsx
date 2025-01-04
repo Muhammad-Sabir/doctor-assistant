@@ -1,11 +1,11 @@
-import React, { useReducer, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { PiVideoCameraLight, PiVideoCameraSlash } from "react-icons/pi";
 import { CiMicrophoneOn, CiMicrophoneOff } from "react-icons/ci";
 import { FiPhone, FiPhoneOff } from "react-icons/fi";
 import { MdOutlineVideoCameraFront } from "react-icons/md";
 
-import useWebRTC from '@/hooks/useWebRTC';
+import { useWebRTCContext } from '@/context/WebRTCContext';
 
 export default function DoctorVideoSection() {
     const { consultationId } = useParams();
@@ -18,7 +18,7 @@ export default function DoctorVideoSection() {
         endCall,
         localStream,
         remoteStream
-    } = useWebRTC();
+    } = useWebRTCContext();
 
     const toggleMute = () => {
         setIsMuted((prev) => !prev);

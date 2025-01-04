@@ -9,7 +9,8 @@ from apps.profiles.views import (
     PrimaryPatientViewSet,
     DependentProfileViewSet,
     PatientAllergyViewSet,
-    AllergyViewSet
+    AllergyViewSet,
+    VerifyPMDCView
 )
 
 router = DefaultRouter()
@@ -25,4 +26,5 @@ router.register('dependents', DependentProfileViewSet, basename='dependent')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('verify-pmdc/', VerifyPMDCView.as_view(), name='verify-pmdc'),
 ]

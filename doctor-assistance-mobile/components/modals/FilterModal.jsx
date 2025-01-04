@@ -5,6 +5,7 @@ import Slider from '@react-native-community/slider';
 import { CheckCircle, Circle, X } from 'lucide-react-native';
 
 const FilterModal = ({ visible, onClose, filters, handleFilterChange, applyFilters, removeFilter }) => {
+
     return (
         <Modal
             animationType="slide"
@@ -100,12 +101,27 @@ const FilterModal = ({ visible, onClose, filters, handleFilterChange, applyFilte
                         </View>
                     </View>
 
+                    <View className="mb-3">
+                        <Text className="text-gray-700 mb-2">Distance (km): {filters.distance ? `${filters.distance} km` : null}</Text>
+                        <Slider
+                            style={{ width: '100%', height: 40 }}
+                            minimumValue={1}
+                            maximumValue={20}
+                            step={1}
+                            value={filters.distance}
+                            onValueChange={(value) => handleFilterChange('distance', value)}
+                            minimumTrackTintColor="hsl(203, 87%, 30%)"
+                            maximumTrackTintColor="#d3d3d3"
+                            thumbTintColor="hsl(203, 87%, 30%)"
+                        />
+                    </View>
+
                     <View className="flex flex-row flex-wrap mb-4">
                         {Object.keys(filters).map(
                             (key) => filters[key] && !(key === 'gender' && filters[key] === 'all') && (
                                 <TouchableOpacity key={key} className="flex flex-row items-center rounded-md px-3 py-2 mr-2 mb-2" style={{ backgroundColor: 'rgb(219 234 254)' }} onPress={() => removeFilter(key)}>
                                     <Text className="text-sm text-gray-700 mr-2">
-                                        {`${key}: ${filters[key]}`}
+                                    {`${key}: ${key === 'distance' ? `${filters[key]} km` : filters[key]}`}
                                     </Text>
                                     <X size={13} color="hsl(203, 87%, 30%)" />
                                 </TouchableOpacity>

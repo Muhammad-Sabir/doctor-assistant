@@ -17,8 +17,10 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255)),
                 ('city', models.CharField(max_length=100)),
-                ('street_address', models.CharField(blank=True, max_length=255)),
+                ('street_address', models.CharField(blank=True, max_length=500)),
                 ('logo_url', models.URLField(blank=True, null=True)),
+                ('latitude', models.DecimalField(blank=True, decimal_places=6, max_digits=9, null=True)),
+                ('longitude', models.DecimalField(blank=True, decimal_places=6, max_digits=9, null=True)),
             ],
         ),
     ]

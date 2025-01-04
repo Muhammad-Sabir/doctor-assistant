@@ -30,7 +30,7 @@ const DoctorSearchBar = () => {
   const suggestions = data?.results || [];
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      navigate(`/patient/doctors/search-results?${searchBy}=${searchQuery}`);
+      navigate(`/patient/doctors/search-results?${searchBy}=${searchQuery}`, { replace: true });
     }
   };
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react-native';
+import * as Location from 'expo-location';
 
 import DoctorCard from '@/components/shared/DoctorCard';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
@@ -13,7 +14,6 @@ import Loading from '@/components/shared/Loading';
 import { getPaginationItems } from '@/utils/pagination';
 
 export default function DoctorSearchResults() {
-
     const { fetchWithUserAuth } = useAuth();
     const { searchBy, searchQuery } = useLocalSearchParams();
     const screenWidth = Dimensions.get('window').width;
@@ -27,9 +27,14 @@ export default function DoctorSearchResults() {
         average_rating_max: '',
         years_of_experience: '',
         gender: 'all',
+        distance: '',
     });
 
     const [resultPerPage, setResultPerPage] = useState(10);
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
+
+    console.log(searchParams)
 
     const { data: doctorsData, isFetching, isError, error } = useFetchQuery({
         url: `doctors?${searchParams}&page=${currentPage}`,
@@ -46,6 +51,21 @@ export default function DoctorSearchResults() {
     const startResult = (currentPage - 1) * resultPerPage + 1;
     const endResult = Math.min(currentPage * resultPerPage, dataCount);
 
+    useEffect(() => {
+        const getLocation = async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                console.log('Permission to access location was denied');
+                return;
+            }
+            let location = await Location.getCurrentPositionAsync({});
+            setLatitude(location.coords.latitude);
+            setLongitude(location.coords.longitude);
+        };
+
+        getLocation();
+    }, []);
+
     const handleFilterChange = (name, value) => {
         setFilters((prev) => ({ ...prev, [name]: value }));
     };
@@ -53,7 +73,7 @@ export default function DoctorSearchResults() {
     useEffect(() => {
         setFilters({
             name: '', average_rating_min: '', average_rating_max: '',
-            years_of_experience: '', gender: 'all',
+            years_of_experience: '', gender: 'all', distance: ''
         });
         setCurrentPage(1);
         setSearchParams(`${searchBy}=${searchQuery}`);
@@ -69,12 +89,25 @@ export default function DoctorSearchResults() {
 
     const applyFilters = () => {
         setCurrentPage(1);
-        createSearchParams(filters);
+
+        const validFilters = { ...filters };
+        if (validFilters.distance && latitude && longitude) {
+            validFilters.radius = validFilters.distance;
+            validFilters.latitude = latitude;
+            validFilters.longitude = longitude;
+            delete validFilters.distance;
+        } else {
+            delete validFilters.latitude;
+            delete validFilters.longitude;
+        }
+    
+        createSearchParams(validFilters);
         setModalVisible(false);
     };
 
     const removeFilter = (filterName) => {
-        const updatedFilters = { ...filters, [filterName]: '' };
+        const updatedFilters = { ...filters };
+        delete updatedFilters[filterName];
         setFilters(updatedFilters);
     };
 
@@ -144,17 +177,19 @@ export default function DoctorSearchResults() {
                             </View>
                         </>
                     )}
-
-                    <FilterModal
-                        visible={modalVisible}
-                        onClose={() => setModalVisible(false)}
-                        filters={filters}
-                        handleFilterChange={handleFilterChange}
-                        applyFilters={applyFilters}
-                        removeFilter={removeFilter}
-                    />
                 </View>
             </CustomKeyboardView>
+
+            <FilterModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                filters={filters}
+                handleFilterChange={handleFilterChange}
+                applyFilters={applyFilters}
+                removeFilter={removeFilter}
+                latitude={latitude}
+                longitude={longitude}
+            />
         </>
     );
 }

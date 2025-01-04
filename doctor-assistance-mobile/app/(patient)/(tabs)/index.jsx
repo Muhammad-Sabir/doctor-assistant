@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Alert, BackHandler, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
@@ -10,10 +10,12 @@ import QuickLinks from '@/components/dashboard/QuickLinks';
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import FAQSection from '@/components/dashboard/FaqSection';
+import IncomingCallModal from '@/components/modals/IncomingCall';
 
 const Home = () => {
 
     const { user, fetchWithUserAuth } = useAuth();
+    const [isModalVisible, setModalVisible] = useState(true);
 
     const { data } = useFetchQuery({
         url: 'patients/',
@@ -93,6 +95,11 @@ const Home = () => {
                 </View>
 
             </View >
+
+            <IncomingCallModal
+                visible={isModalVisible}
+                onClose={() => setModalVisible(false)}
+            />
         </CustomKeyboardView>
     );
 };
