@@ -23,7 +23,6 @@ from apps.consultations.serializers import (
     PrescriptionSerializer, TranscriptionSerializer
 )
 from apps.consultations.filters import ConsultationFilter, PrescriptionFilter
-from apps.consultations.utils.sectiontagger import SectionTagger
 
 logging.basicConfig(level=logging.INFO)
 

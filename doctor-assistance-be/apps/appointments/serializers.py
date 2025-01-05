@@ -58,16 +58,49 @@ class TimeSlotSerializer(serializers.ModelSerializer):
 class DoctorScheduleSerializer(serializers.ModelSerializer):
     day_name = serializers.CharField(source='get_day_of_week_display', read_only=True)
     time_slots = TimeSlotSerializer(many=True, read_only=True)
+    original_time_slots = serializers.SerializerMethodField()
     hospital_name = serializers.SerializerMethodField()
 
     class Meta:
         model = DoctorSchedule
         fields = ['id', 'doctor', 'hospital', 'hospital_name', 'day_of_week', 'day_name', 
-                  'time_slots', 'is_available']
+                  'time_slots', 'original_time_slots', 'is_available']
         read_only_fields = ['doctor']
 
     def get_hospital_name(self, obj):
         return obj.hospital.name
+
+    def get_original_time_slots(self, obj):
+        time_slots = list(obj.time_slots.order_by('start_time'))
+        if not time_slots:
+            return []
+            
+        original_slots = []
+        current_chunk = {
+            'start_time': time_slots[0].start_time,
+            'end_time': time_slots[0].end_time,
+            'duration': time_slots[0].duration
+        }
+        
+        for i in range(1, len(time_slots)):
+            current_slot = time_slots[i]
+            
+            # Check if this slot is consecutive and has same duration
+            if (current_slot.start_time == time_slots[i-1].end_time and 
+                current_slot.duration == current_chunk['duration']):
+                current_chunk['end_time'] = current_slot.end_time
+            else:
+                original_slots.append(current_chunk)
+                current_chunk = {
+                    'start_time': current_slot.start_time,
+                    'end_time': current_slot.end_time,
+                    'duration': current_slot.duration
+                }
+        
+        # Add the last chunk
+        original_slots.append(current_chunk)
+        
+        return original_slots
 
     def validate(self, data):
         # Only validate time_slots if they are present in the request
