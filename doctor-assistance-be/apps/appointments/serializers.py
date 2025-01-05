@@ -105,7 +105,7 @@ class DoctorScheduleSerializer(serializers.ModelSerializer):
         if 'day_of_week' in data:
             existing_schedule = DoctorSchedule.objects.filter(
                 doctor=doctor,
-                hospital=data.get('hospital', self.instance.hospital),
+                hospital=data.get('hospital', getattr(self.instance, 'hospital', None)),
                 day_of_week=data['day_of_week']
             ).exists()
             
