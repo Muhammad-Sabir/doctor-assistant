@@ -165,4 +165,11 @@ select option:checked {
 select:hover, select:focus {
   @apply border-primary border-[0.12rem]
 } 
- 
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+input[type="checkbox"] {
+  accent-color: #2c378d
+}
