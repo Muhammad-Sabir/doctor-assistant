@@ -52,7 +52,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 class TimeSlotSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeSlot
-        fields = ['start_time', 'end_time']
+        fields = ['id','start_time', 'end_time']
 
 
 class DoctorScheduleSerializer(serializers.ModelSerializer):
