@@ -7,9 +7,9 @@ import { TbClock24, TbReportMedical, TbBrandHipchat} from "react-icons/tb";
 export const menuItems = {
     doctor: [
         { icon: <Home className="h-5 w-5" />, url: "/doctor/home", name: "Home" },
+        { icon: <TbClock24 className="h-5 w-5" />, url: "/doctor/schedule", name: "My Schedule" },
         { icon: <Users className="h-5 w-5" />, url: "/doctor/patients", name: "My Patients" },
         {icon: <LuCalendarClock className="h-5 w-5" />, url: "/doctor/appointments", name: "Appointments" },
-        { icon: <TbClock24 className="h-5 w-5" />, url: "/doctor/schedule", name: "My Schedule" },
         { icon: <TbBrandHipchat className="h-5 w-5" />, url: "/doctor/chats", name: "Chats" },
     ],
     patient: [

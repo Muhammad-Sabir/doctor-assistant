@@ -25,7 +25,7 @@ const DaySchedule = ({ key, dayName, schedules }) => {
             </AccordionTrigger>
             <AccordionContent>
                 {schedules.length === 0 ? (
-                    <div className="sm:ml-3 text-sm text-gray-500 py-1">No Schedule Available</div>
+                    <div className="sm:ml-3 text-sm text-gray-500 py-1">No schedule set yet for {dayName}. Create one by clicking the Create Schedule button</div>
                 ) : (
                     <div>
                         <div className="sm:ml-3 hidden sm:grid grid-cols-6 gap-4 py-3 border-t border-gray-300">

@@ -15,12 +15,12 @@ export default function DoctorHomeCards() {
                         <div className="bg-violet-100 rounded-md flex h-full">
                             <div className="p-5 xl:p-8 flex flex-col justify-center w-full md:w-1/2">
                                 <h3 className="text-lg font-bold text-primary pb-2">
-                                    Manage Consultations and Appointments
+                                    Manage Your Schedule and Availability
                                 </h3>
-                                <p className="text-sm text-gray-600 mb-4">Streamline your workflow and focus on patient care with one easy platform.</p>
+                                <p className="text-sm text-gray-600 mb-4">Ensure patients know when you are available by managing your schedule.</p>
                                 <Button variant='outline' className="bg-violet-100 self-start block">
-                                    <Link className="flex" to="/doctor/appointments">
-                                        Go To Appointments <MdOutlineArrowForwardIos className="mt-1 ml-1" />
+                                    <Link className="flex" to="/doctor/schedule">
+                                        Go To My Schedule <MdOutlineArrowForwardIos className="mt-1 ml-1" />
                                     </Link>
                                 </Button>
                             </div>
@@ -36,7 +36,7 @@ export default function DoctorHomeCards() {
                             <p className="text-sm font-normal text-white mb-4">Manage and track your patients' online and in-person seamlessly in one place.</p>
                             <Button variant='outline' className="bg-secondary hover:text-white text-white border-white block self-start">
                                 <Link className="flex" to="/doctor/patients">
-                                    Go to Patients <MdOutlineArrowForwardIos className="mt-1 ml-1" />
+                                    Go to My Patients <MdOutlineArrowForwardIos className="mt-1 ml-1" />
                                 </Link>
                             </Button>
                         </div>
