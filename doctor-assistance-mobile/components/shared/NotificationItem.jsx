@@ -36,7 +36,7 @@ export const NotificationItem = ({ notification, onMarkAsRead }) => {
     };
 
     return (
-        <TouchableOpacity className={`flex-row items-center p-3 bg-white rounded-md mb-3 ${!notification.is_read ? 'bg-blue-50' : 'bg-white'}`}
+        <TouchableOpacity className={`flex-row items-center p-3 bg-white rounded-md mb-3 ${!notification.is_read ? 'bg-blue-100' : 'bg-white'}`}
             onPress={handleClick}
         >
             <View className={`w-10 h-10 p-2 mr-3 ${notification.is_read ? 'bg-gray-200' : 'bg-white'} rounded-full`}>
