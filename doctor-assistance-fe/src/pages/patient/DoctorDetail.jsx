@@ -71,7 +71,7 @@ export default function DoctorDetail() {
                     </div>
 
                     <div className="flex gap-2">
-                        <BookAppointment doctorId={data.id} doctorName={data.name} />
+                        <BookAppointment doctorId={data.id} doctorName={data.name} hospitals={data.hospitals}/>
                     </div>
                 </div>
 
