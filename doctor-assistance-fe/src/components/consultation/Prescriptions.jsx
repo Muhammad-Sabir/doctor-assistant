@@ -12,15 +12,9 @@ export default function Prescriptions() {
   const [isCopied, setIsCopied] = useState(false);
   const [formData, setFormData] = useState({
     medications: [
-      { name: 'Aspirin (Bayer)', dosage: '500mg', frequency: 'Take one tablet every 4-6 hours' },
-      { name: 'Ibuprofen (Advil)', dosage: '320mg', frequency: 'Take one tablet daily' },
-      { name: 'Acetaminophen (Tylenol)', dosage: '500mg', frequency: 'Take one tablet every 4-6 hours' },
-
-    ],
-    prescribedTests: ['Complete Blood Count (CBC)', 'C-reactive protein (CRP)', 'Comprehensive Metabolic Panel (CMP)'],
-    patientInstructions: [
-      'Take medications as prescribed by the doctor. Follow dosage instructions carefully.',
-      'Stay hydrated by drinking plenty of fluids to help thin mucus and alleviate congestion.'
+      { name: 'Aspirin (Bayer)', instruction: 'Take one tablet every 4-6 hours' },
+      { name: 'Ibuprofen (Advil)', instruction: 'Take one tablet daily' },
+      { name: 'Acetaminophen (Tylenol)', instruction: 'Take one tablet every 4-6 hours' },
     ],
     additionalInfo: '',
   });
@@ -34,7 +28,7 @@ export default function Prescriptions() {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === 'prescribedTests' || name === 'patientInstructions' ? value.split('\n') : value,
+      [name]: value,
     }));
   };
 
@@ -52,13 +46,8 @@ export default function Prescriptions() {
     };
   }, [formData]);
 
-
-  console.log(formData)
-
   const handleCopy = () => {
-    const textToCopy = `Medications: ${formData.medications.map(med => `${med.name}, ${med.dosage}, ${med.frequency}`).join(', ')}
-                        Prescribed Tests: ${formData.prescribedTests.join(', ')}
-                        Patient Instructions: ${formData.patientInstructions.join(', ')}
+    const textToCopy = `Medications: ${formData.medications.map(med => `${med.name}, ${med.instruction}`).join(', ')}
                         Additional Information: ${formData.additionalInfo}`.trim();
 
     navigator.clipboard.writeText(textToCopy).then(() => {
@@ -71,24 +60,12 @@ export default function Prescriptions() {
     <div className="h-[76vh]">
       <div id="prescription-content" className="h-[67vh] mb-5 overflow-y-scroll">
 
-        <div className='flex justify-between items-center'>
-          <h3 className="-mt-2 text-primary text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Medications:</h3>
+        <div className='flex items-center justify-between'>
+          <h3 className="-mt-2 text-sm font-medium leading-none text-primary peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Medications:</h3>
           <AddMedication />
         </div>
 
         <MedicationTable medications={formData.medications} setMedications={(medications) => setFormData(prev => ({ ...prev, medications }))} />
-
-        <Label htmlFor='prescribedTests' className="text-primary">Prescribed Tests:</Label>
-        <textarea name='prescribedTests' id='prescribedTests' value={formData.prescribedTests.join('\n')}
-          onChange={(e) => handleInputChange(e, null, null, 'prescribedTests')} rows={1}
-          className="mx-2 focus-visible:ring-gray-500 focus:text-gray-500 w-[90%] border-none rounded-md my-2"
-          placeholder="Enter each test on a new line..." />
-
-        <Label htmlFor='patientInstructions' className="text-primary">Patient Instructions:</Label>
-        <textarea name='patientInstructions' id='patientInstructions' value={formData.patientInstructions.join('\n')}
-          onChange={(e) => handleInputChange(e, null, null, 'patientInstructions')} rows={1}
-          className="mx-2 focus-visible:ring-gray-500 focus:text-gray-500 w-[90%] border-none rounded-md my-2"
-          placeholder="Enter each instruction on a new line..." />
 
         <Label htmlFor='PadditionalInfo' className="text-primary">Additional Information:</Label>
         <textarea name="additionalInfo" id='PadditionalInfo' value={formData.additionalInfo}

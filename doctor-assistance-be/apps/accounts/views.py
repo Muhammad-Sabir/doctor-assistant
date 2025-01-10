@@ -22,6 +22,7 @@ from apps.accounts.serializers import (
     VerifyAccountSerializer,
     OTPVerifyAccountSerializer,
     RoleBasedTokenObtainPairSerializer,
+    OTPPasswordResetSerializer,
 )
 
 User = get_user_model()
@@ -110,20 +111,30 @@ class VerifyAccount(generics.CreateAPIView):
         return Response({'detail': 'Account successfully verified.'}, status=status.HTTP_200_OK)
 
 
-class OTPGenerationView(generics.CreateAPIView):
+class BaseOTPView(generics.CreateAPIView):
     serializer_class = VerifyEmailSerializer
-
+    otp_purpose = None
+    
     def perform_create(self, serializer):
         user = User.objects.get(email=serializer.validated_data['email'])
         otp_code = generate_otp_code(user)
-        send_otp_email(user, otp_code)
+        send_otp_email(user, otp_code, purpose=self.otp_purpose)
 
     def create(self, request, *args, **kwargs):
         super().create(request, *args, **kwargs)
         return Response(
-            {'detail': 'Password verification OTP code has been sent to your email.'},
+            {'detail': f'{self.otp_purpose} OTP code has been sent to your email.'},
             status=status.HTTP_200_OK
         )
+
+
+class OTPGenerationView(BaseOTPView):
+    otp_purpose = 'Account verification'
+
+
+class PasswordResetOTPView(BaseOTPView):
+    otp_purpose = 'Password reset'
+
 
 class VerifyOTPView(generics.CreateAPIView):
     serializer_class = OTPVerifyAccountSerializer
@@ -131,3 +142,13 @@ class VerifyOTPView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         return Response({'detail': 'Account successfully verified.'}, status=status.HTTP_200_OK)
+
+class PasswordResetOTPConfirmView(generics.CreateAPIView):
+    serializer_class = OTPPasswordResetSerializer
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        return Response(
+            {'detail': 'Password has been reset successfully.'},
+            status=status.HTTP_200_OK
+        )

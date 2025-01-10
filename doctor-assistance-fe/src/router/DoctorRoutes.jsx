@@ -11,6 +11,7 @@ import Appointments from '@/pages/doctor/Appointments';
 import Chats from '@/pages/doctor/Chats';
 import MyPatients from '@/pages/doctor/MyPatients';
 import PatientDetails from '@/pages/doctor/PatientDetails';
+import MySchedule from '@/pages/doctor/MySchedule';
 import { WebRTCProvider } from '@/context/WebRTCContext';
 
 export default function DoctorRoutes() {
@@ -24,6 +25,7 @@ export default function DoctorRoutes() {
                         <Route path="patients" element={<MyPatients />} />
                         <Route path="patient/:id" element={<PatientDetails />} />
                         <Route path="appointments" element={<Appointments />} />
+                        <Route path="schedule" element={<MySchedule />} />
                         <Route path="chats" element={<Chats />} />
                         <Route path="*" element={<Navigate to="home" replace />} />
                     </Route>

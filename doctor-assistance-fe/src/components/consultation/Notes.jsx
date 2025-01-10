@@ -6,17 +6,40 @@ import { Button } from '@/components/ui/button';
 
 import { handleDownloadPDF } from '@/utils/pdf';
 
-export default function Notes() {
+const subsectionsMapping = {
+  "cc": "Chief Complaint: ",
+  "hpi": "History of Present Illness: ",
+  "ros": "Review of Systems: ",
+  "other_histories": "Other Histories: ",
+  "pe": "Physical Exam: ",
+  "vitals": "Vitals Reviewed: ",
+  "findings": "Findings: ",
+  "assessment": "Assessment: ",
+  "plan": "Plan: ",
+  "ap": "Assessment & Plan: ",
+  "instructions": "Instructions: ",
+};
 
+export default function Notes({ notes }) {
+  let parsedNotes = {};
+  console.log("notes");
+  console.log("notes");
+  console.log("notes");
+  console.log("notes");
+  console.log("notes");
+  console.log(notes);
+  try {
+    // Check if notes is a valid JSON string, otherwise fall back to an empty object
+    parsedNotes = typeof notes === 'string' ? JSON.parse(notes) : notes;
+  } catch (error) {
+    console.error("Error parsing notes:", error);
+    parsedNotes = {};
+  }
+  
   const [isCopied, setIsCopied] = useState(false);
-  const [formData, setFormData] = useState({
-    chiefComplaint: 'Persistent flu-like symptoms for three months.',
-    presentIllness: 'The patient presents with recurrent coughing, nasal congestion, sore throat, fatigue, and occasional low-grade fever persisting for the past three months. Symptoms have not responded to over-the-counter medications.',
-    familyHistory: 'The patient reports a family history of allergic rhinitis and asthma on the maternal side.',
-    differentialDiagnosis: ['Asthma exacerbation', 'Bronchitis'],
-    additionalInfo: '',
-  });
+  const [formData, setFormData] = useState(parsedNotes);
 
+  // Auto-resize textarea
   const autoResize = (textarea) => {
     textarea.style.height = 'auto';
     textarea.style.height = `${textarea.scrollHeight}px`;
@@ -26,7 +49,7 @@ export default function Notes() {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === 'differentialDiagnosis' ? value.split('\n') : value,
+      [name]: value,
     }));
   };
 
@@ -44,10 +67,12 @@ export default function Notes() {
     };
   }, [formData]);
 
+  // Copy formatted text to clipboard
   const handleCopy = () => {
-    const textToCopy = `Chief Complaint: ${formData.chiefComplaint} History of Present Illness: ${formData.presentIllness}
-                        Family History: ${formData.familyHistory} Differential Diagnosis: ${formData.differentialDiagnosis.join(', ')}
-                        Additional Information: ${formData.additionalInfo}`.trim();
+    const textToCopy = Object.entries(formData).map(([key, value]) => {
+      const label = subsectionsMapping[key] || key;
+      return `${label} ${value}`;
+    }).join("\n");
 
     navigator.clipboard.writeText(textToCopy).then(() => {
       setIsCopied(true);
@@ -58,37 +83,31 @@ export default function Notes() {
   return (
     <div className="h-[76vh]">
       <div id="notes-content" className="h-[67vh] mb-5 overflow-y-scroll">
-
-        <Label htmlFor='chiefComplaint' className='text-primary'>Chief Complaint:</Label>
-        <textarea name="chiefComplaint" id="chiefComplaint" value={formData.chiefComplaint} rows={1}
-          onChange={handleInputChange} placeholder="Enter chief complaint for patient..."
-          className="mx-2 focus-visible:ring-gray-500 focus:text-gray-500 w-[90%] border-none rounded-md my-2" />
-
-        <Label htmlFor='presentIllness' className='text-primary'>History of Present Illness:</Label>
-        <textarea name="presentIllness" id="presentIllness" value={formData.presentIllness} rows={1}
-          onChange={handleInputChange} placeholder="Enter present Illness for patient..."
-          className="mx-2 focus-visible:ring-gray-500 focus:text-gray-500 w-[90%] border-none rounded-md my-2" />
-
-        <Label htmlFor='familyHistory' className='text-primary'>Family History:</Label>
-        <textarea name="familyHistory" id="familyHistory" value={formData.familyHistory} rows={1}
-          onChange={handleInputChange} placeholder="Enter Family History for patient..."
-          className="mx-2 focus-visible:ring-gray-500 focus:text-gray-500 w-[90%] border-none rounded-md my-2" />
-
-        <Label htmlFor='differentialDiagnosis' className='text-primary'>Differential Diagnosis:</Label>
-        <textarea name="differentialDiagnosis" id='differentialDiagnosis' value={formData.differentialDiagnosis.join('\n')}
-          onChange={handleInputChange} rows={1} placeholder="Enter each diagnosis on a new line..."
-          className="mx-2 focus-visible:ring-gray-500 focus:text-gray-500 w-[90%] border-none rounded-md my-2" />
-
-        <Label htmlFor='additionalInfo' className='text-primary'>Additional Information:</Label>
-        <textarea name="additionalInfo" id='additionalInfo' value={formData.additionalInfo} rows={1}
-          onChange={handleInputChange} placeholder="Add Additional information here (if any)..."
-          className="mx-2 focus-visible:ring-gray-500 focus:text-gray-500 w-[90%] border-none rounded-md my-2" />
+        
+        {Object.keys(formData).map((key) => (
+          <div key={key} className="mb-4">
+            <Label htmlFor={key} className="text-primary">
+              {subsectionsMapping[key] || key}
+            </Label>
+            <textarea
+              name={key}
+              id={key}
+              value={formData[key] || ""}
+              onChange={handleInputChange}
+              placeholder={`Enter ${subsectionsMapping[key] || key}...`}
+              rows={1}
+              className="mx-2 focus-visible:ring-gray-500 focus:text-gray-500 w-[90%] border-none rounded-md my-2"
+            />
+          </div>
+        ))}
 
       </div>
 
       <div className="flex justify-end gap-3">
         <Button onClick={() => handleDownloadPDF('notes-content', 'patient-notes.pdf')}>Download PDF</Button>
-        <Button onClick={handleCopy} variant='outline'>  {isCopied ? <IoCopy /> : <IoCopyOutline />}  </Button>
+        <Button onClick={handleCopy} variant='outline'>
+          {isCopied ? <IoCopy /> : <IoCopyOutline />}
+        </Button>
       </div>
     </div>
   );

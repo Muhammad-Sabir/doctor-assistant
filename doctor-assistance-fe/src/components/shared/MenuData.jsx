@@ -2,12 +2,12 @@ import { Home, Users, Settings, LogOut } from 'lucide-react';
 import { RiUserSearchLine } from "react-icons/ri";
 import { FaRegComments } from "react-icons/fa6";
 import { LuCalendarClock } from "react-icons/lu";
-import { TbReportMedical } from "react-icons/tb";
-import { TbBrandHipchat } from "react-icons/tb";
+import { TbClock24, TbReportMedical, TbBrandHipchat} from "react-icons/tb";
 
 export const menuItems = {
     doctor: [
         { icon: <Home className="h-5 w-5" />, url: "/doctor/home", name: "Home" },
+        { icon: <TbClock24 className="h-5 w-5" />, url: "/doctor/schedule", name: "My Schedule" },
         { icon: <Users className="h-5 w-5" />, url: "/doctor/patients", name: "My Patients" },
         {icon: <LuCalendarClock className="h-5 w-5" />, url: "/doctor/appointments", name: "Appointments" },
         { icon: <TbBrandHipchat className="h-5 w-5" />, url: "/doctor/chats", name: "Chats" },

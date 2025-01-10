@@ -99,6 +99,10 @@ const validationRules = {
         test: (value) => value.trim() !== "",
         message: "Designation is required",
     },
+    targetDays: {
+        test: (value) => value.length !== 0,
+        message: "Please select at least one day"
+    },
     rating: {
         test: (value) => value >= 1 && value <= 5,
         message: "Rating must be between 1 and 5",
@@ -112,8 +116,20 @@ const validationRules = {
         message: "Please select how the dependent is related to you",
     },
     patientId: {
-        test: (value) => typeof value === 'number' && value > 0, 
+        test: (value) => value > 0,
         message: "Patient ID is required",
+    },
+    hospitalId: {
+        test: (value) => value > 0,
+        message: "Please select Hospital",
+    },
+    dayOfWeek: {
+        test: (value) => value > 0,
+        message: "Please select Day of Week",
+    },
+    appointmentTimeSlot: {
+        test: (value) => value > 0,
+        message: "Time Slot is required",
     },
     message: {
         test: (value) => value.trim().length >= 10,
@@ -121,7 +137,7 @@ const validationRules = {
     },
     cancellation_reason: {
         test: (value) => !value || value.trim().length >= 10,
-        message: "Message must be at least 10 characters long",
+        message: "Reason must be at least 10 characters long",
     },
     date_of_appointment: {
         test: (value) => {
@@ -129,7 +145,7 @@ const validationRules = {
                 validationRules.date_of_appointment.message = "Please select date of appointment.";
                 return false;
             }
-        
+
             const today = new Date().toISOString().split("T")[0];
             if (new Date(value) < new Date(today)) {
                 validationRules.date_of_appointment.message = "Date cannot be in the past";
@@ -155,6 +171,26 @@ const validationRules = {
         test: (value) => value.trim() !== "",
         message: "Frequency is required",
     },
+    overrideDate: {
+        test: (value) => {
+            if (!isDateSelected(value)) {
+                validationRules.overrideDate.message = "Please select date you need to override schedule for.";
+                return false;
+            }
+
+            const today = new Date().toISOString().split("T")[0];
+            if (new Date(value) < new Date(today)) {
+                validationRules.overrideDate.message = "Date cannot be in the past";
+                return false;
+            }
+            validationRules.overrideDate.message = "";
+            return true;
+        },
+    },
+    overrideReason: {
+        test: (value) => value.trim().length >= 10,
+        message: "Reason must be at least 10 characters long",
+    },
 }
 
 export const validateField = (id, value, inputErrors, password = '') => {
@@ -176,7 +212,7 @@ export const hasNoFieldErrors = (inputErrors) => {
 };
 
 export const validateAllFields = (inputValues, inputErrors) => {
-    let errors = { ...inputErrors }; 
+    let errors = { ...inputErrors };
 
     Object.keys(inputValues).forEach((key) => {
         const value = inputValues[key];
