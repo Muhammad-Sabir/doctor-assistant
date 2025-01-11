@@ -71,11 +71,6 @@ export const AuthProvider = ({ children }) => {
         fetchFunction: fetchApi,
         onSuccessMessage: 'OTP Code sent has been sent on your email.',
         onErrorMessage: 'Failed to send OTP Code',
-        onSuccess: () => {
-            if (pathname === '/login') {
-                router.push('/forget-password');
-            }
-        }
     })
 
     const verifyOTP = useCreateUpdateMutation({
@@ -86,24 +81,35 @@ export const AuthProvider = ({ children }) => {
         onSuccessMessage: 'Your account has been verified successfully.',
         onErrorMessage: 'Verification failed',
         onSuccess: () => {
-            if (pathname === '/forget-password') {
-                router.push('/reset-password');
-            } else {
-                router.push('/login');
-            }
+            router.push('/login');
         }
     })
 
+    const sendResetPasswordOTP = ({ email }) => {
+        return useCreateUpdateMutation({
+            url: 'user/send-reset-password-otp/',
+            method: 'POST',
+            fetchFunction: fetchApi,
+            headers: { 'Content-Type': 'application/json' },
+            onSuccessMessage: 'OTP Code sent has been sent on your email to reset password.',
+            onErrorMessage: 'Failed to send OTP Code on your email to reset password',
+            onSuccess: async () => {
+                await AsyncStorage.setItem('userEmail', email);
+                router.push('/reset-password');
+            },
+        });
+    };
+
     const resetPassword = useCreateUpdateMutation({
-        url: `user/change-password/`,
+        url: `user/reset-password-otp/`,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         fetchFunction: fetchApi,
-        onSuccessMessage: 'Password reset successfully.',
+        onSuccessMessage: 'Your password has been reset successfully.',
         onErrorMessage: 'Failed to reset password',
         onSuccess: () => {
             router.push('/login');
-        },
+        }
     });
 
     const completeProfile = useCreateUpdateMutation({
@@ -127,7 +133,7 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             user, signupMutation, loginMutation, logout, completeProfile,
-            verifyOTP, resetPassword, sendOTPVerification, fetchWithUserAuth
+            verifyOTP, resetPassword, sendOTPVerification, fetchWithUserAuth, sendResetPasswordOTP
         }}>
             {children}
         </AuthContext.Provider>
