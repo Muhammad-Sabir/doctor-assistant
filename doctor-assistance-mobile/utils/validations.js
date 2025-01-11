@@ -123,9 +123,21 @@ const validationRules = {
         test: (value) => value.trim().length >= 10,
         message: "Message must be at least 10 characters long",
     },
+    hospitalId: {
+        test: (value) => value > 0,
+        message: "Please select Hospital",
+    },
+    dayOfWeek: {
+        test: (value) => value > 0,
+        message: "Please select Day of Week",
+    },
+    appointmentTimeSlot: {
+        test: (value) => value > 0,
+        message: "Time Slot is required",
+    },
     cancellation_reason: {
         test: (value) => !value || value.trim().length >= 10,
-        message: "Message must be at least 10 characters long",
+        message: "Reason must be at least 10 characters long",
     },
     date_of_appointment: {
         test: (value) => {

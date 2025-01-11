@@ -102,7 +102,7 @@ const CompleteProfile = () => {
               <Text className="text-gray-700">Date of Birth</Text>
               <Pressable onPress={() => setShowDatePicker(true)}>
                 <View className={`w-full py-3 px-4 rounded-md border ${inputErrors.birthDate ? 'border-red-500' : 'border-gray-300'}`}>
-                  <Text className={userDetails.dob ? "text-black" : "text-gray-400"}>{userDetails.dob || 'Select your Date of Birth'} </Text>
+                  <Text className={userDetails.dob ? "text-gray-700" : "text-customGrey"}>{userDetails.dob || 'Select your Date of Birth'} </Text>
                 </View>
               </Pressable>
               {showDatePicker && (

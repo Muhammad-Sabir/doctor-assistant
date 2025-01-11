@@ -16,6 +16,7 @@ module.exports = {
       colors: {
         background: 'hsl(0, 0%, 100%)', 
         foreground: 'hsl(222.2, 84%, 4.9%)',
+        customGrey: '#a8a5a4',
         card: {
           DEFAULT: 'hsl(0, 0%, 100%)', 
           foreground: 'hsl(222.2, 84%, 4.9%)', 

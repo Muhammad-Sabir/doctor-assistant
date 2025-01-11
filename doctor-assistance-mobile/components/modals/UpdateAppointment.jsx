@@ -115,7 +115,7 @@ const UpdateAppointment = ({ appointment }) => {
                             <Text className="text-gray-700 mb-2">Date of Appointment</Text>
                             <Pressable onPress={() => setShowDatePicker(true)}>
                                 <View className={`w-full p-3 rounded-md border ${inputErrors.date_of_appointment ? 'border-red-500' : 'border-gray-300'}`}>
-                                    <Text className={formData.date_of_appointment ? "text-black" : "text-gray-400"}>{formData.date_of_appointment || 'Select Date of Appointment'} </Text>
+                                    <Text className={formData.date_of_appointment ? "text-gray-700" : "text-customGrey"}>{formData.date_of_appointment || 'Select Date of Appointment'} </Text>
                                 </View>
                             </Pressable>
                             {showDatePicker && (
