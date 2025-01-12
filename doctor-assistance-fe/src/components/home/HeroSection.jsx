@@ -13,7 +13,7 @@ const HeroSection = () => {
         <section className="section-padding h-full py-11 lg:py-6">
             <div className="flex justify-between items-center flex-col lg:flex-row">
 
-                <div className="w-full lg:w-1/2 text-center lg:text-left">
+                <div className="w-full lg:w-1/2 text-center lg:text-left mr-6">
                     <div className="flex items-center text-sm font-medium text-gray-500 justify-center lg:justify-start mb-3">
                         <p className="bg-primary py-1 px-3 rounded-md text-xs font-medium text-white mr-3">AI</p>
                         Healthcare Revolution
@@ -36,18 +36,18 @@ const HeroSection = () => {
                         <img
                             src={heroImg1}
                             alt="Hero section Image"
-                            className="hidden lg:block w-44 h-80 rounded-xl object-cover mt-11"
+                            className="hidden lg:block w-44 h-80 xlPlus:w-72 rounded-xl object-cover mt-11"
                         />
                         <video
                             src={heroVideo}
                             alt="Hero section Video"
-                            className="w-full lg:w-44 h-80 rounded-xl object-cover md:mx-auto mt-11 lg:mt-20"
+                            className="w-full lg:w-44 h-80 rounded-xl xlPlus:w-72 object-cover md:mx-auto mt-11 lg:mt-20"
                             loop autoPlay muted
                         />
                         <img
                             src={heroImg2}
                             alt="Hero section Image"
-                            className="hidden lg:block w-44 h-80 rounded-xl object-cover mt-32"
+                            className="hidden lg:block w-44 h-80 xlPlus:w-72 rounded-xl object-cover mt-32"
                         />
                     </div>
                 </div>
