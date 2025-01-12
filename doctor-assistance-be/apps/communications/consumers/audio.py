@@ -5,9 +5,11 @@ import boto3
 import uuid  # Import the uuid module
 
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
 from decouple import config
 
 from apps.consultations.models import Transcription
+from apps.consultations.models import Consultation
 
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
@@ -28,7 +30,10 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         if bytes_data:
-            self.audio_file.write(bytes_data)
+            try:
+                self.audio_file.write(bytes_data)
+            except Exception as e:
+                print("ERRRRRRRRRRRRRRRRORRRRRRRRRRRR ", e)
         elif text_data:
             data = json.loads(text_data)
             if data.get('action') == 'stop_recording':
@@ -41,6 +46,7 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         
     async def handle_transcription(self):
         try:
+            await asyncio.sleep(1)
             self.audio_file.close()
 
             # AWS S3 upload
@@ -56,7 +62,7 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
                     asyncio.to_thread(s3_client.upload_fileobj, audio_data, bucket_name, s3_audio_path), 
                     timeout=120
                 )
-
+            print("HERRE")
             # Trigger AWS Transcribe transcription
             await self.trigger_transcribe(bucket_name, s3_audio_path)
         except asyncio.TimeoutError:
@@ -97,6 +103,7 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
                                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_DEFAULT_REGION)
 
         while True:
+            print("Checking aws Transcribe")
             job_status = transcribe_client.get_transcription_job(
                 TranscriptionJobName=job_name
             )['TranscriptionJob']
@@ -124,12 +131,29 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         # Extract the detailed transcript
         audio_segments = transcript_json.get("results", {}).get("audio_segments", [])
 
-        Transcription.objects.create(
-            consultation=self.consultation_id, 
-            transcription_text=audio_segments
-        )
+        processed_transcript = self.process_transcripts(audio_segments)
+        
+        await self.create_transcription(processed_transcript)
+        
         # Send transcription to the client
         await self.send(text_data=json.dumps({
             'message': 'Transcription completed',
-            'transcription': audio_segments
+            'transcription': processed_transcript
         }))
+        
+    @database_sync_to_async
+    def create_transcription(self, audio_segments):
+        print("audio_segments:", audio_segments)
+        consultation = Consultation.objects.filter(id=self.consultation_id).first()
+
+        Transcription.objects.create(
+            consultation=consultation, 
+            transcription_text=audio_segments
+        )
+        
+    def process_transcripts(self, transcripts):
+        return " ".join(
+            f"[{'doctor' if entry['speaker_label'] == 'spk_0' else 'patient'}] {entry['transcript']}"
+            for entry in transcripts
+        )
+        

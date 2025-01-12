@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 
-const RECORDING_TIMEOUT = 5000; // milliseconds
+const RECORDING_TIMEOUT = 500; // milliseconds
 
 export const useAudioTranscription = (consultationId) => {
   const [transcription, setTranscription] = useState([]);
