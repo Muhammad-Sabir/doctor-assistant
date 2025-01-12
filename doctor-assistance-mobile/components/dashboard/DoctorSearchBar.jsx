@@ -51,10 +51,10 @@ const DoctorSearchBar = () => {
 
     return (
         <View className="relative">
-            <View className="flex-row items-center border border-gray-300 rounded-md px-3">
+            <View className="flex-row items-center px-3 border border-gray-300 rounded-md">
                 <TextInput className="flex-1 p-2 border-0" value={searchQuery}
                     onChangeText={(text) => handleInputChange(text)}
-                    placeholder={`Search Doctors By ${searchBy.replace("_", " ")}...`}
+                    placeholder={`Search doctors by ${searchBy.replace("_", " ")}...`}
                 />
                 <TouchableOpacity onPress={handleSearch} className="p-2">
                     <Search color="hsl(203, 87%, 30%)" size={20} />
@@ -77,11 +77,11 @@ const DoctorSearchBar = () => {
                 {isFetching ? (
                     <View className="flex-row items-center p-3 px-4 border border-gray-300 rounded">
                         <ActivityIndicator size="small" color="hsl(203, 87%, 30%)" />
-                        <Text className="text-gray-500 ml-2">Loading suggestions...</Text>
+                        <Text className="ml-2 text-gray-500">Loading suggestions...</Text>
                     </View>
                 ) : (
                     !isSelected && suggestions.length > 0 && (
-                        <ScrollView className="border border-gray-300 rounded p-3" style={{maxHeight:200}}>
+                        <ScrollView className="p-3 border border-gray-300 rounded" style={{maxHeight:200}}>
                             {suggestions.map((item) => (
                                 <TouchableOpacity className='p-2' key={item.id} onPress={() => handleSuggestionClick(item)}>
                                     <Text className='text-gray-500'>{item.name}</Text>

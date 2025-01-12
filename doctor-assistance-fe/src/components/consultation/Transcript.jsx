@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import Pulse from "@/components/shared/Pulse";
 import { useAudioTranscription } from "@/hooks/useAudioTranscription";
 import { getAuthStatus } from "@/utils/auth";
+import { useCreateUpdateMutation } from "@/hooks/useCreateUpdateMutation";
+import { fetchWithAuth } from "@/utils/fetchApis";
 
 const LABEL_SPEAKER = {
   spk_0: "Doctor",
@@ -75,35 +77,24 @@ export default function TranscriptionPage({ consultationId, setNotes }) {
     return `${minutes}:${secs}`;
   };
 
-  const handleNotesGeneration = () => {
-    const { user } = getAuthStatus();
-    let accessToken = user.access_token;
+  const generateNotesMutation = useCreateUpdateMutation({
+    url: `transcriptions/`,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    fetchFunction: fetchWithAuth,
+    onSuccessMessage: "Successfully generated SOAP Notes.",
+    onErrorMessage: "Failed to generate SOAP Notes.",
+  });
 
+  const handleNotesGeneration = () => {
     const transcript = processTranscripts(chatMessages);
 
-    fetch("http://localhost:8000/api/transcriptions/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
+    generateNotesMutation.mutate(
+      JSON.stringify({
         consultation: consultationId,
         transcription_text: transcript,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
       })
-      .then((data) => {
-        setNotes(data.soap_notes.description);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    );
   };
 
   const handleStart = () => {
