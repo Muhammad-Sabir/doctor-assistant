@@ -76,15 +76,10 @@ export default function TranscriptionPage({ consultationId, setNotes }) {
   });
 
   const handleNotesGeneration = () => {
-    const { user } = getAuthStatus();
-    let accessToken = user.access_token;
-
-    const transcript = chatMessages;
-
     generateNotesMutation.mutate(
       JSON.stringify({
         consultation: consultationId,
-        transcription_text: transcript,
+        transcription_text: chatMessages,
       })
     );
   };

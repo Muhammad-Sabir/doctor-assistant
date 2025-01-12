@@ -137,14 +137,12 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         audio_segments = transcript_json.get(
             "results", {}).get("audio_segments", [])
 
-        processed_transcript = self.process_transcripts(audio_segments)
-        
-        await self.create_transcription(processed_transcript)
+        await self.create_transcription(audio_segments)
         
         # Send transcription to the client
         await self.send(text_data=json.dumps({
             'message': 'Transcription completed',
-            'transcription': processed_transcript
+            'transcription': audio_segments
         }))
         
     @database_sync_to_async
@@ -155,11 +153,5 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         Transcription.objects.create(
             consultation=consultation, 
             transcription_text=audio_segments
-        )
-        
-    def process_transcripts(self, transcripts):
-        return " ".join(
-            f"[{'doctor' if entry['speaker_label'] == 'spk_0' else 'patient'}] {entry['transcript']}"
-            for entry in transcripts
         )
         
