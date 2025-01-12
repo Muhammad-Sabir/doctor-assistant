@@ -22,7 +22,7 @@ from apps.consultations.serializers import (
     ConsultationSerializer, SOAPNotesSerializer,
     PrescriptionSerializer, TranscriptionSerializer
 )
-from apps.consultations.filters import ConsultationFilter, PrescriptionFilter
+from apps.consultations.filters import ConsultationFilter, PrescriptionFilter, TranscriptionFilter, SOAPNotesFilter
 
 logging.basicConfig(level=logging.INFO)
 
@@ -30,6 +30,7 @@ logging.basicConfig(level=logging.INFO)
 MODEL_PATH = os.path.join(settings.BASE_DIR, "mlmodel", "bart-soap")
 
 print("Model path:", MODEL_PATH)
+
 
 
 def load_model_and_tokenizer():
@@ -42,6 +43,7 @@ def load_model_and_tokenizer():
     return model, tokenizer
 
 model, tokenizer = load_model_and_tokenizer()
+
 
 logging.info("SOAP Notes model loaded successfully.")
 
@@ -158,16 +160,20 @@ class ConsultationsViewSet(ModelViewSet):
 class SOAPNotesViewSet(ModelViewSet):
     serializer_class = SOAPNotesSerializer
     permission_classes = [IsDoctor]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = SOAPNotesFilter
 
     def get_queryset(self):
         user = self.request.user
         return SOAPNotes.objects.select_related('consultation') \
-            .only('consultation', 'subject', 'description', 'created_at', 'updated_at') \
+            .only('consultation', 'description', 'created_at', 'updated_at') \
             .filter(consultation__doctor=user.doctor)
 
 class TranscriptionViewSet(ModelViewSet):
     serializer_class = TranscriptionSerializer
     permission_classes = [IsDoctor]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TranscriptionFilter
 
     def get_queryset(self):
         user = self.request.user
@@ -190,7 +196,6 @@ class TranscriptionViewSet(ModelViewSet):
         # Save the generated SOAP notes
         soap_notes = SOAPNotes.objects.create(
             consultation=transcription.consultation,
-            subject='Generated SOAP Notes',
             description=soap_notes_text
         )
 
