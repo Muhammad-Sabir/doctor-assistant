@@ -72,7 +72,7 @@ export default function AppointmentCard({ appointment }) {
 
         {user.role === "doctor" && appointment.status === "approved" && (
           <div className="flex items-center justify-end">
-            <CreateConsultation patientId={appointment.patient} />
+            <CreateConsultation patientId={appointment.patient} appointmentId={appointment.id}/>
           </div>
         )}
 

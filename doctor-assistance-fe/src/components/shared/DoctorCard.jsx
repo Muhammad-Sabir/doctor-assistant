@@ -68,7 +68,7 @@ const DoctorCard = ({ doctor }) => {
             </Link>
 
             <div className="flex mt-5 justify-center">
-                <BookAppointment doctorId={doctor.id} doctorName={doctor.name} />
+                <BookAppointment doctorId={doctor.id} doctorName={doctor.name} hospitals={doctor.hospitals} />
             </div>
 
         </div>
