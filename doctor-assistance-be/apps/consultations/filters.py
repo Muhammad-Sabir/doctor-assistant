@@ -1,15 +1,17 @@
 from django_filters import FilterSet
-from django_filters import CharFilter
+from django_filters import CharFilter, BooleanFilter
 
 from apps.consultations.models import Consultation, Prescription, Transcription, SOAPNotes
 
 
 class ConsultationFilter(FilterSet):
-    patient_id = CharFilter(field_name='patient', lookup_expr='exact')
+    patient_id = CharFilter(field_name='appointment__patient', lookup_expr='exact')
+    appointment_id = CharFilter(field_name='appointment', lookup_expr='exact')
+    completed = BooleanFilter(field_name='appointment__completed', lookup_expr='exact')
     
     class Meta:
         model = Consultation
-        fields = ['patient_id']
+        fields = ['patient_id', 'appointment_id', 'completed']
 
 class TranscriptionFilter(FilterSet):
     consultation_id = CharFilter(field_name='consultation', lookup_expr='exact')

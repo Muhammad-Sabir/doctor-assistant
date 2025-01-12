@@ -4,19 +4,32 @@ from apps.consultations.models import Consultation, SOAPNotes, Prescription, Tra
 
 
 class ConsultationSerializer(serializers.ModelSerializer):
-    patient_name = serializers.CharField(source='patient.name', read_only=True)
-    doctor_name = serializers.CharField(source='doctor.name', read_only=True)
+    patient_name = serializers.CharField(source='appointment.patient.name', read_only=True)
+    patient = serializers.CharField(source='appointment.patient.id', read_only=True)
+    doctor_name = serializers.CharField(source='appointment.doctor.name', read_only=True)
+    appointment_mode = serializers.CharField(source='appointment.appointment_mode', read_only=True)
+    appointment_date = serializers.DateField(source='appointment.date_of_appointment', read_only=True)
+    appointment_time = serializers.TimeField(source='appointment.time_slot.start_time', read_only=True)
 
     class Meta:
         model = Consultation
-        fields = '__all__'
-        read_only_fields = ['doctor']
+        fields = ['id', 'appointment', 'title', 'patient_name', 'patient', 'doctor_name', 
+                 'appointment_mode', 'appointment_date', 'appointment_time', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+
+    def validate_appointment(self, value):
+        user = self.context['request'].user
+        if hasattr(user, 'doctor') and value.doctor != user.doctor:
+            raise serializers.ValidationError(
+                "You can only create consultations for your own appointments."
+            )
+        return value
 
 
 class BaseConsultationSerializer(serializers.ModelSerializer):
     def validate_consultation(self, value):
         user = self.context['request'].user
-        if hasattr(user, 'doctor') and value.doctor != user.doctor:
+        if hasattr(user, 'doctor') and value.appointment.doctor != user.doctor:
             raise serializers.ValidationError(
                 "You can only create SOAP notes or prescriptions for your own consultations."
             )

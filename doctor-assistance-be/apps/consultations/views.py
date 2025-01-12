@@ -140,22 +140,26 @@ class ConsultationsViewSet(ModelViewSet):
         return self.get_consultations(self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(doctor=self.request.user.doctor)
+        serializer.save()
 
     def get_consultations(self, user):
         if user.role == 'patient':
             return Consultation.objects.select_related(
-                'doctor__user',
-                'patient__user',
-                'patient__primary_patient__user'
+                'appointment__doctor__user',
+                'appointment__patient__user',
+                'appointment__patient__primary_patient__user',
+                'appointment__time_slot'
             ).filter(
-                Q(patient__user=user) | Q(patient__primary_patient__user=user)
-            )
+                Q(appointment__patient__user=user) | 
+                Q(appointment__patient__primary_patient__user=user)
+            ).filter(appointment__completed=True)
+        
         return Consultation.objects.select_related(
-            'doctor__user',
-            'patient__user',
-            'patient__primary_patient__user'
-        ).filter(doctor__user=user)
+            'appointment__doctor__user',
+            'appointment__patient__user',
+            'appointment__patient__primary_patient__user',
+            'appointment__time_slot'
+        ).filter(appointment__doctor__user=user)
 
 class SOAPNotesViewSet(ModelViewSet):
     serializer_class = SOAPNotesSerializer
