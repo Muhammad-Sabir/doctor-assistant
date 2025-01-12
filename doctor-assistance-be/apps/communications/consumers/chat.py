@@ -114,12 +114,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     
     @database_sync_to_async
     def get_approved_appointments(self, profile):
-        profile_filter = Q(doctor=profile) if isinstance(profile, DoctorProfile) else Q(patient=profile)
+        # Fetch appointments for the primary patient and their dependents
+        profile_filter = Q(doctor=profile) if isinstance(profile, DoctorProfile) else Q(patient=profile) | Q(patient__primary_patient=profile)
 
         appointments = Appointment.objects.filter(
             profile_filter, 
-            status='approved',
-            patient__primary_patient__isnull=True
+            status='approved'
         ).select_related(
             'doctor__user', 
             'patient__user'
