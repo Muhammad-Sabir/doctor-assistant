@@ -5,12 +5,12 @@ import { BiMessageSquareDetail } from "react-icons/bi";
 import { RiHospitalLine } from "react-icons/ri";
 
 import HospitalName from "@/components/shared/HospitalName";
-import { convert24HrTo12Hr } from "@/utils/time";
+import { toHHMMFormat } from "@/utils/time";
 
-const DateSchedule = ({ key, date, dateSchedules }) => {
+const DateSchedule = ({ date, dateSchedules }) => {
 
     return (
-        <AccordionItem key={key} value={date}>
+        <AccordionItem value={date}>
             <AccordionTrigger>
                 <div className="font-bold text-md text-primary">{date}</div>
             </AccordionTrigger>
@@ -51,7 +51,7 @@ const DateSchedule = ({ key, date, dateSchedules }) => {
                                         </div>
                                         {schedule.time_slots.map((slot, slotIndex) => (
                                             <div key={`${schedule.id}-${slotIndex}`}>
-                                                {convert24HrTo12Hr(slot.start_time)} - {convert24HrTo12Hr(slot.end_time)}
+                                                {toHHMMFormat(slot.start_time)} - {toHHMMFormat(slot.end_time)}
                                             </div>
                                         ))}
                                     </div>

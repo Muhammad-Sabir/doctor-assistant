@@ -8,9 +8,9 @@ import DisplaySlots from "@/components/dialogs/DisplaySlots";
 import CopySchedule from '@/components/dialogs/CopySchedule';
 import UpdateSchedule from '@/components/dialogs/UpdateSchedule';
 import DeleteItem from '@/components/dialogs/DeleteItem';
-import { convert24HrTo12Hr } from "@/utils/time";
+import { toHHMMFormat } from "@/utils/time";
 
-const DaySchedule = ({ key, dayName, schedules }) => {
+const DaySchedule = ({dayName, schedules }) => {
 
     const groupSlots = (slots, blockStartTime, blockEndTime) => {
         return slots.filter(
@@ -19,7 +19,7 @@ const DaySchedule = ({ key, dayName, schedules }) => {
     };
 
     return (
-        <AccordionItem key={key} value={dayName}>
+        <AccordionItem value={dayName}>
             <AccordionTrigger>
                 <div className="font-bold text-md text-primary">{dayName}</div>
             </AccordionTrigger>
@@ -57,7 +57,7 @@ const DaySchedule = ({ key, dayName, schedules }) => {
                                                                 <div className="flex items-center text-primary font-medium text-sm mr-1 sm:hidden">
                                                                     <LuTimer className="mr-1" />
                                                                 </div>
-                                                                {convert24HrTo12Hr(slot.start_time)} - {convert24HrTo12Hr(slot.end_time)}
+                                                                {toHHMMFormat(slot.start_time)} - {toHHMMFormat(slot.end_time)}
                                                             </div>
                                                             <div className="flex text-sm font-normal text-gray-600 sm:mb-2">
                                                                 <div className="flex items-center text-primary font-medium text-sm mr-1 sm:hidden">
@@ -67,15 +67,15 @@ const DaySchedule = ({ key, dayName, schedules }) => {
                                                             </div>
                                                             <div className="text-sm font-normal text-gray-500">
                                                                 <DisplaySlots groupedSlots={groupedSlots} dayName={dayName}
-                                                                    hospitalName={schedule.hospital_name} timings={`${convert24HrTo12Hr(slot.start_time)} - ${convert24HrTo12Hr(slot.end_time)}`}
+                                                                    hospitalName={schedule.hospital_name} timings={`${toHHMMFormat(slot.start_time)} - ${toHHMMFormat(slot.end_time)}`}
                                                                 />
                                                             </div>
                                                         </div>
-                                                        <div className="hidden sm:block text-sm font-normal text-gray-500">{convert24HrTo12Hr(slot.start_time)} - {convert24HrTo12Hr(slot.end_time)}</div>
+                                                        <div className="hidden sm:block text-sm font-normal text-gray-500">{toHHMMFormat(slot.start_time)} - {toHHMMFormat(slot.end_time)}</div>
                                                         <div className="hidden sm:block text-sm font-normal text-gray-500">{slot.duration} mins</div>
                                                         <div className="hidden sm:block text-sm font-normal text-gray-500">
                                                             <DisplaySlots groupedSlots={groupedSlots} dayName={dayName}
-                                                                hospitalName={schedule.hospital_name} timings={`${convert24HrTo12Hr(slot.start_time)} - ${convert24HrTo12Hr(slot.end_time)}`}
+                                                                hospitalName={schedule.hospital_name} timings={`${toHHMMFormat(slot.start_time)} - ${toHHMMFormat(slot.end_time)}`}
                                                             />
                                                         </div>
                                                         <div className="flex mt-3 sm:mt-0 justify-end sm:justify-start items-center">

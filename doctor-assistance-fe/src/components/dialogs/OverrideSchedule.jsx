@@ -10,7 +10,9 @@ import { Input } from '@/components/ui/input';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
+import TimePicker from '@/components/shared/TimePicker';
 import { validateField, hasNoFieldErrors, validateAllFields } from '@/utils/validations';
+import { formatTime, formatTimeString } from '@/utils/time';
 
 export default function OverrideSchedule() {
 
@@ -50,6 +52,13 @@ export default function OverrideSchedule() {
         setFormData((prev) => ({ ...prev, [field]: value }));
         const errors = validateField(field, value, inputErrors);
         setInputErrors(errors);
+    };
+
+    const handleTimeSlotChange = (field, value) => {
+        setFormData((prev) => {
+            const updatedFormData = { ...prev, [field]: value };
+            return updatedFormData;
+        });
     };
 
     const handleBlur = (e) => {
@@ -94,7 +103,7 @@ export default function OverrideSchedule() {
                 <Button>Create Custom Schedule</Button>
             </DialogTrigger>
 
-            <DialogContent>
+            <DialogContent className='max-w-xl'>
                 <DialogHeader>
                     <DialogTitle>Create Custom Schedule</DialogTitle>
                     <DialogDescription>
@@ -156,24 +165,22 @@ export default function OverrideSchedule() {
                         )}
                     </div>
 
-                    <div className="grid gap-2">
+                    <div className="grid gap-2 overflow-x-auto max-w-100 sm:max-w-full">
                         <Label className='text-gray-700 text-sm font-normal'>Timings</Label>
                         <div className="flex items-center gap-3 mb-2 ml-2">
                             <div className="flex flex-col">
-                                <Label htmlFor="start_time" className='text-gray-700 text-sm font-normal mb-2'>Start Time</Label>
-                                <Input type="time" id="start_time" value={formData.start_time} required onChange={handleChange}
-                                />
+                                <TimePicker value={formatTime(formData.start_time)}
+                                    onChange={(value) => handleTimeSlotChange("start_time", formatTimeString(value))} />
                             </div>
-                            <div className='flex text-gray-600 mt-5'>-</div>
+                            <div className="flex mx-2 text-sm mt-5 text-gray-600">To</div>
                             <div className="flex flex-col">
-                                <Label htmlFor="end_time" className='text-gray-700 text-sm font-normal mb-2'>End Time</Label>
-                                <Input type="time" id="end_time" value={formData.end_time} required onChange={handleChange}
-                                />
+                                <TimePicker value={formatTime(formData.end_time)}
+                                    onChange={(value) => handleTimeSlotChange("end_time", formatTimeString(value))} />
                             </div>
-                            <div className="flex flex-col">
-                                <Label htmlFor="duration" className='text-gray-700 text-sm font-normal mb-2'>Duration (minutes)</Label>
+                            <div className="flex flex-col mx-2">
+                                <Label htmlFor="duration" className='text-gray-600 text-sm font-normal mb-1'>Duration</Label>
                                 <Input type="number" id="duration" value={formData.duration} required
-                                    onChange={handleChange} className='w-32' placeholder="(minutes)"
+                                    onChange={handleChange} className='w-32' placeholder="mins"
                                 />
                             </div>
                         </div>
