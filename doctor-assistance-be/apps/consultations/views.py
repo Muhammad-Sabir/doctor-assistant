@@ -140,22 +140,26 @@ class ConsultationsViewSet(ModelViewSet):
         return self.get_consultations(self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(doctor=self.request.user.doctor)
+        serializer.save()
 
     def get_consultations(self, user):
         if user.role == 'patient':
             return Consultation.objects.select_related(
-                'doctor__user',
-                'patient__user',
-                'patient__primary_patient__user'
+                'appointment__doctor__user',
+                'appointment__patient__user',
+                'appointment__patient__primary_patient__user',
+                'appointment__time_slot'
             ).filter(
-                Q(patient__user=user) | Q(patient__primary_patient__user=user)
-            )
+                Q(appointment__patient__user=user) | 
+                Q(appointment__patient__primary_patient__user=user)
+            ).filter(appointment__completed=True)
+        
         return Consultation.objects.select_related(
-            'doctor__user',
-            'patient__user',
-            'patient__primary_patient__user'
-        ).filter(doctor__user=user)
+            'appointment__doctor__user',
+            'appointment__patient__user',
+            'appointment__patient__primary_patient__user',
+            'appointment__time_slot'
+        ).filter(appointment__doctor__user=user)
 
 class SOAPNotesViewSet(ModelViewSet):
     serializer_class = SOAPNotesSerializer
@@ -190,8 +194,8 @@ class TranscriptionViewSet(ModelViewSet):
         transcription = serializer.save()
 
         # Generate SOAP notes using the transcription text
-        transcription_text = transcription.transcription_text
-        soap_notes_text = generate_soap_notes(transcription_text)
+        processed_transcription = self.process_transcripts(transcription.transcription_text)
+        soap_notes_text = generate_soap_notes(processed_transcription)
 
         # Save the generated SOAP notes
         soap_notes = SOAPNotes.objects.create(
@@ -208,6 +212,12 @@ class TranscriptionViewSet(ModelViewSet):
         }
 
         return Response(response_data, status=status.HTTP_201_CREATED)
+    
+    def process_transcripts(self, transcripts):
+        return " ".join(
+            f"[{'doctor' if entry['speaker_label'] == 'spk_0' else 'patient'}] {entry['transcript']}"
+            for entry in transcripts
+        )
 
 class PrescriptionViewSet(ModelViewSet):
     queryset = Prescription.objects.all()

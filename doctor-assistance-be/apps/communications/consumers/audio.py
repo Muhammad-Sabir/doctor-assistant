@@ -5,9 +5,11 @@ import boto3
 import uuid
 
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
 from decouple import config
 
 from apps.consultations.models import Transcription
+from apps.consultations.models import Consultation
 
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
@@ -30,7 +32,10 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         if bytes_data:
-            self.audio_file.write(bytes_data)
+            try:
+                self.audio_file.write(bytes_data)
+            except Exception as e:
+                print("ERRRRRRRRRRRRRRRRORRRRRRRRRRRR ", e)
         elif text_data:
             data = json.loads(text_data)
             if data.get('action') == 'stop_recording':
@@ -43,8 +48,10 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
 
     async def handle_transcription(self):
         try:
+            await asyncio.sleep(1)
             self.audio_file.close()
-
+            self.loading_message = 'Connecting to AWS Transcribe'
+            await self.send(text_data=json.dumps({'loading_message': self.loading_message}))
             # AWS S3 upload
             s3_client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID,
                                      aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
@@ -59,7 +66,7 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
                                       audio_data, bucket_name, s3_audio_path),
                     timeout=120
                 )
-
+            print("HERRE")
             # Trigger AWS Transcribe transcription
             await self.trigger_transcribe(bucket_name, s3_audio_path)
         except asyncio.TimeoutError:
@@ -69,6 +76,8 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
 
     async def trigger_transcribe(self, bucket_name, audio_file_path):
         """Start AWS Transcribe transcription job with speaker diarization."""
+        self.loading_message = 'Starting the AWS Transcribe job.'
+        await self.send(text_data=json.dumps({'loading_message': self.loading_message}))
         transcribe_client = boto3.client('transcribe', aws_access_key_id=AWS_ACCESS_KEY_ID,
                                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_DEFAULT_REGION)
 
@@ -102,6 +111,8 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
                                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_DEFAULT_REGION)
 
         while True:
+            self.loading_message = 'Transcribing the audio.'
+            await self.send(text_data=json.dumps({'loading_message': self.loading_message}))
             job_status = transcribe_client.get_transcription_job(
                 TranscriptionJobName=job_name
             )['TranscriptionJob']
@@ -130,12 +141,21 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         audio_segments = transcript_json.get(
             "results", {}).get("audio_segments", [])
 
-        Transcription.objects.create(
-            consultation=self.consultation_id,
-            transcription_text=audio_segments
-        )
+        await self.create_transcription(audio_segments)
+        
         # Send transcription to the client
         await self.send(text_data=json.dumps({
             'message': 'Transcription completed',
             'transcription': audio_segments
         }))
+        
+    @database_sync_to_async
+    def create_transcription(self, audio_segments):
+        print("audio_segments:", audio_segments)
+        consultation = Consultation.objects.filter(id=self.consultation_id).first()
+
+        Transcription.objects.create(
+            consultation=consultation, 
+            transcription_text=audio_segments
+        )
+        

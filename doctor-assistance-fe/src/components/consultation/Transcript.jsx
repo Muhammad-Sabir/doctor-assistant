@@ -24,17 +24,6 @@ export default function TranscriptionPage({ consultationId, setNotes }) {
   const [isCopied, setIsCopied] = useState(false);
   const [chatMessages, setChatMessages] = useState([]);
 
-  function processTranscripts(transcripts) {
-    return transcripts
-      .map((entry) => {
-        const label =
-          entry.speaker_label === "spk_0" ? "[doctor]" : "[patient]";
-
-        return `${label} ${entry.transcript}`;
-      })
-      .join(" ");
-  }
-
   const transcriptEndRef = useRef(null);
 
   const {
@@ -87,12 +76,10 @@ export default function TranscriptionPage({ consultationId, setNotes }) {
   });
 
   const handleNotesGeneration = () => {
-    const transcript = processTranscripts(chatMessages);
-
     generateNotesMutation.mutate(
       JSON.stringify({
         consultation: consultationId,
-        transcription_text: transcript,
+        transcription_text: chatMessages,
       })
     );
   };
