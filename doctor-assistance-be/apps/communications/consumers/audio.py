@@ -50,7 +50,8 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         try:
             await asyncio.sleep(1)
             self.audio_file.close()
-
+            self.loading_message = 'Connecting to AWS Transcribe'
+            await self.send(text_data=json.dumps({'loading_message': self.loading_message}))
             # AWS S3 upload
             s3_client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID,
                                      aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
@@ -75,6 +76,8 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
 
     async def trigger_transcribe(self, bucket_name, audio_file_path):
         """Start AWS Transcribe transcription job with speaker diarization."""
+        self.loading_message = 'Starting the AWS Transcribe job.'
+        await self.send(text_data=json.dumps({'loading_message': self.loading_message}))
         transcribe_client = boto3.client('transcribe', aws_access_key_id=AWS_ACCESS_KEY_ID,
                                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_DEFAULT_REGION)
 
@@ -108,7 +111,8 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
                                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_DEFAULT_REGION)
 
         while True:
-            print("Checking aws Transcribe")
+            self.loading_message = 'Transcribing the audio.'
+            await self.send(text_data=json.dumps({'loading_message': self.loading_message}))
             job_status = transcribe_client.get_transcription_job(
                 TranscriptionJobName=job_name
             )['TranscriptionJob']

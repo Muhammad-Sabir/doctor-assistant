@@ -23,6 +23,8 @@ export const useAudioTranscription = (consultationId) => {
         appendTranscription(data.message);
       } else if (data.error) {
         console.error('Error from server:', data.error);
+      } else if (data.loading_message) {
+        console.log('Lload: ', data.loading_message);
       }
     };
     websocket.onclose = () => {
