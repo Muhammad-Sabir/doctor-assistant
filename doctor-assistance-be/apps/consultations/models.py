@@ -11,17 +11,16 @@ class Consultation(TimeStampedModel):
 
 
 class Transcription(TimeStampedModel):
-    consultation = models.ForeignKey(Consultation, on_delete=models.CASCADE, related_name='transcription')
+    consultation = models.OneToOneField(Consultation, on_delete=models.CASCADE, related_name='transcription')
     transcription_text = models.TextField()
 
 
 class SOAPNotes(TimeStampedModel):
-    consultation = models.ForeignKey(Consultation, on_delete=models.CASCADE, related_name='soap_notes')
-    subject = models.CharField(max_length=255)
+    consultation = models.OneToOneField(Consultation, on_delete=models.CASCADE, related_name='soap_note')
     description = models.TextField(blank=True, null=True)
 
 
 class Prescription(TimeStampedModel):
-    consultation = models.ForeignKey(Consultation, on_delete=models.CASCADE, related_name='prescriptions')
-    medicine_name = models.CharField(max_length=255)
-    instruction = models.TextField(blank=True, null=True)
+    consultation = models.OneToOneField(Consultation, on_delete=models.CASCADE, related_name='prescription')
+    medicines = models.JSONField(default=list)  # Will store list of medicine objects
+    additional_info = models.TextField(blank=True, null=True)
