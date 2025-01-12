@@ -24,7 +24,7 @@ const DisplaySlots = ({ dayName, hospitalName, timings, groupedSlots }) => {
                     {groupedSlots.length > 0 ? (
                         <ul className="list-disc list-inside">
                             {groupedSlots.map((slot, index) => (
-                                <li key={index} className="mb-2 text-gray-500 text-sm">
+                                <li key={index} className="mb-2 text-sm text-gray-500">
                                     {convert24HrTo12Hr(slot.start_time)} - {convert24HrTo12Hr(slot.end_time)}
                                 </li>
                             ))}

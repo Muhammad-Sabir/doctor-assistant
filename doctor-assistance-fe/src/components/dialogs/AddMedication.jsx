@@ -41,12 +41,12 @@ export default function AddMedication() {
                 <DialogHeader>
                     <DialogTitle>Add Medication</DialogTitle>
                     <DialogDescription>
-                        Add Medication for the patient. Click Add when done.
+                        Add medication for the patient. Click add when done.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-2">
                     <div className="grid gap-2">
-                        <Label htmlFor="medication_name" className='text-gray-700 font-normal'>Name</Label>
+                        <Label htmlFor="medication_name" className='font-normal text-gray-700'>Name</Label>
                         <Input
                             id="medication_name"
                             name='name'
@@ -59,13 +59,13 @@ export default function AddMedication() {
                             required
                         />
                         {inputErrors.medication_name && (
-                            <div aria-live="assertive" className="flex text-red-500 text-sm">
-                                <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.medication_name}
+                            <div aria-live="assertive" className="flex text-sm text-red-500">
+                                <BiSolidError color='red' className="mt-1 mr-1" /> {inputErrors.medication_name}
                             </div>
                         )}
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="medication_dosage" className='text-gray-700 font-normal'>Dosage</Label>
+                        <Label htmlFor="medication_dosage" className='font-normal text-gray-700'>Dosage</Label>
                         <Input
                             id="medication_dosage"
                             name='dosage'
@@ -78,13 +78,13 @@ export default function AddMedication() {
                             required
                         />
                         {inputErrors.medication_dosage && (
-                            <div aria-live="assertive" className="flex text-red-500 text-sm">
-                                <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.medication_dosage}
+                            <div aria-live="assertive" className="flex text-sm text-red-500">
+                                <BiSolidError color='red' className="mt-1 mr-1" /> {inputErrors.medication_dosage}
                             </div>
                         )}
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="medication_frequency" className='text-gray-700 font-normal'>Freuqency</Label>
+                        <Label htmlFor="medication_frequency" className='font-normal text-gray-700'>Freuqency</Label>
                         <Input
                             id="medication_frequency"
                             name='frequency'
@@ -97,8 +97,8 @@ export default function AddMedication() {
                             required
                         />
                         {inputErrors.medication_frequency && (
-                            <div aria-live="assertive" className="flex text-red-500 text-sm">
-                                <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.medication_frequency}
+                            <div aria-live="assertive" className="flex text-sm text-red-500">
+                                <BiSolidError color='red' className="mt-1 mr-1" /> {inputErrors.medication_frequency}
                             </div>
                         )}
                     </div>
