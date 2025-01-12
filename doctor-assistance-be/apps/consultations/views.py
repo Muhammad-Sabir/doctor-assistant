@@ -22,7 +22,7 @@ from apps.consultations.serializers import (
     ConsultationSerializer, SOAPNotesSerializer,
     PrescriptionSerializer, TranscriptionSerializer
 )
-from apps.consultations.filters import ConsultationFilter, PrescriptionFilter
+from apps.consultations.filters import ConsultationFilter, PrescriptionFilter, TranscriptionFilter, SOAPNotesFilter
 
 logging.basicConfig(level=logging.INFO)
 
@@ -32,9 +32,18 @@ MODEL_PATH = os.path.join(settings.BASE_DIR, "mlmodel", "bart-soap")
 print("Model path:", MODEL_PATH)
 
 
-tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
-model = BartForConditionalGeneration.from_pretrained(MODEL_PATH)
-model.eval()
+
+def load_model_and_tokenizer():
+    # Load the trained model
+    model = BartForConditionalGeneration.from_pretrained(MODEL_PATH)
+    
+    # Load the tokenizer
+    tokenizer = BartTokenizer.from_pretrained('facebook/bart-base')
+    
+    return model, tokenizer
+
+model, tokenizer = load_model_and_tokenizer()
+
 
 logging.info("SOAP Notes model loaded successfully.")
 
@@ -75,6 +84,7 @@ def generate_soap_notes(conversation):
         return_tensors="pt"
     )
 
+    model.eval()
     with torch.no_grad():
         generated_ids = model.generate(
             input_ids=inputs['input_ids'],
@@ -88,7 +98,8 @@ def generate_soap_notes(conversation):
         generated_ids[0],
         skip_special_tokens=True,
         clean_up_tokenization_spaces=False
-    ).replace("\n", " ")
+    )
+    soap_notes = soap_notes.replace("\n", " ")
 
     matches = re.split(f"({keyword_pattern})", soap_notes, flags=re.IGNORECASE)
 
@@ -149,16 +160,20 @@ class ConsultationsViewSet(ModelViewSet):
 class SOAPNotesViewSet(ModelViewSet):
     serializer_class = SOAPNotesSerializer
     permission_classes = [IsDoctor]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = SOAPNotesFilter
 
     def get_queryset(self):
         user = self.request.user
         return SOAPNotes.objects.select_related('consultation') \
-            .only('consultation', 'subject', 'description', 'created_at', 'updated_at') \
+            .only('consultation', 'description', 'created_at', 'updated_at') \
             .filter(consultation__doctor=user.doctor)
 
 class TranscriptionViewSet(ModelViewSet):
     serializer_class = TranscriptionSerializer
     permission_classes = [IsDoctor]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TranscriptionFilter
 
     def get_queryset(self):
         user = self.request.user
@@ -181,7 +196,6 @@ class TranscriptionViewSet(ModelViewSet):
         # Save the generated SOAP notes
         soap_notes = SOAPNotes.objects.create(
             consultation=transcription.consultation,
-            subject='Generated SOAP Notes',
             description=soap_notes_text
         )
 
