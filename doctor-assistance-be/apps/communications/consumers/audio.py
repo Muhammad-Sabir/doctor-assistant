@@ -2,7 +2,7 @@ import json
 import tempfile
 import asyncio
 import boto3
-import uuid  # Import the uuid module
+import uuid
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from decouple import config
@@ -13,6 +13,7 @@ AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 AWS_DEFAULT_REGION = config('AWS_DEFAULT_REGION')
 
+
 class ConsultationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.consultation_id = self.scope['url_route']['kwargs']['consultation_id']
@@ -21,7 +22,8 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         # Temporary file to hold audio data
-        self.audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".webm")
+        self.audio_file = tempfile.NamedTemporaryFile(
+            delete=False, suffix=".webm")
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
@@ -38,22 +40,23 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': event['message']
         }))
-        
+
     async def handle_transcription(self):
         try:
             self.audio_file.close()
 
             # AWS S3 upload
-            s3_client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, 
-                                    aws_secret_access_key=AWS_SECRET_ACCESS_KEY, 
-                                    region_name=AWS_DEFAULT_REGION)
+            s3_client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID,
+                                     aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                                     region_name=AWS_DEFAULT_REGION)
             bucket_name = 'doctor-assistance-transcription'
             s3_audio_path = f"input/consultation_{self.consultation_id}.webm"
 
             # Upload audio file to S3
             with open(self.audio_file.name, 'rb') as audio_data:
                 await asyncio.wait_for(
-                    asyncio.to_thread(s3_client.upload_fileobj, audio_data, bucket_name, s3_audio_path), 
+                    asyncio.to_thread(s3_client.upload_fileobj,
+                                      audio_data, bucket_name, s3_audio_path),
                     timeout=120
                 )
 
@@ -66,13 +69,15 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
 
     async def trigger_transcribe(self, bucket_name, audio_file_path):
         """Start AWS Transcribe transcription job with speaker diarization."""
-        transcribe_client = boto3.client('transcribe', aws_access_key_id=AWS_ACCESS_KEY_ID, 
+        transcribe_client = boto3.client('transcribe', aws_access_key_id=AWS_ACCESS_KEY_ID,
                                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_DEFAULT_REGION)
 
         # Generate a unique identifier
         self.unique_id = str(uuid.uuid4())
-        self.transcription_job_name = f"consultation_{self.consultation_id}_{self.unique_id}"
-        self.output_key = f"output/consultation_{self.consultation_id}_{self.unique_id}.json"
+        self.transcription_job_name = f"consultation_{
+            self.consultation_id}_{self.unique_id}"
+        self.output_key = f"output/consultation_{
+            self.consultation_id}_{self.unique_id}.json"
 
         # Start transcription job with diarization
         response = transcribe_client.start_transcription_job(
@@ -93,7 +98,7 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
 
     async def check_transcription_status(self, job_name, bucket_name):
         """Poll AWS Transcribe until transcription is complete."""
-        transcribe_client = boto3.client('transcribe', aws_access_key_id=AWS_ACCESS_KEY_ID, 
+        transcribe_client = boto3.client('transcribe', aws_access_key_id=AWS_ACCESS_KEY_ID,
                                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_DEFAULT_REGION)
 
         while True:
@@ -114,7 +119,7 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
 
     async def retrieve_and_send_transcription(self, bucket_name):
         """Retrieve transcription data from the transcript file in the output folder."""
-        s3_client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, 
+        s3_client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
                                  region_name=AWS_DEFAULT_REGION)
         key = self.output_key  # Use the unique output key
 
@@ -122,10 +127,11 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         transcript_json = json.loads(transcript_data['Body'].read())
 
         # Extract the detailed transcript
-        audio_segments = transcript_json.get("results", {}).get("audio_segments", [])
+        audio_segments = transcript_json.get(
+            "results", {}).get("audio_segments", [])
 
         Transcription.objects.create(
-            consultation=self.consultation_id, 
+            consultation=self.consultation_id,
             transcription_text=audio_segments
         )
         # Send transcription to the client

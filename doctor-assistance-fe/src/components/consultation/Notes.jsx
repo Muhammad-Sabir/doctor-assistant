@@ -22,12 +22,7 @@ const subsectionsMapping = {
 
 export default function Notes({ notes }) {
   let parsedNotes = {};
-  console.log("notes");
-  console.log("notes");
-  console.log("notes");
-  console.log("notes");
-  console.log("notes");
-  console.log(notes);
+  
   try {
     // Check if notes is a valid JSON string, otherwise fall back to an empty object
     parsedNotes = typeof notes === 'string' ? JSON.parse(notes) : notes;
