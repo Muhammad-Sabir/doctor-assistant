@@ -224,5 +224,4 @@ class ChatConsumer(AsyncWebsocketConsumer):
             - source: where it originated from
             - data: what ever you want to send as a dict
         '''
-        print('sending_data_chat', data)
         await self.send(text_data=json.dumps(data))

@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 
-const RECORDING_TIMEOUT = 5000; // milliseconds
+const RECORDING_TIMEOUT = 500; // milliseconds
 
 export const useAudioTranscription = (consultationId) => {
   const [transcription, setTranscription] = useState([]);
@@ -23,6 +23,8 @@ export const useAudioTranscription = (consultationId) => {
         appendTranscription(data.message);
       } else if (data.error) {
         console.error('Error from server:', data.error);
+      } else if (data.loading_message) {
+        console.log('Lload: ', data.loading_message);
       }
     };
     websocket.onclose = () => {
