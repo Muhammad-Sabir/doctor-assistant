@@ -137,12 +137,7 @@ class ConsultationsViewSet(ModelViewSet):
         return [IsDoctorOrOwner()]
 
     def get_queryset(self):
-        return self.get_consultations(self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def get_consultations(self, user):
+        user = self.request.user
         if user.role == 'patient':
             return Consultation.objects.select_related(
                 'appointment__doctor__user',
@@ -151,8 +146,9 @@ class ConsultationsViewSet(ModelViewSet):
                 'appointment__time_slot'
             ).filter(
                 Q(appointment__patient__user=user) | 
-                Q(appointment__patient__primary_patient__user=user)
-            ).filter(appointment__completed=True)
+                Q(appointment__patient__primary_patient__user=user),
+                appointment__completed=True
+            )
         
         return Consultation.objects.select_related(
             'appointment__doctor__user',
@@ -160,6 +156,15 @@ class ConsultationsViewSet(ModelViewSet):
             'appointment__patient__primary_patient__user',
             'appointment__time_slot'
         ).filter(appointment__doctor__user=user)
+
+    def perform_create(self, serializer):
+        # Save the consultation instance
+        consultation = serializer.save()
+
+        # Create related instances
+        Transcription.objects.create(consultation=consultation, transcription_text="")
+        SOAPNotes.objects.create(consultation=consultation, description="")
+        Prescription.objects.create(consultation=consultation, medicines=[], additional_info="")
 
 class SOAPNotesViewSet(ModelViewSet):
     serializer_class = SOAPNotesSerializer
@@ -171,7 +176,7 @@ class SOAPNotesViewSet(ModelViewSet):
         user = self.request.user
         return SOAPNotes.objects.select_related('consultation') \
             .only('consultation', 'description', 'created_at', 'updated_at') \
-            .filter(consultation__doctor=user.doctor)
+            .filter(consultation__appointment__doctor=user.doctor)
 
 class TranscriptionViewSet(ModelViewSet):
     serializer_class = TranscriptionSerializer
@@ -181,9 +186,8 @@ class TranscriptionViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Transcription.objects.select_related('consultation') \
-            .only('consultation', 'transcription_text', 'created_at', 'updated_at') \
-            .filter(consultation__doctor=user.doctor)
+        # Fetch transcriptions related to consultations for the doctor's appointments
+        return Transcription.objects.filter(consultation__appointment__doctor=user.doctor)
 
     def create(self, request, *args, **kwargs):
         # Serialize and validate the input data
@@ -212,7 +216,7 @@ class TranscriptionViewSet(ModelViewSet):
         }
 
         return Response(response_data, status=status.HTTP_201_CREATED)
-    
+
     def process_transcripts(self, transcripts):
         return " ".join(
             f"[{'doctor' if entry['speaker_label'] == 'spk_0' else 'patient'}] {entry['transcript']}"
@@ -233,11 +237,7 @@ class PrescriptionViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.role == 'patient':
-            filters = Q(consultation__patient__user=user) | Q(consultation__patient__primary_patient__user=user)
+            filters = Q(consultation__appointment__patient__user=user) | Q(consultation__appointment__patient__primary_patient__user=user)
         else:
-            filters = Q(consultation__doctor__user=user)
-        return Prescription.objects.select_related(
-            'consultation__patient__user',
-            'consultation__patient__primary_patient__user',
-            'consultation__doctor__user'
-        ).filter(filters)
+            filters = Q(consultation__appointment__doctor__user=user)
+        return Prescription.objects.filter(filters)
