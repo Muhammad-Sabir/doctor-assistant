@@ -24,7 +24,7 @@ class IsDoctorOrOwner(BasePermission):
         
         return (
             ((hasattr(obj, 'user') and obj.user == request.user)
-            or (hasattr(obj, 'doctor') and obj.doctor == request.user.doctor))
+            or (hasattr(obj.appointment, 'doctor') and obj.appointment.doctor == request.user.doctor))
             and request.user.role == 'doctor'
         )
 
