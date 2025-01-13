@@ -13,7 +13,7 @@ import AppointmentRejectReason from "@/components/dialogs/AppointmentRejectReaso
 import { capitalizeWords } from "@/utils/strings";
 
 export default function AppointmentCard({ appointment }) {
-    console.log("appointment: ", appointment)
+  console.log("appointment: ", appointment)
   const { user } = getAuthStatus();
 
   return (
@@ -34,18 +34,12 @@ export default function AppointmentCard({ appointment }) {
 
       <div>
         <p className="mt-2 text-sm font-medium text-primary">
-          Appointment {capitalizeWords(appointment.status)}{" "}
+          Appointment {appointment.completed ? "Completed" : capitalizeWords(appointment.status)}
         </p>
         {user.role === "doctor" ? (
-          <p className="mb-1 text-sm text-gray-600">
-            {" "}
-            with {appointment.patient_name}
-          </p>
+          <p className="mb-1 text-sm text-gray-600">with {appointment.patient_name}</p>
         ) : (
-          <p className="mb-1 text-sm text-gray-600">
-            {" "}
-            with {appointment.doctor_name}
-          </p>
+          <p className="mb-1 text-sm text-gray-600">with {appointment.doctor_name}</p>
         )}
       </div>
 
@@ -70,9 +64,9 @@ export default function AppointmentCard({ appointment }) {
           </div>
         )}
 
-        {user.role === "doctor" && appointment.status === "approved" && (
+        {user.role === "doctor" && appointment.status === "approved" && !appointment.completed && (
           <div className="flex items-center justify-end">
-            <CreateConsultation patientId={appointment.patient} appointmentId={appointment.id}/>
+            <CreateConsultation patientId={appointment.patient} appointmentId={appointment.id} />
           </div>
         )}
 

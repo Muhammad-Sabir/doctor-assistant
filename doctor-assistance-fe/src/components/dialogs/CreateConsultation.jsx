@@ -28,7 +28,7 @@ export default function CreateConsultation({ patientId, appointmentId}) {
         onErrorMessage: 'Failed to Create Consultation',
         onSuccess: (responseData) => {
             setTimeout(() => {
-                navigate(`/doctor/consultation/${patientId}/${responseData.data.id}`, {
+                navigate(`/doctor/consultation/${patientId}/${responseData.data.id}/${appointmentId}`, {
                     state: { patientName: responseData.data?.patient_name},
                 });
             }, 300);

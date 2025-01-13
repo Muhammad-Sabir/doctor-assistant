@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IoMedicalOutline } from "react-icons/io5";
 import { CgUserList } from "react-icons/cg";
 import { RxFilePlus } from "react-icons/rx";
@@ -14,12 +14,41 @@ import { getAuthStatus } from '@/utils/auth';
 import PatientInfo from '@/components/consultation/PatientInfo';
 import PatientAllergies from '@/components/consultation/PatientAllergies';
 import PatientConsultations from '@/components/consultation/PatientConsultations';
+import { Button } from '../ui/button';
+import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
+import { fetchWithAuth } from '@/utils/fetchApis';
+import { useFetchQuery } from '@/hooks/useFetchQuery';
 
 export default function Sidebar() {
 
-    const { patientId } = useParams();
+    const navigate = useNavigate();
+    const { patientId, appointmentId } = useParams();
     const { user } = getAuthStatus();
     const role = user?.role;
+
+    const completeAppointmentMutation = useCreateUpdateMutation({
+        url: `appointments/${appointmentId}/`,
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        fetchFunction: fetchWithAuth,
+        onSuccessMessage: 'Appointment Successfully Updated',
+        onErrorMessage: 'Failed to Update Appointment',
+        onSuccess: () => {
+            navigate('/doctor/appointments')
+        },
+    });
+
+    const { data: appointmentData, isFetching } = useFetchQuery({
+        url: `appointments/${appointmentId}/`,
+        queryKey: ['appointmentConsultation'],
+        fetchFunction: fetchWithAuth,
+    });
+
+    const isCompleted = appointmentData?.completed || false;
+
+    const handleSubmit = () => {
+        completeAppointmentMutation.mutate(JSON.stringify({ completed: "true" }));
+    };
 
     return (
         <div className="bg-muted/40 h-screen fixed left-0 bg-slate-100 px-3">
@@ -31,7 +60,7 @@ export default function Sidebar() {
                     </Link>
                 </div>
 
-                <div className='px-2 lg:px-4'>
+                <div className='px-2 lg:px-4 overflow-y-auto'>
                     <Accordion type="single" collapsible className="w-full">
 
                         <AccordionItem value="item-1">
@@ -78,6 +107,12 @@ export default function Sidebar() {
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
+
+                    {!isCompleted && !isFetching && (
+                        <div className="flex items-center justify-center py-6 px-7 fixed bottom-0 left-0">
+                            <Button onClick={handleSubmit}>Complete Consultation</Button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

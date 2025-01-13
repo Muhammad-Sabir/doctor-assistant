@@ -6,11 +6,13 @@ import Transcript from "@/components/consultation/Transcript";
 import Notes from "@/components/consultation/Notes";
 import Prescriptions from "@/components/consultation/Prescriptions";
 import VideoCall from "@/components/consultation/VideoCall";
+import { useFetchQuery } from "@/hooks/useFetchQuery";
+import { fetchWithAuth } from "@/utils/fetchApis";
 
 export default function Consultation() {
   const [activeTab, setActiveTab] = useState("consultationTranscript");
   const [notes, setNotes] = useState(null);
-  const { consultationId } = useParams();
+  const { consultationId, appointmentId } = useParams();
 
   const consultationTabs = [
     { label: "Video Call", key: "videoCall" },
@@ -19,6 +21,14 @@ export default function Consultation() {
     { label: "Prescriptions", key: "consultationPrescriptions" },
   ];
 
+  const { data: appointmentData, isFetching: isAppointmentFetching } = useFetchQuery({
+    url: `appointments/${appointmentId}/`,
+    queryKey: ['appointmentConsultation'],
+    fetchFunction: fetchWithAuth,
+  });
+
+  const isCompleted = appointmentData?.completed || false;
+  
   const tabComponents = {
     videoCall: <VideoCall />,
     consultationTranscript: (

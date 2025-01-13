@@ -7,7 +7,7 @@ import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 
-export default function EditableTitle({ consultationId }) {
+export default function EditableTitle({ consultationId, isCompleted, isAppointmentFetching }) {
 
     const [title, setTitle] = useState('');
     const [isEditing, setIsEditing] = useState(false);
@@ -64,9 +64,8 @@ export default function EditableTitle({ consultationId }) {
                     autoFocus
                 />
             ) : (
-                <p
-                    className="text-md font-semibold text-primary w-40 truncate block sm:w-94 lg:w-102"
-                    onClick={toggleEditing}
+                <p className={`text-md font-semibold w-40 truncate block sm:w-94 lg:w-102 text-primary ${isCompleted ?'cursor-not-allowed' : 'cursor-pointer'}`}
+                    onClick={isCompleted ? null : toggleEditing}
                 >
                     <CiEdit className='text-gray-500 inline -mt-1 mr-1' size={20} /> Title: {title}
                 </p>

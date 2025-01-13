@@ -1,8 +1,8 @@
 import DoctorHomeCards from "@/components/dashboard/DoctorHomeCard";
 import React from "react";
-import DoctorConsultations from "@/components/consultation/DoctorConsultations";
 import TotalAppointments from "@/components/dashboard/TotalAppointments";
 import TotalPatients from "@/components/dashboard/TotalPatients";
+import TotalPendingConsultations from "@/components/dashboard/TotalPendingConsultations";
 
 export default function Home() {
   return (
@@ -25,11 +25,12 @@ export default function Home() {
           </div>
 
           <div className="relative w-full">
-            <h2 className="mb-3 font-medium capitalize text-md text-primary">
-              Your recent Consultations:
+            <h2 className="mb-3 font-medium text-md text-primary">
+              Your Pending Consultations:
             </h2>
-            <DoctorConsultations />
+            <TotalPendingConsultations />
           </div>
+          
         </div>
       </section>
     </>

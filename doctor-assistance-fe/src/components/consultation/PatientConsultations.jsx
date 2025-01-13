@@ -25,7 +25,7 @@ export default function PatientConsultations({ patientId, truncate = false }) {
                 patientConsultations.map(consultation => (
                     <Link 
                         key={consultation.id}
-                        to={`/doctor/consultation/${patientId}/${consultation.id}`}
+                        to={`/doctor/consultation/${patientId}/${consultation.id}/${consultation.appointment}`}
                         state= {{ patientName: consultation.patient_name }}
                     >
                         <div className="p-4 bg-white border border-gray-300 rounded-lg hover:shadow-md hover:border-primary transition-shadow">
