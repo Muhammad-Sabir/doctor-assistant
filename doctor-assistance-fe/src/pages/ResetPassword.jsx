@@ -75,8 +75,8 @@ export default function ResetPassword() {
                 <Link to={'/'}>
                     <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
                 </Link>
-                <h1 className="text-3xl font-bold">Reset Your Password</h1>
-                <p className="text-balance text-muted-foreground">
+                <h1 className="text-xl font-bold">Reset Your Password</h1>
+                <p className="text-sm text-muted-foreground">
                     Enter your new password and confirm it below.
                 </p>
             </div>
