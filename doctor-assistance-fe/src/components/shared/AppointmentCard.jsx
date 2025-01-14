@@ -11,9 +11,11 @@ import UpdateAppointment from "@/components/dialogs/UpdateAppointment";
 import CreateConsultation from "@/components/dialogs/CreateConsultation";
 import AppointmentRejectReason from "@/components/dialogs/AppointmentRejectReason";
 import { capitalizeWords } from "@/utils/strings";
+import { Link } from "react-router-dom";
+import { TbMessagePlus } from "react-icons/tb";
 
 export default function AppointmentCard({ appointment }) {
-  console.log("appointment: ", appointment)
+
   const { user } = getAuthStatus();
 
   return (
@@ -43,11 +45,19 @@ export default function AppointmentCard({ appointment }) {
         )}
       </div>
 
-      <div className="flex items-center gap-2">
-        <Info size={15} className="text-gray-500" />
-        <h4 className="text-sm font-medium text-gray-500">
-          {appointment.message}
-        </h4>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Info size={15} className="text-gray-500" />
+          <h4 className="text-sm font-medium text-gray-500">
+            {appointment.message}
+          </h4>
+        </div>
+
+        {user.role === "patient" && appointment.completed && (
+          <Link to={`/patient/doctor/${appointment.doctor}`} className="text-primary flex underline items-center gap-2 text-xs">
+            <TbMessagePlus />Add Review for Dr
+          </Link>
+        )}
       </div>
 
       <div className="absolute flex items-center justify-between mt-2 bottom-3 right-3">

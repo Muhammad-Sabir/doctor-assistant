@@ -22,7 +22,7 @@ export default function MobileAppBanner() {
                             Access your health records anytime, anywhere.
                             Experience hassle-free appointments and consultations right from your phone.</p>
                         <Button className="block mx-auto mt-5 lg:mx-0">
-                            <Link className="flex" to="/">
+                            <Link className="flex" to="https://drive.google.com/drive/folders/18jguCAutzK3pfUGV5pJvPum2tcF7_5-9?usp=drive_link">
                                 <MdOutlineInstallMobile className="mt-1 mr-1" /> Download App Now
                             </Link>
                         </Button>
