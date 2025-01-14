@@ -20,7 +20,7 @@ export default function PatientInfo({ patientId }) {
         <>
             {patientData && !isFetching ? (
                 <p className="font-normal px-1.5 text-gray-500 text-sm">
-                    <span className="leading-6 block w-32 truncate lg:w-full">Name: {patientData.name}</span>
+                    <span className="leading-6 block sm:truncate">Name: {patientData.name}</span>
                     <span className='leading-6 block'>Patient ID: {patientData.id}</span>
                     <span className='leading-6 block'>Age: {calculateAge(patientData.date_of_birth)}</span>
                     <span className='leading-6 flex'>

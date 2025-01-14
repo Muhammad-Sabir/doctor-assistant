@@ -13,10 +13,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import AddAllergy from '@/components/dialogs/AddAllergy';
 import PatientInfo from '@/components/consultation/PatientInfo';
 import PatientAllergies from '@/components/consultation/PatientAllergies';
-import PatientConsultations from '@/components/consultation/PatientConsultations';
 import logoIcon from '@/assets/images/svg/logo-icon.svg';
 import { getAuthStatus } from '@/utils/auth';
 import { accountLinks } from '@/components/shared/MenuData';
+import PatientConsultationsList from '@/components/consultation/PatientConsultationsList';
 
 export default function MobileOverlay() {
 
@@ -115,7 +115,7 @@ export default function MobileOverlay() {
                         </AccordionTrigger>
                         <AccordionContent>
                             <div className='py-1 h-96 overflow-y-scroll flex flex-col gap-3'>
-                                <PatientConsultations patientId={patientId}/>
+                                <PatientConsultationsList patientId={patientId}/>
                             </div>
                         </AccordionContent>
                     </AccordionItem>
