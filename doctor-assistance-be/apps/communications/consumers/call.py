@@ -14,7 +14,7 @@ class CallConsumer(AsyncWebsocketConsumer):
         if not user.is_authenticated:
             await self.close()
             return
-        
+
         self.room_group_name = self.get_room_group_name(user.id)
         print(f"WebSocket connected for user: {user}")
 
@@ -39,7 +39,7 @@ class CallConsumer(AsyncWebsocketConsumer):
         consultation_id = message.get('consultationId')
 
         consultation, receiver_id = await self.get_consultation_and_receiver(user, consultation_id)
-        
+
         if consultation:
             if user.role == 'doctor':
                 message['sender'] = await self.get_doctor_details(user)
@@ -64,32 +64,31 @@ class CallConsumer(AsyncWebsocketConsumer):
         try:
             consultation = (
                 Consultation.objects.select_related(
-                    'doctor__user',
-                    'patient__user',
-                    'patient__primary_patient__user'
+                    'appointment__doctor__user',
+                    'appointment__patient__user',
+                    'appointment__patient__primary_patient__user'
                 ).get(id=consultation_id)
             )
-            
+
             if user.role == 'patient':
-                receiver_id = consultation.doctor.user.id
+                receiver_id = consultation.appointment.doctor.user.id
             else:
-                patient = consultation.patient
+                patient = consultation.appointment.patient
                 receiver_id = (
-                    patient.primary_patient.user.id 
-                    if patient.primary_patient 
+                    patient.primary_patient.user.id
+                    if patient.primary_patient
                     else patient.user.id
                 )
-                
+
             return consultation, receiver_id
-            
+
         except ObjectDoesNotExist:
             print(f"Consultation with id {consultation_id} does not exist")
             return None, None
-    
+
     @database_sync_to_async
     def get_doctor_details(self, user):
         return {
             'name': user.doctor.name,
             'id': user.doctor.id
         }
-
