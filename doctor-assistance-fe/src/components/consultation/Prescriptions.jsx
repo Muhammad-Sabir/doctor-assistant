@@ -10,6 +10,7 @@ import AddMedication from '@/components/dialogs/AddMedication';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
+import Loading from '@/components/shared/Loading';
 
 export default function Prescriptions({ consultationId }) {
 
@@ -19,7 +20,7 @@ export default function Prescriptions({ consultationId }) {
     additional_info: '',
   });
 
-  const { data } = useFetchQuery({
+  const { data, isFetching, isError } = useFetchQuery({
     url: `prescriptions/${consultationId}/`,
     queryKey: ['consultationPrescription', consultationId],
     fetchFunction: fetchWithAuth,
@@ -87,6 +88,9 @@ export default function Prescriptions({ consultationId }) {
       setTimeout(() => setIsCopied(false), 1000);
     });
   };
+
+  if (isFetching) return <Loading />;
+  if (isError) return <p className="text-primary">Error fetching prescription: {error.message}</p>;
 
   return (
     <div className="h-[76vh]">
