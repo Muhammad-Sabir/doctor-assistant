@@ -83,7 +83,7 @@ export default function Prescriptions({ consultationId }) {
   const handleCopy = () => {
     const textToCopy = `
       medicines: ${formData.medicines
-        .map((med) => `${med.name}: ${med.instruction}`)
+        .map((med) => `${med.medicine_name}: ${med.instruction}`)
         .join(", ")}
       Additional Information: ${formData.additional_info}`.trim();
 
