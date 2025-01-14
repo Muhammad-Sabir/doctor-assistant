@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { BiErrorCircle } from "react-icons/bi";
@@ -12,33 +12,35 @@ export default function EmailVerificationMessage() {
     const { verify_uid, verify_token } = useParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('loading');
+    const hasVerified = useRef(false);
 
-    const { mutate: verifyAccount, isSuccess, isError } = useCreateUpdateMutation({
+    const { mutate: verifyAccount} = useCreateUpdateMutation({
         url: () => `user/verify-account/${verify_uid}/${verify_token}`,
         method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         fetchFunction: fetchApi,
         onSuccessMessage: 'Your account has been verified successfully.',
         onErrorMessage: 'Verification failed',
+        onSuccess: () => setStatus('success'),
+        onError: () => setStatus('error')
     });
 
     useEffect(() => {
-        verifyAccount(JSON.stringify({uid: verify_uid, token: verify_token}));
-    }, [verify_uid, verify_token, verifyAccount]);
-
+        if (!hasVerified.current) {
+            verifyAccount(); 
+            hasVerified.current = true;
+        }
+    }, []); 
+    
+    
     useEffect(() => {
-        if (isSuccess) {
-            setStatus('success');
+        if (status === 'success') {
             const timer = setTimeout(() => {
-                navigate('/login');
+                navigate('/login'); 
             }, 4000);
-
             return () => clearTimeout(timer);
         }
-        if (isError) {
-            setStatus('error');
-        }
-    }, [isSuccess, isError, navigate]);
+    }, [status, navigate]); 
 
     return (
         <div className="flex flex-col items-center justify-center min-h-[70vh] p-4">
