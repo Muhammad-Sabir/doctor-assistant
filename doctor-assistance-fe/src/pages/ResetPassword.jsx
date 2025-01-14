@@ -55,17 +55,8 @@ export default function ResetPassword() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const passwordsMatch = formData.password === formData.confirmPassword;
-        if (!passwordsMatch) {
-            setInputErrors({
-                ...inputErrors,
-                confirmPassword: 'Passwords do not match'
-            });
-            return;
-        }
-
         if (hasNoFieldErrors(inputErrors)) {
-            resetPassword(JSON.stringify({  uid: reset_uid, token: reset_token, password: formData.password}));
+            resetPassword(JSON.stringify({ password: formData.password}));
         }
     };
 
