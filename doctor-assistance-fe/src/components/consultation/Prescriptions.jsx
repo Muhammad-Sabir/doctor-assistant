@@ -1,45 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { IoCopyOutline, IoCopy } from 'react-icons/io5';
+import React, { useState, useEffect } from "react";
+import { IoCopyOutline, IoCopy } from "react-icons/io5";
 
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
-import { handleDownloadPDF } from '@/utils/pdf';
-import MedicationTable from '@/components/consultation/MedicationTable';
-import AddMedication from '@/components/dialogs/AddMedication';
-import { fetchWithAuth } from '@/utils/fetchApis';
-import { useFetchQuery } from '@/hooks/useFetchQuery';
-import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
-import Loading from '@/components/shared/Loading';
+import { handleDownloadPDF } from "@/utils/pdf";
+import MedicationTable from "@/components/consultation/MedicationTable";
+import AddMedication from "@/components/dialogs/AddMedication";
+import { fetchWithAuth } from "@/utils/fetchApis";
+import { useFetchQuery } from "@/hooks/useFetchQuery";
+import { useCreateUpdateMutation } from "@/hooks/useCreateUpdateMutation";
+import Loading from "@/components/shared/Loading";
 
 export default function Prescriptions({ consultationId }) {
-
   const [isCopied, setIsCopied] = useState(false);
   const [formData, setFormData] = useState({
     medicines: [],
-    additional_info: '',
+    additional_info: "",
   });
 
   const { data, isFetching, isError } = useFetchQuery({
     url: `prescriptions/${consultationId}/`,
-    queryKey: ['consultationPrescription', consultationId],
+    queryKey: ["consultationPrescription", consultationId],
     fetchFunction: fetchWithAuth,
   });
 
   const updatePrescriptionMutation = useCreateUpdateMutation({
-    url: `prescriptions/${consultationId}/`,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    url: `prescriptions/${data?.id}/`,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
     fetchFunction: fetchWithAuth,
-    onSuccessMessage: 'Successfully Updated Prescription',
-    onErrorMessage: 'Failed to Update Prescription',
+    onErrorMessage: "Failed to Update Prescription",
   });
 
   useEffect(() => {
     if (data) {
       setFormData({
-        medicines: data.medicines || [],
-        additional_info: data.additional_info || '',
+        medicines: data?.medicines || [],
+        additional_info: data?.additional_info || "",
       });
     }
   }, [data]);
@@ -58,7 +56,9 @@ export default function Prescriptions({ consultationId }) {
   const handleAddMedication = (newMedication) => {
     const updatedmedicines = [...formData.medicines, newMedication];
     setFormData((prev) => ({ ...prev, medicines: updatedmedicines }));
-    updatePrescriptionMutation.mutate(JSON.stringify({ medicines: updatedmedicines }));
+    updatePrescriptionMutation.mutate(
+      JSON.stringify({ medicines: updatedmedicines })
+    );
   };
 
   const handleUpdateMedication = (updatedMedication, index) => {
@@ -68,19 +68,23 @@ export default function Prescriptions({ consultationId }) {
     setFormData((prev) => ({ ...prev, medicines: updatedMedicines }));
 
     updatePrescriptionMutation.mutate(
-      JSON.stringify({ medicines: updatedMedicines }),
+      JSON.stringify({ medicines: updatedMedicines })
     );
   };
 
   const handleDeleteMedication = (index) => {
     const updatedmedicines = formData.medicines.filter((_, i) => i !== index);
     setFormData((prev) => ({ ...prev, medicines: updatedmedicines }));
-    updatePrescriptionMutation.mutate(JSON.stringify({ ...formData, medicines: updatedmedicines }));
+    updatePrescriptionMutation.mutate(
+      JSON.stringify({ ...formData, medicines: updatedmedicines })
+    );
   };
 
   const handleCopy = () => {
     const textToCopy = `
-      medicines: ${formData.medicines.map(med => `${med.name}: ${med.instruction}`).join(', ')}
+      medicines: ${formData.medicines
+        .map((med) => `${med.name}: ${med.instruction}`)
+        .join(", ")}
       Additional Information: ${formData.additional_info}`.trim();
 
     navigator.clipboard.writeText(textToCopy).then(() => {
@@ -90,13 +94,23 @@ export default function Prescriptions({ consultationId }) {
   };
 
   if (isFetching) return <Loading />;
-  if (isError) return <p className="text-primary">Error fetching prescription: {error.message}</p>;
+  if (isError)
+    return (
+      <p className="text-primary">
+        Error fetching prescription: {error.message}
+      </p>
+    );
 
   return (
     <div className="h-[76vh]">
-      <div id="prescription-content" className="h-[67vh] mb-5 overflow-y-scroll">
+      <div
+        id="prescription-content"
+        className="h-[67vh] mb-5 overflow-y-scroll"
+      >
         <div className="flex items-center justify-between">
-          <h3 className="-mt-2 text-sm font-medium leading-none text-primary peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Medications:</h3>
+          <h3 className="-mt-2 text-sm font-medium leading-none text-primary peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            Medications:
+          </h3>
           <AddMedication onAdd={handleAddMedication} />
         </div>
 
@@ -106,7 +120,9 @@ export default function Prescriptions({ consultationId }) {
           onDelete={handleDeleteMedication}
         />
 
-        <Label htmlFor="Padditional_info" className="text-primary mt-3">Additional Information:</Label>
+        <Label htmlFor="Padditional_info" className="mt-3 text-primary">
+          Additional Information:
+        </Label>
         <textarea
           name="additional_info"
           id="Padditional_info"
@@ -120,7 +136,16 @@ export default function Prescriptions({ consultationId }) {
       </div>
 
       <div className="flex justify-end gap-3">
-        <Button onClick={() => handleDownloadPDF('prescription-content', 'patient-prescription.pdf')}>Download PDF</Button>
+        <Button
+          onClick={() =>
+            handleDownloadPDF(
+              "prescription-content",
+              "patient-prescription.pdf"
+            )
+          }
+        >
+          Download PDF
+        </Button>
         <Button onClick={handleCopy} variant="outline">
           {isCopied ? <IoCopy /> : <IoCopyOutline />}
         </Button>

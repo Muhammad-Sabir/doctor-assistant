@@ -16,3 +16,7 @@ export const formatTime = (time) => {
         minutes: minutes || "",
     };
 };
+
+export const removeLeadingZeros = (str) => {
+    return str.replace(/^0+/, '');
+}

@@ -35,7 +35,7 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
             try:
                 self.audio_file.write(bytes_data)
             except Exception as e:
-                print("ERRRRRRRRRRRRRRRRORRRRRRRRRRRR ", e)
+                print("Error ", e)
         elif text_data:
             data = json.loads(text_data)
             if data.get('action') == 'stop_recording':
@@ -66,7 +66,6 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
                                       audio_data, bucket_name, s3_audio_path),
                     timeout=120
                 )
-            print("HERRE")
             # Trigger AWS Transcribe transcription
             await self.trigger_transcribe(bucket_name, s3_audio_path)
         except asyncio.TimeoutError:
@@ -120,6 +119,8 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
             status = job_status['TranscriptionJobStatus']
 
             if status == 'COMPLETED':
+                self.loading_message = ''
+                await self.send(text_data=json.dumps({'loading_message': self.loading_message}))
                 await self.retrieve_and_send_transcription(bucket_name)
                 break
             elif status == 'FAILED':
@@ -141,21 +142,20 @@ class ConsultationConsumer(AsyncWebsocketConsumer):
         audio_segments = transcript_json.get(
             "results", {}).get("audio_segments", [])
 
-        await self.create_transcription(audio_segments)
-        
+        await self.update_transcription(audio_segments)
+
         # Send transcription to the client
         await self.send(text_data=json.dumps({
             'message': 'Transcription completed',
             'transcription': audio_segments
         }))
-        
-    @database_sync_to_async
-    def create_transcription(self, audio_segments):
-        print("audio_segments:", audio_segments)
-        consultation = Consultation.objects.filter(id=self.consultation_id).first()
 
-        Transcription.objects.create(
-            consultation=consultation, 
-            transcription_text=audio_segments
-        )
-        
+    @database_sync_to_async
+    def update_transcription(self, audio_segments):
+        print("audio_segments:", audio_segments)
+        consultation = Consultation.objects.filter(
+            id=self.consultation_id).first()
+
+        transcription = Transcription.objects.get(consultation=consultation)
+        transcription.transcription_text = audio_segments
+        transcription.save()
