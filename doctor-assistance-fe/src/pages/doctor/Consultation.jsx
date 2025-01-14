@@ -41,7 +41,7 @@ export default function Consultation() {
         Waiting for notes to be generated, please wait.
       </h1>
     ),
-    consultationPrescriptions: <Prescriptions />,
+    consultationPrescriptions: <Prescriptions consultationId={consultationId} />,
   };
 
   return (

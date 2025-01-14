@@ -4,7 +4,7 @@ import { IoCopyOutline, IoCopy } from 'react-icons/io5';
 import { Button } from '@/components/ui/button';
 
 import { handleDownloadPDF } from '@/utils/pdf';
-import MedicationTable from '@/components/consultation/MedicationTable';
+import PatientMedicationTable from '@/components/consultation/PatientMedicationTable';
 
 export default function Prescription() {
 
@@ -42,7 +42,7 @@ export default function Prescription() {
         <h3 className="my-1 text-primary text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Prescription:</h3>
 
         <h3 className="mt-5 mb-3 text-primary text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Medications:</h3>
-        <MedicationTable medications={formData.medications} setMedications={(medications) => setFormData(prev => ({ ...prev, medications }))} />
+        <PatientMedicationTable medications={formData.medications} setMedications={(medications) => setFormData(prev => ({ ...prev, medications }))} />
 
         <h3 className="mt-5 mb-3 text-primary text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Prescribed Tests:</h3>
         <div className="mx-2 text-sm w-[90%] my-2">

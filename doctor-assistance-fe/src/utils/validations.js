@@ -170,17 +170,13 @@ const validationRules = {
     test: (value) => !value || value.trim().length >= 15,
     message: "Title must be at least 15 characters long",
   },
-  medication_name: {
+  medicine_name: {
     test: (value) => value.trim() !== "",
     message: "Name is required",
   },
-  medication_dosage: {
+  instruction: {
     test: (value) => value.trim() !== "",
-    message: "Dosage is required",
-  },
-  medication_frequency: {
-    test: (value) => value.trim() !== "",
-    message: "Frequency is required",
+    message: "Instruction is required",
   },
   overrideDate: {
     test: (value) => {
