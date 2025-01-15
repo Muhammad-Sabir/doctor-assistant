@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { PiVideoCameraLight, PiVideoCameraSlash } from "react-icons/pi";
 import { CiMicrophoneOn, CiMicrophoneOff } from "react-icons/ci";
 import { FiPhone, FiPhoneOff } from "react-icons/fi";
 import { MdOutlineVideoCameraFront } from "react-icons/md";
-
+import { useTranscriptionStore } from '@/store/transcriptionStore';
 import { useWebRTCContext } from '@/context/WebRTCContext';
 
 export default function DoctorVideoSection() {
@@ -19,6 +19,16 @@ export default function DoctorVideoSection() {
         localStream,
         remoteStream
     } = useWebRTCContext();
+
+    const { startTranscription, stopTranscription } = useTranscriptionStore();
+
+    useEffect(() => {
+        console.log("killer localStream", localStream);
+        if (localStream && remoteStream) {
+            console.log("localStream", localStream);
+            startTranscription(localStream, remoteStream, consultationId);
+        }
+    }, [localStream, remoteStream]);
 
     const toggleMute = () => {
         setIsMuted((prev) => !prev);
@@ -44,6 +54,7 @@ export default function DoctorVideoSection() {
         console.log('CallActive status:', isCallActive)
         if (isCallActive) {
             endCall();
+            stopTranscription();
         } else {
             startCall(consultationId);
         }

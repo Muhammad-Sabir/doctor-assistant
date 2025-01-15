@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PiVideoCameraLight, PiVideoCameraSlash } from "react-icons/pi";
 import { CiMicrophoneOn, CiMicrophoneOff } from "react-icons/ci";
 import { FiPhone, FiPhoneOff } from "react-icons/fi";
 import { MdOutlineVideoCameraFront } from "react-icons/md";
 import { useWebRTCContext } from '@/context/WebRTCContext';
+import { useTranscriptionStore } from '@/store/transcriptionStore';
 
 export default function PatientVideoSection() {
 
     const [isMuted, setIsMuted] = useState(false);
     const [isVideoOn, setIsVideoOn] = useState(true);
+
+    // const { transcription, loadingMessage, startTranscription, stopTranscription } = useTranscriptionStore();
 
     const {
         isCallActive,
@@ -17,6 +20,15 @@ export default function PatientVideoSection() {
         answerCall,
         endCall
     } = useWebRTCContext();
+
+
+    // useEffect(() => {
+    //     console.log("killer localStream", localStream);
+    //     if (localStream) {
+    //         console.log("localStream", localStream);
+    //         startTranscription(localStream, 11);
+    //     }
+    // }, [localStream]);
 
     const toggleMute = () => {
         setIsMuted((prev) => !prev);
@@ -41,6 +53,7 @@ export default function PatientVideoSection() {
     const toggleCall = () => {
         if (isCallActive) {
             endCall();
+            // stopTranscription();
         }
         answerCall();
     }

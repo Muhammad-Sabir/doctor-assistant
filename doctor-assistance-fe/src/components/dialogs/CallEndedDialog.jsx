@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 
 import { getAuthStatus } from '@/utils/auth';
 import { useWebRTCContext } from '@/context/WebRTCContext';
+import { useTranscriptionStore } from '@/store/transcriptionStore';
 
 export default function CallEndedDialog() {
 
@@ -13,13 +14,15 @@ export default function CallEndedDialog() {
     const role = user.role;
 
     const {isEndCall, setIsEndCall} = useWebRTCContext();
+    const { stopTranscription } = useTranscriptionStore();
 
     const navigate = useNavigate();
 
     const handleSubmit = () => {
         setIsEndCall(false);
         if (role === 'doctor') {
-            navigate('/doctor/home');
+            stopTranscription();
+            // navigate('/doctor/home');
         } else if (role === 'patient') {
             navigate('/patient/home');
         }
