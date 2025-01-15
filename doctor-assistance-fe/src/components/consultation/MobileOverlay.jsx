@@ -31,7 +31,7 @@ export default function MobileOverlay() {
 
     useEffect(() => {
         const currentPath = location.pathname;
-        const currentItem = [...accountLinks].find(item => currentPath.includes(item.url));
+        const currentItem = accountLinks.find(item => currentPath.includes(item.url));
         setActiveItem(currentItem ? currentItem.name : "Home");
 
     }, [location]);

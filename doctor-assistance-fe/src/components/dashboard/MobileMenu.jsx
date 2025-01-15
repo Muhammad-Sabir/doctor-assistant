@@ -21,7 +21,7 @@ export default function MobileMenu() {
 
     useEffect(() => {
         const currentPath = location.pathname;
-        const currentItem = [...items, ...accountLinks].find(item => currentPath.includes(item.url));
+        const currentItem = items.concat(accountLinks).find(item => currentPath.includes(item.url));
         setActiveItem(currentItem ? currentItem.name : "Home");
 
     }, [location, items]);

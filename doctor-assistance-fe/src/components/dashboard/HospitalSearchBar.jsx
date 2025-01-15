@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineSearch } from "react-icons/md";
 
@@ -18,6 +18,7 @@ const HospitalSearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchBy, setSearchBy] = useState("street_address");
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
   const navigate = useNavigate();
 
   const labels = {
@@ -38,15 +39,32 @@ const HospitalSearchBar = () => {
     setSearchQuery(item.name);
     navigate(`/patient/hospital/${item.id}`);
     setSelectedItem(item);
+    setIsSuggestionsOpen(false); 
   };
 
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
     setSelectedItem(null);
+    setIsSuggestionsOpen(true);
   };
 
+  const searchBarRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchBarRef.current && !searchBarRef.current.contains(e.target)) {
+        setIsSuggestionsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="px-2 mt-1">
+    <div className="px-2 mt-1" ref={searchBarRef}>
       <div className="flex items-center justify-between px-1 py-1 border border-gray-300 rounded-lg">
         <div className="font-semibold text-primary">
           <Select onValueChange={setSearchBy} value={searchBy}>
@@ -71,7 +89,7 @@ const HospitalSearchBar = () => {
             className="w-full px-4 py-2 text-sm border-none focus:outline-none focus-visible:outline-0 focus-visible:ring-0 focus-visible:border-0"
           />
 
-          {suggestions.length > 0 && (
+          {isSuggestionsOpen && suggestions.length > 0 && (
             <div className="absolute z-10 w-full mt-1 overflow-auto bg-white border border-gray-300 rounded shadow-lg max-h-60">
               {suggestions.map((item) => (
                 <div
