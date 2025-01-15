@@ -53,7 +53,7 @@ const SpecificSchedule = () => {
             <h2 className="mt-3 sm:mt-0 text-md font-medium text-primary mb-3">Your Customized Schedules:</h2>
 
             {Object.keys(groupedSchedules).length === 0 ? (
-                <p className="text-gray-500">You don't have any customized schedules.</p>
+                <p className="text-gray-500 text-sm ml-3">You don't have any customized schedules yet.</p>
             ) : (
                 <Accordion type="single" collapsible value={openDate} onValueChange={setOpenDate}>
                     {Object.keys(groupedSchedules).map((date) => (

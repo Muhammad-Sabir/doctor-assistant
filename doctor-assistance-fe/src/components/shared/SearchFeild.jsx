@@ -96,7 +96,7 @@ const SearchField = ({
         if (!hasSelectedItems()) {
             setInputError(prevErrors => ({
                 ...prevErrors,
-                [id]: "Please select at least one item."
+                [id]: `Please select at least one of the ${id}.`
             }));
         } else {
             setInputError(prevErrors => {
@@ -112,7 +112,7 @@ const SearchField = ({
                 <Label className={labelClassName}>{placeholder}</Label>
                 <Input
                     type="text"
-                    placeholder={`Search ${placeholder} to select...`}
+                    placeholder={`Search ${placeholder} to select at least one...`}
                     value={query}
                     onChange={handleChange}
                     className={`${inputErrors[id] ? 'border-red-500' : ''}`}

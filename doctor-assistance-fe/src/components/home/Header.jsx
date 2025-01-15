@@ -8,7 +8,7 @@ import logo from '@/assets/images/svg/logo-icon.svg';
 export default function Header() {
     return (
         <nav className="sticky top-0 left-0 z-50 py-3 bg-white border-b shadow-md md:py-4 section-padding">
-            <div className="flex items-center justify-between mx-auto max-w-7xl">
+            <div className="flex items-center justify-between mx-auto">
                 
                 <Link to={'/'} className="flex items-center">
                     <img src={logo} alt="Logo" className="w-8 h-8" />

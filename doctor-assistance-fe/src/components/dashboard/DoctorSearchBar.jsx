@@ -34,17 +34,10 @@ const DoctorSearchBar = () => {
   });
 
   const suggestions = data?.results || [];
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigate(`/patient/doctors/search-results?${searchBy}=${searchQuery}`, {
-        replace: true,
-      });
-    }
-  };
 
   const handleSuggestionClick = (item) => {
     setSearchQuery(item.name);
-    setIsSelected(true);
+    navigate(`/patient/doctors/search-results?${searchBy}=${item.name}`)
   };
 
   const handleInputChange = (e) => {
@@ -94,7 +87,7 @@ const DoctorSearchBar = () => {
           )}
         </div>
 
-        <button onClick={handleSearch}>
+        <button>
           <MdOutlineSearch className="mr-2 text-primary" fontSize={20} />
         </button>
       </div>

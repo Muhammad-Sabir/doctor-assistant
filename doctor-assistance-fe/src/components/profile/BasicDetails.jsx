@@ -4,7 +4,7 @@ import { BiSolidError } from "react-icons/bi";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-const PersonalDetails = ({ inputValues, handleChange, handleBlur, inputErrors }) => {
+const BasicDetails = ({ inputValues, handleChange, handleBlur, inputErrors }) => {
     return (
         <div className='mb-8'>
             <div className='grid lg:grid-cols-2 gap-5 mt-7 items-baseline'>
@@ -14,7 +14,7 @@ const PersonalDetails = ({ inputValues, handleChange, handleBlur, inputErrors })
                         id="name"
                         name='name'
                         type="text"
-                        placeholder="Enter your name..."
+                        placeholder="Enter your full name (First and Last)"
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={inputValues.name}
@@ -28,7 +28,10 @@ const PersonalDetails = ({ inputValues, handleChange, handleBlur, inputErrors })
                     )}
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="doctorBirthDate" className='text-gray-700 font-normal'>Date of Birth</Label>
+                    <div className='flex items-center justify-start gap-2'>
+                        <Label htmlFor="doctorBirthDate" className='text-gray-700 font-normal'>Date of Birth</Label>
+                        <span className='text-gray-700 text-sm '>(20 or older )</span>
+                    </div>
                     <Input
                         id="doctorBirthDate"
                         name="doctorBirthDate"
@@ -46,34 +49,21 @@ const PersonalDetails = ({ inputValues, handleChange, handleBlur, inputErrors })
                         </div>
                     )}
                 </div>
-            </div>
-
-            <div className='grid gap-2 mt-7 lg:mt-0.5'>
-                <Label className='text-gray-700 font-normal'>Gender</Label>
-                <div className="flex items-center">
-                    <input
-                        type="radio"
-                        id="M"
-                        name="gender"
-                        value="M"
-                        onChange={handleChange}
-                        checked={inputValues.gender === 'M'}
+                <div className="grid gap-2 mb-2 lg:mb-5 -mt-3">
+                    <Label htmlFor="registrationNo" className='text-gray-700 font-normal'>PMDC Registration No</Label>
+                    <Input
+                        id="registrationNo"
+                        name="registrationNo"
+                        type="text"
+                        className='bg-gray-200 cursor-not-allowed'
+                        placeholder="Enter your registration number..."
+                        readOnly
+                        value={inputValues.registrationNo || ''}
                     />
-                    <Label htmlFor="M" className='ml-2 font-normal'>Male</Label>
-                    <input
-                        type="radio"
-                        id="F"
-                        name="gender"
-                        value="F"
-                        onChange={handleChange}
-                        className='ml-6'
-                        checked={inputValues.gender === 'F'}
-                    />
-                    <Label htmlFor="F" className='ml-2 font-normal'>Female</Label>
                 </div>
             </div>
         </div>
     );
 };
 
-export default PersonalDetails;
+export default BasicDetails;

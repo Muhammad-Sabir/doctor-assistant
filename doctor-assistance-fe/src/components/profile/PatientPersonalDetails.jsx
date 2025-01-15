@@ -66,7 +66,7 @@ const PatientPersonalDetails = ({ patientData }) => {
                             id="name"
                             name='name'
                             type="text"
-                            placeholder="Enter your name..."
+                            placeholder="Enter your full name (First and Last)"
                             onChange={handleChange}
                             onBlur={handleBlur}
                             value={inputValues.name}
@@ -80,7 +80,10 @@ const PatientPersonalDetails = ({ patientData }) => {
                         )}
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="birthDate" className='text-gray-700 font-normal'>Date of Birth</Label>
+                        <div className='flex items-center justify-start gap-2'>
+                            <Label htmlFor="doctorBirthDate" className='text-gray-700 font-normal'>Date of Birth</Label>
+                            <span className='text-gray-700 text-sm '>(13 or older )</span>
+                        </div>
                         <Input
                             id="birthDate"
                             name="birthDate"
@@ -102,7 +105,7 @@ const PatientPersonalDetails = ({ patientData }) => {
 
                 <div className='grid gap-2 mt-7 lg:mt-0.5'>
                     <Label className='text-gray-700 font-normal'>Gender</Label>
-                    <div className="flex items-center">
+                    <div className="flex items-center mt-1 ml-4">
                         <input
                             type="radio"
                             id="M"

@@ -62,7 +62,7 @@ export default function TopDoctorsSection() {
     };
 
     return (
-        <section className="py-8 lg:py-14 section-padding">
+        <section id="topDoctors" className="py-8 lg:py-14 section-padding">
             <div className="flex-col flex-wrap items-center justify-center gap-y-8 lg:gap-y-0 md:flex-wrap lg:flex-nowrap lg:flex-row lg:justify-between lg:gap-x-8">
                 <div className="w-full text-center">
                     <Subtitle subtitle="Doctors" />

@@ -8,10 +8,11 @@ import { Label } from "@/components/ui/label"
 
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 
-export default function AddMedication() {
+export default function AddMedication({ onAdd }) {
 
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [inputErrors, setInputErrors] = useState({});
-    const [inputValues, setInputValues] = useState({ name: '', dosage: '', frequency: '' });
+    const [inputValues, setInputValues] = useState({ medicine_name: '', instruction: '' });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -29,11 +30,12 @@ export default function AddMedication() {
         if (!hasNoFieldErrors(inputErrors)) {
             return;
         }
-        console.log(inputValues)
+        onAdd(inputValues);
+        setIsDialogOpen(false);
     };
 
     return (
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
                 <Button className='mr-3 actionButton'>Add New</Button>
             </DialogTrigger>
@@ -48,57 +50,38 @@ export default function AddMedication() {
                     <div className="grid gap-2">
                         <Label htmlFor="medication_name" className='font-normal text-gray-700'>Name</Label>
                         <Input
-                            id="medication_name"
-                            name='name'
+                            id="medicine_name"
+                            name='medicine_name'
                             type="text"
                             placeholder="Enter medication name..."
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={inputValues.name}
-                            className={inputErrors.medication_name ? 'border-red-500' : ''}
+                            value={inputValues.medicine_name}
+                            className={inputErrors.medicine_name ? 'border-red-500' : ''}
                             required
                         />
-                        {inputErrors.medication_name && (
+                        {inputErrors.medicine_name && (
                             <div aria-live="assertive" className="flex text-sm text-red-500">
-                                <BiSolidError color='red' className="mt-1 mr-1" /> {inputErrors.medication_name}
+                                <BiSolidError color='red' className="mt-1 mr-1" /> {inputErrors.medicine_name}
                             </div>
                         )}
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="medication_dosage" className='font-normal text-gray-700'>Dosage</Label>
+                        <Label htmlFor="instruction" className='font-normal text-gray-700'>Instruction</Label>
                         <Input
-                            id="medication_dosage"
-                            name='dosage'
+                            id="instruction"
+                            name='instruction'
                             type="text"
-                            placeholder="Enter medication dosage..."
+                            placeholder="Enter instruction..."
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={inputValues.dosage}
-                            className={inputErrors.medication_dosage ? 'border-red-500' : ''}
+                            value={inputValues.instruction}
+                            className={inputErrors.instruction ? 'border-red-500' : ''}
                             required
                         />
-                        {inputErrors.medication_dosage && (
+                        {inputErrors.instruction && (
                             <div aria-live="assertive" className="flex text-sm text-red-500">
-                                <BiSolidError color='red' className="mt-1 mr-1" /> {inputErrors.medication_dosage}
-                            </div>
-                        )}
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="medication_frequency" className='font-normal text-gray-700'>Freuqency</Label>
-                        <Input
-                            id="medication_frequency"
-                            name='frequency'
-                            type="text"
-                            placeholder="Enter medication Frequency..."
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={inputValues.frequency}
-                            className={inputErrors.medication_frequency ? 'border-red-500' : ''}
-                            required
-                        />
-                        {inputErrors.medication_frequency && (
-                            <div aria-live="assertive" className="flex text-sm text-red-500">
-                                <BiSolidError color='red' className="mt-1 mr-1" /> {inputErrors.medication_frequency}
+                                <BiSolidError color='red' className="mt-1 mr-1" /> {inputErrors.instruction}
                             </div>
                         )}
                     </div>
@@ -108,5 +91,5 @@ export default function AddMedication() {
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
+    );
 }

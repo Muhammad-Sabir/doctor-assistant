@@ -82,7 +82,7 @@ export default function Login() {
                 <Link to={'/'}>
                     <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
                 </Link>
-                <h1 className="text-3xl font-bold mb-2">Login</h1>
+                <h1 className="text-xl font-bold mb-2">Login</h1>
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                     <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger className='mr-3' value="patient">Patient</TabsTrigger>

@@ -15,7 +15,6 @@ export default function PatientAllergies({ patientId }) {
     const patientAllergies = data?.results || []
 
     if (isFetching) { return <div className="text-gray-500 text-sm">Loading...</div>; }
-
     if (isError) { return <div className="text-red-500">Error: {error.message}</div>; }
 
     return (

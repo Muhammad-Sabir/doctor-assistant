@@ -51,8 +51,8 @@ export default function VerifyEmail() {
             <Link to={'/'}>
                 <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
             </Link>
-            <h1 className="text-3xl font-bold">Verify Your Email</h1>
-            <p className="text-gray-600 mb-6">
+            <h1 className="text-xl font-bold">Verify Your Email</h1>
+            <p className="text-gray-600 mb-6 text-sm">
                 {email ? "We have sent a verification link to:" : "Please enter your email address to receive a verification link:"}
             </p>
             <form className="grid gap-4" onSubmit={handleResendEmail}>

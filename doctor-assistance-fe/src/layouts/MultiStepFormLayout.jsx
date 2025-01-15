@@ -52,8 +52,8 @@ export default function MultiStepFormLayout() {
                             <Link to={'/'}>
                                 <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
                             </Link>
-                            <h1 className="text-3xl font-bold mb-2">Complete Your Profile</h1>
-                            <p className="text-balance text-muted-foreground mb-2 -mt-2">
+                            <h1 className="text-xl font-bold mb-2">Complete Your Profile</h1>
+                            <p className="text-sm text-muted-foreground mb-2 -mt-2">
                                 Enter your complete information to continue
                             </p>
                         </div>

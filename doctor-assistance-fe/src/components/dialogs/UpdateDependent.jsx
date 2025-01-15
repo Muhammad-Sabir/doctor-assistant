@@ -14,7 +14,7 @@ import { fetchWithAuth } from '@/utils/fetchApis';
 import { relationshipOptions } from '@/assets/data/relationshipOptions';
 
 const UpdateDependent = ({ selectedDependent }) => {
-    
+
     const [inputErrors, setInputErrors] = useState({});
     const [dependent, setDependent] = useState(selectedDependent);
 
@@ -91,7 +91,7 @@ const UpdateDependent = ({ selectedDependent }) => {
                             name='name'
                             type="text"
                             value={dependent.name}
-                            placeholder="Enter dependent's name..."
+                            placeholder="Enter dependent's full name..."
                             onChange={handleChange}
                             onBlur={handleBlur}
                             className={inputErrors.name ? 'border-red-500' : 'border-gray-300'}
@@ -144,28 +144,29 @@ const UpdateDependent = ({ selectedDependent }) => {
                             />
                             <Label htmlFor="F" className='ml-2 font-normal'>Female</Label>
                         </div>
-                        <div className="grid gap-2 mt-0.5">
-                        <Label htmlFor="relationship" className='text-gray-700 font-normal'>Relationship</Label>
-                        <div className="text-gray-500">
-                            <Select value={dependent.relationship} onValueChange={handleSelectChange}>
-                                <SelectTrigger id="relationship" className={`${inputErrors.relationship ? 'border-red-500' : ''}`}>
-                                    <SelectValue placeholder="Select dependent relationship (dependent is the)" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {relationshipOptions.map((option) => (
-                                        <SelectItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            {inputErrors.relationship && (
-                                <div aria-live="assertive" className="flex text-red-500 text-sm mt-2">
-                                    <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.relationship}
-                                </div>
-                            )}
+
+                        <div className="grid gap-2 mt-3 mb-1">
+                            <Label htmlFor="relationship" className='text-gray-700 font-normal'>Relationship</Label>
+                            <div className="text-gray-500">
+                                <Select value={dependent.relationship} onValueChange={handleSelectChange}>
+                                    <SelectTrigger id="relationship" className={`${inputErrors.relationship ? 'border-red-500' : ''}`}>
+                                        <SelectValue placeholder="Select dependent relationship (dependent is the)" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {relationshipOptions.map((option) => (
+                                            <SelectItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {inputErrors.relationship && (
+                                    <div aria-live="assertive" className="flex text-red-500 text-sm mt-2">
+                                        <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.relationship}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
                     </div>
                     <DialogFooter>
                         <Button type="button" onClick={handleSubmit}>Save changes</Button>

@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 
 import { useCreateUpdateMutation } from "@/hooks/useCreateUpdateMutation";
 import { fetchWithAuth } from "@/utils/fetchApis";
-import { toHHMMFormat } from "@/utils/time";
+import TimePicker from "@/components/shared/TimePicker";
+import { toHHMMFormat, formatTime, formatTimeString } from "@/utils/time";
 
 export default function UpdateSchedule({ scheduleData }) {
     const [formData, setFormData] = useState({
@@ -72,7 +73,7 @@ export default function UpdateSchedule({ scheduleData }) {
                 </span>
             </DialogTrigger>
 
-            <DialogContent>
+            <DialogContent className='max-w-xl'> 
                 <DialogHeader>
                     <DialogTitle>Update Schedule</DialogTitle>
                     <DialogDescription>
@@ -82,45 +83,40 @@ export default function UpdateSchedule({ scheduleData }) {
 
                 <div className="grid py-2">
                     <Label className="text-gray-700 text-sm font-normal">Timings</Label>
-                    <div className="overflow-y-auto max-h-64 p-2">
+                    <div className="p-2 overflow-y-auto max-h-28 sm:max-h-48">
                         {formData.timeSlots.map((slot, index) => (
                             <div key={index} className="flex items-center gap-3 mb-2 ml-2">
+                                <div className="flex flex-col">
+                                    <TimePicker value={formatTime(toHHMMFormat(slot.start_time))}
+                                        onChange={(value) => handleTimeSlotChange(index, "start_time", formatTimeString(value))} />
+                                </div>
+                                <div className="flex mx-2 text-sm mt-5 text-gray-600">To</div>
 
                                 <div className="flex flex-col">
-                                    <Label htmlFor={`start_time_${index}`} className="text-gray-600 font-normal text-sm mb-2">From</Label>
-                                    <Input type="time" id={`start_time_${index}`} value={slot.start_time} required
-                                        onChange={(e) => handleTimeSlotChange(index, "start_time", e.target.value)}
-                                    />
+                                    <TimePicker value={formatTime(toHHMMFormat(slot.end_time))}
+                                        onChange={(value) => handleTimeSlotChange(index, "end_time", formatTimeString(value))} />
                                 </div>
 
-                                <div className="flex text-gray-600 mt-5">-</div>
-
-                                <div className="flex flex-col">
-                                    <Label htmlFor={`end_time_${index}`} className="text-gray-600 font-normal text-sm mb-2">To</Label>
-                                    <Input type="time" id={`end_time_${index}`} value={slot.end_time} required
-                                        onChange={(e) => handleTimeSlotChange(index, "end_time", e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="flex flex-col">
-                                    <Label htmlFor={`duration_${index}`} className="text-gray-600 font-normal text-sm mb-2">Duration </Label>
-                                    <Input type="text" id={`duration_${index}`} value={slot.duration} required className="w-32" placeholder="(minutes)"
+                                <div className="flex flex-col mx-2">
+                                    <Label htmlFor={`duration_${index}`} className="mb-1 text-sm font-normal text-gray-600">Duration</Label>
+                                    <Input type="text" id={`duration_${index}`} value={slot.duration}
                                         onChange={(e) => handleTimeSlotChange(index, "duration", e.target.value)}
+                                        required className="w-20" placeholder="mins"
                                     />
                                 </div>
 
                                 {formData.timeSlots.length === 1 ? (
-                                    <span onClick={addTimeSlot}><IoAddCircleOutline color="green" className="font-bold h-5 w-5 mt-7" /></span>
+                                    <span onClick={addTimeSlot}><IoAddCircleOutline color="green" className="w-5 h-5 font-bold mt-7" /> </span>
                                 ) : (
                                     <>
                                         {index === formData.timeSlots.length - 1 && (
                                             <>
-                                                <span onClick={addTimeSlot}><IoAddCircleOutline color="green" className="font-bold h-5 w-5 mt-7" /></span>
-                                                <span onClick={() => removeTimeSlot(index)}><IoCloseCircleOutline color="red" className="font-bold -ml-1 h-5 w-5 mt-7" /></span>
+                                                <span onClick={addTimeSlot}><IoAddCircleOutline color="green" className="w-5 h-5 font-bold mt-7" /></span>
+                                                <span onClick={() => removeTimeSlot(index)}><IoCloseCircleOutline color="red" className="w-5 h-5 -ml-1 font-bold mt-7" /></span>
                                             </>
                                         )}
                                         {index > 0 && index !== formData.timeSlots.length - 1 && (
-                                            <span onClick={() => removeTimeSlot(index)}><IoCloseCircleOutline color="red" className="font-bold h-5 w-5 mt-7" /></span>
+                                            <span onClick={() => removeTimeSlot(index)}><IoCloseCircleOutline color="red" className="w-5 h-5 font-bold mt-7" /></span>
                                         )}
                                     </>
                                 )}

@@ -11,7 +11,8 @@ export default {
 			'xxs': '0.6rem', 
 		},
   		screens: {
-  			xs: '356px'
+  			xs: '356px',
+			xlPlus: '1328px'
   		},
 		width: {
 			'102': '30rem', 

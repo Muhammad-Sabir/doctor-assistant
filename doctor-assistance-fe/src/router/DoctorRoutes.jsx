@@ -13,6 +13,7 @@ import MyPatients from '@/pages/doctor/MyPatients';
 import PatientDetails from '@/pages/doctor/PatientDetails';
 import MySchedule from '@/pages/doctor/MySchedule';
 import { WebRTCProvider } from '@/context/WebRTCContext';
+import MyAllConsultations from '@/pages/doctor/MyAllConsultations';
 
 export default function DoctorRoutes() {
     return (
@@ -26,12 +27,13 @@ export default function DoctorRoutes() {
                         <Route path="patient/:id" element={<PatientDetails />} />
                         <Route path="appointments" element={<Appointments />} />
                         <Route path="schedule" element={<MySchedule />} />
+                        <Route path="consultations" element={<MyAllConsultations />} />
                         <Route path="chats" element={<Chats />} />
                         <Route path="*" element={<Navigate to="home" replace />} />
                     </Route>
 
                     <Route element={<ConsultationLayout />}>
-                        <Route path="consultation/:patientId/:consultationId" element={<Consultation />} />
+                        <Route path="consultation/:patientId/:consultationId/:appointmentId" element={<Consultation />} />
                     </Route>
                 </Route>
             </Routes>

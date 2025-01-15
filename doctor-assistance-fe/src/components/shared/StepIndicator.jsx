@@ -4,10 +4,10 @@ const StepIndicator = () => {
     const currentStep = parseInt(sessionStorage.getItem('currentStep')) || 1;
 
     const stepNames = {
-        1: 'Enter your Personal Info',
+        1: 'Enter your Basic Info',
         2: 'Enter your Education Details',
         3: 'Enter your Work Details',
-        4: 'Enter your Professional Details'
+        4: 'Enter your Identity and Experience Details'
     };
 
     const getStepName = (step) => {

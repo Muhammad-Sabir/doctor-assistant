@@ -43,8 +43,8 @@ export default function ForgetPassword() {
             <Link to={'/'}>
                 <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
             </Link>
-            <h1 className="text-3xl font-bold">Forgot Password?</h1>
-            <p className="text-gray-600 mb-6">
+            <h1 className="text-xl font-bold">Forgot Password?</h1>
+            <p className="text-gray-600 mb-6 text-sm">
                 Please enter your email address below to receive a password reset link
             </p>
             <form className="grid gap-4" onSubmit={handleSubmit}>

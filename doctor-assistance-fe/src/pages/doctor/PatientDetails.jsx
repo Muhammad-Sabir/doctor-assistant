@@ -15,7 +15,7 @@ import AddAllergy from "@/components/dialogs/AddAllergy";
 import userIcon from "@/assets/images/webp/userIcon.webp";
 import banner from "@/assets/images/webp/profileBanner.webp";
 import PatientAllergies from "@/components/consultation/PatientAllergies";
-import PatientConsultations from "@/components/consultation/PatientConsultations";
+import PatientDetailedConsultations from "@/components/consultation/PatientDetailedConsultations";
 
 export default function PatientDetail() {
   const { id } = useParams();
@@ -105,7 +105,7 @@ export default function PatientDetail() {
             Past Consultations
           </h2>
           <div className="grid grid-cols-1 gap-4 mt-2 lg:grid-cols-2">
-            <PatientConsultations patientId={id} />
+            <PatientDetailedConsultations patientId={id} />
           </div>
         </div>
       </div>
