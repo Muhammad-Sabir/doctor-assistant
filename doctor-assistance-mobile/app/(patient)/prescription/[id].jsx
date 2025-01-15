@@ -56,11 +56,11 @@ export default function Prescription() {
                     key={index}
                     className="p-3 border border-gray-300 rounded mb-5"
                   >
-                    <View className='flex-1 items-center justify-start gap-2'>
+                    <View className='flex-1 justify-start gap-2'>
                       <Text className="text-base text-primary font-semibold">Medicine:</Text>
                       <Text className='text-gray-600'>{med.medicine_name}</Text>
                     </View>
-                    <View className='flex-1 items-center justify-start gap-2'>
+                    <View className='flex-1 justify-start gap-2'>
                       <Text className="text-base text-primary font-semibold">Instruction:</Text>
                       <Text className='text-gray-600'>{med.instruction}</Text>
                     </View>
