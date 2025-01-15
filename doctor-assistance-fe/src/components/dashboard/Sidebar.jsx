@@ -4,15 +4,22 @@ import { Link, useLocation } from 'react-router-dom';
 import logoIcon from '@/assets/images/svg/logo-icon.svg';
 import { getAuthStatus } from '@/utils/auth';
 import { menuItems, accountLinks } from '@/components/shared/MenuData';
+import ChatBadge from '@/components/shared/ChatBadge';
+import useChatNotificationStore from '@/store/ChatNotificationStore';
 
 export default function Sidebar() {
   const { user } = getAuthStatus();
+  const { initializeNotifications, resetCount } = useChatNotificationStore();
   const role = user?.role;
 
   const location = useLocation(); 
 
   const [activeItem, setActiveItem] = useState("");
   const items = menuItems[role] || [];
+  
+  useEffect(() => {
+    initializeNotifications();
+  }, [getAuthStatus]);
 
   useEffect(() => {
     if (items.length > 0) {
