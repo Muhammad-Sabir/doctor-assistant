@@ -23,7 +23,7 @@ const Footer = () => {
 
   ];
   const quicklinks3 = [
-    { name: 'SignUp', url: '/signup' },
+    { name: 'Sign Up', url: '/signup' },
     { name: 'Login', url: '/login' },
     { name: 'Get Mobile App', url: 'https://drive.google.com/drive/folders/18jguCAutzK3pfUGV5pJvPum2tcF7_5-9?usp=drive_link' },
   ];
