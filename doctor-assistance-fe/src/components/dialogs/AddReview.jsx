@@ -107,7 +107,7 @@ export default function AddReview({ doctorId, doctorName }) {
                             onBlur={handleBlur}
                             className={`${inputErrors.comment ? 'border-red-500' : ''}`}
                             rows="4"
-                            placeholder="Write your review..."
+                            placeholder="Write your comment..."
                         />
                         {inputErrors.comment && (
                             <div className="flex items-center text-red-500 text-sm">

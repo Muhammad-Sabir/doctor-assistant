@@ -19,7 +19,7 @@ export default function DependentPatientsDetails({ patientData }) {
         <div className="w-full">
             <AddDependent />
 
-            <h2 className="text-sm font-medium text-primary mb-4">Your Dependent Patients:</h2>
+            <h2 className="text-sm font-medium text-primary mb-5">Your Dependent Patients:</h2>
 
             {dependentDetails.length > 0 ? (
                 <>

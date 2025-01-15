@@ -55,8 +55,8 @@ export default function Appointments() {
   };
 
   const handleSelectChange = (value, field) => {
-      setFilters((prev) => ({ ...prev, [field]: value }));
-    };
+    setFilters((prev) => ({ ...prev, [field]: value }));
+  };
 
   useEffect(() => {
     setPage(1);
@@ -76,9 +76,9 @@ export default function Appointments() {
       appointment.patient_name.toLowerCase().includes(filters.patientName.toLowerCase()));
 
   const matchesMode = (appointment) =>
-    !filters.mode ||
-    (appointment.appointment_mode &&
-      appointment.appointment_mode === filters.mode);
+    !filters.mode || filters.mode === "none" ||
+    (appointment.appointment_mode && appointment.appointment_mode === filters.mode);
+
 
   const filteredAppointments = appointments.filter((appointment) => {
     if (activeTab === "upcoming") return !appointment.completed;

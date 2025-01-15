@@ -34,14 +34,9 @@ const HospitalSearchBar = () => {
 
   const suggestions = data?.results || [];
 
-  const handleSearch = () => {
-    if (selectedItem) {
-      navigate(`/patient/hospital/${selectedItem.id}`);
-    }
-  };
-
   const handleSuggestionClick = (item) => {
     setSearchQuery(item.name);
+    navigate(`/patient/hospital/${item.id}`);
     setSelectedItem(item);
   };
 
@@ -91,7 +86,7 @@ const HospitalSearchBar = () => {
           )}
         </div>
 
-        <button onClick={handleSearch}>
+        <button>
           <MdOutlineSearch className="mr-2 text-primary" fontSize={20} />
         </button>
       </div>
