@@ -14,7 +14,7 @@ const BasicDetails = ({ inputValues, handleChange, handleBlur, inputErrors }) =>
                         id="name"
                         name='name'
                         type="text"
-                        placeholder="Enter your name..."
+                        placeholder="Enter your full name (First and Last)"
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={inputValues.name}
@@ -28,7 +28,10 @@ const BasicDetails = ({ inputValues, handleChange, handleBlur, inputErrors }) =>
                     )}
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="doctorBirthDate" className='text-gray-700 font-normal'>Date of Birth</Label>
+                    <div className='flex items-center justify-start gap-2'>
+                        <Label htmlFor="doctorBirthDate" className='text-gray-700 font-normal'>Date of Birth</Label>
+                        <span className='text-gray-700 text-sm '>(20 or older )</span>
+                    </div>
                     <Input
                         id="doctorBirthDate"
                         name="doctorBirthDate"

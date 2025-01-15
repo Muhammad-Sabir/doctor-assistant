@@ -107,7 +107,7 @@ export default function CompleteProfileStep4() {
 
                 <div className='grid gap-2 mb-5'>
                     <div className="grid w-full max-w-sm items-center gap-1.5">
-                        <Label htmlFor="picture">Upload Image</Label>
+                        <Label htmlFor="picture" className='mb-1'>Upload Image</Label>
                         <Input
                             id="picture"
                             name="picture"
@@ -126,7 +126,10 @@ export default function CompleteProfileStep4() {
                 </div>
 
                 <div className="grid gap-2 mb-5">
-                    <Label htmlFor="experience">Experience</Label>
+                    <div className='flex items-center justify-start gap-2'>
+                        <Label htmlFor="doctorBirthDate">Experience </Label>
+                        <span className='text-gray-700 text-sm '>(1 year or more )</span>
+                    </div>
                     <Input
                         id="experience"
                         name="experience"
@@ -146,7 +149,7 @@ export default function CompleteProfileStep4() {
                 </div>
                 <div className='grid gap-2 mb-3'>
                     <Label>Gender</Label>
-                    <div>
+                    <div className='ml-4'>
                         <input
                             type="radio"
                             id="M"

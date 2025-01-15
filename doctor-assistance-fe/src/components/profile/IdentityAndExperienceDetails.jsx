@@ -9,7 +9,11 @@ const IdentityAndExperienceDetails = ({ inputValues, handleChange, handleBlur, i
         <div className='grid lg:grid-cols-2 mt-7 items-baseline'>
 
             <div className="grid gap-2 mb-5">
-                <Label htmlFor="experience" className='text-gray-700 font-normal'>Experience (in years)</Label>
+                <div className='flex items-center justify-start gap-2'>
+                    <Label htmlFor="experience" className='text-gray-700 font-normal'>Experience</Label>
+                    <span className='text-gray-700 text-sm '>(1 year or more )</span>
+                </div>
+
                 <Input
                     id="experience"
                     name="experience"
@@ -37,7 +41,7 @@ const IdentityAndExperienceDetails = ({ inputValues, handleChange, handleBlur, i
                         value="M"
                         onChange={handleChange}
                         checked={inputValues.gender === 'M'}
-                        
+
                     />
                     <Label htmlFor="M" className='ml-2 font-normal'>Male</Label>
                     <input

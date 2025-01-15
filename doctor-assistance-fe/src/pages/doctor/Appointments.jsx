@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import ProfileTabs from '@/components/shared/ProfileTabs';
 import AppoitmentCard from '@/components/shared/AppointmentCard';
@@ -46,6 +53,10 @@ export default function Appointments() {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleSelectChange = (value, field) => {
+      setFilters((prev) => ({ ...prev, [field]: value }));
+    };
 
   useEffect(() => {
     setPage(1);
@@ -93,16 +104,19 @@ export default function Appointments() {
           onChange={handleChange}
           className="border p-2 mr-2 col-span-2"
         />
-        <select
-          id='mode'
-          name='mode'
-          value={filters.mode}
-          onChange={handleChange}
-          className='flex h-9 w-full text-gray-500 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'>
-          <option value="">All Modes</option>
-          <option value="physical">Physical</option>
-          <option value="online">Online</option>
-        </select>
+
+        <div className="text-gray-500">
+          <Select onValueChange={(value) => handleSelectChange(value, "mode")} >
+            <SelectTrigger id='mode' name='mode' value={filters.mode}>
+              <SelectValue placeholder="Select Mode" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">All Modes</SelectItem>
+              <SelectItem value="physical">Physical</SelectItem>
+              <SelectItem value="online">Online</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="mt-4">

@@ -14,7 +14,7 @@ import { fetchWithAuth } from "@/utils/fetchApis";
 import { useFetchQuery } from "@/hooks/useFetchQuery";
 import { daysOfWeek } from "@/utils/day";
 import { validateField, hasNoFieldErrors, validateAllFields } from "@/utils/validations";
-import { formatTime, formatTimeString } from "@/utils/time";
+import { formatTime, formatTimeString, formatTimeValue } from "@/utils/time";
 
 export default function CreateSchedule() {
   const [formData, setFormData] = useState({
@@ -55,6 +55,13 @@ export default function CreateSchedule() {
   const handleTimeSlotChange = (index, field, value) => {
     const updatedTimeSlots = [...formData.timeSlots];
     updatedTimeSlots[index][field] = value;
+    setFormData((prev) => ({ ...prev, timeSlots: updatedTimeSlots }));
+  };
+  
+  const handleDurationBlurInSlot = (index, value) => {
+    const formattedDuration = formatTimeValue(value, 15, 120);
+    const updatedTimeSlots = [...formData.timeSlots];
+    updatedTimeSlots[index].duration = formattedDuration;
     setFormData((prev) => ({ ...prev, timeSlots: updatedTimeSlots }));
   };
 
@@ -106,7 +113,7 @@ export default function CreateSchedule() {
         <DialogHeader>
           <DialogTitle>Create Schedule</DialogTitle>
           <DialogDescription>
-            Set the details for the schedule you want to create.
+            Set the details for the schedule you want to create. Click Create when done.
           </DialogDescription>
         </DialogHeader>
 
@@ -118,7 +125,7 @@ export default function CreateSchedule() {
                 onValueChange={(value) => handleSelectChange(value, "hospitalId")} required
               >
                 <SelectTrigger className={`${inputErrors.hospitalId ? "border-red-500" : ""}`}>
-                  <SelectValue placeholder="Select a hospital" />
+                  <SelectValue placeholder="Select one of your affiliated hospitals" />
                 </SelectTrigger>
                 <SelectContent>
                   {isFetching ? (<SelectItem value="loading" disabled>Loading... </SelectItem>
@@ -182,7 +189,8 @@ export default function CreateSchedule() {
                     <Label htmlFor={`duration_${index}`} className="mb-1 text-sm font-normal text-gray-600">Duration</Label>
                     <Input type="text" id={`duration_${index}`} value={slot.duration}
                       onChange={(e) => handleTimeSlotChange(index, "duration", e.target.value)}
-                      required className="w-20" placeholder="mins"
+                      onBlur={(e) => handleDurationBlurInSlot(index, e.target.value)}
+                      required className="w-20 text-gray-600" placeholder="mins" min="15" max="120"
                     />
                   </div>
 
@@ -208,7 +216,7 @@ export default function CreateSchedule() {
         </div>
 
         <DialogFooter>
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button onClick={handleSubmit}>Create</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

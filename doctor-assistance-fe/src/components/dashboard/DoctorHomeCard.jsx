@@ -14,7 +14,7 @@ export default function DoctorHomeCards() {
           <div className="relative w-full md:col-span-2 h-52">
             <div className="flex h-full rounded-md bg-violet-100">
               <div className="flex flex-col justify-center w-full p-5 xl:p-8 md:w-1/2">
-                <h3 className="pb-2 text-lg font-bold text-primary">
+                <h3 className="pb-2 text-lg font-bold text-primary capitalize">
                   Manage Your Schedule and Availability
                 </h3>
                 <p className="mb-4 text-sm text-gray-600">

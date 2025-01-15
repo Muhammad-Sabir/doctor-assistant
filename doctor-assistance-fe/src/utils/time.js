@@ -20,3 +20,9 @@ export const formatTime = (time) => {
 export const removeLeadingZeros = (str) => {
     return str.replace(/^0+/, '');
 }
+
+export const formatTimeValue = (value, min, max) => {
+    let newValue = Math.max(min, Math.min(max, Number(value))); 
+    newValue = removeLeadingZeros(newValue.toString());
+    return newValue.padStart(2, "0");
+};

@@ -126,7 +126,11 @@ export default function CompleteProfileStep1() {
                     )}
                 </div>
                 <div className="grid gap-2 mb-5">
-                    <Label htmlFor="doctorBirthDate">Date of Birth</Label>
+                    <div className='flex items-center justify-start gap-2'>
+                        <Label htmlFor="doctorBirthDate">Date of Birth </Label>
+                        <span className='text-gray-700 text-sm '>(20 or older)</span>
+                    </div>
+
                     <Input
                         id="doctorBirthDate"
                         name="doctorBirthDate"

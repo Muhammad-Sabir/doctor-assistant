@@ -12,7 +12,7 @@ import { fetchWithAuth } from '@/utils/fetchApis';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import TimePicker from '@/components/shared/TimePicker';
 import { validateField, hasNoFieldErrors, validateAllFields } from '@/utils/validations';
-import { formatTime, formatTimeString } from '@/utils/time';
+import { formatTime, formatTimeString, formatTimeValue } from '@/utils/time';
 
 export default function OverrideSchedule() {
 
@@ -72,6 +72,17 @@ export default function OverrideSchedule() {
         setFormData((prev) => ({ ...prev, [id]: value }));
     };
 
+    const handleDurationChange = (e) => {
+        const { id, value } = e.target;
+        setFormData((prev) => ({ ...prev, [id]: value }));
+    };
+
+    const handleDurationBlur = (e) => {
+        const { id, value } = e.target;
+        const formattedDuration = formatTimeValue(value, 15, 120);
+        setFormData((prev) => ({ ...prev, [id]: formattedDuration }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -107,7 +118,7 @@ export default function OverrideSchedule() {
                 <DialogHeader>
                     <DialogTitle>Create Custom Schedule</DialogTitle>
                     <DialogDescription>
-                        Set the following details to create custom schedule for some date.
+                        Set the following details to create custom schedule for some date. Click Create when done
                     </DialogDescription>
                 </DialogHeader>
 
@@ -119,7 +130,7 @@ export default function OverrideSchedule() {
                                 onValueChange={(value) => handleSelectChange(value, 'hospitalId')} required
                             >
                                 <SelectTrigger className={`${inputErrors.hospitalId ? 'border-red-500' : ''}`}>
-                                    <SelectValue placeholder="Select a hospital" />
+                                    <SelectValue placeholder="Select one of your affiliated hospitals" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {isFetching ? (
@@ -179,8 +190,8 @@ export default function OverrideSchedule() {
                             </div>
                             <div className="flex flex-col mx-2">
                                 <Label htmlFor="duration" className='text-gray-600 text-sm font-normal mb-1'>Duration</Label>
-                                <Input type="number" id="duration" value={formData.duration} required
-                                    onChange={handleChange} className='w-32' placeholder="mins"
+                                <Input type="number" id="duration" value={formData.duration} required min="15" max="120"
+                                    onChange={handleDurationChange} onBlur={handleDurationBlur} className='w-32 text-gray-600' placeholder="mins"
                                 />
                             </div>
                         </div>
@@ -188,7 +199,7 @@ export default function OverrideSchedule() {
                 </div>
 
                 <DialogFooter>
-                    <Button onClick={handleSubmit}>Submit</Button>
+                    <Button onClick={handleSubmit}>Create</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

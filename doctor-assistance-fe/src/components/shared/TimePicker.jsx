@@ -2,28 +2,22 @@ import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-import { removeLeadingZeros } from "@/utils/time";
+import { formatTimeValue, removeLeadingZeros } from "@/utils/time";
 
 const TimePicker = ({ value, onChange }) => {
   const [hours, setHours] = useState(value?.hours || "00");
   const [minutes, setMinutes] = useState(value?.minutes || "00");
 
   const handleHoursChange = (e) => {
-    let newHours = Math.max(0, Math.min(24, Number(e.target.value)));
-
-    newHours = removeLeadingZeros(newHours.toString());
-
-    const formattedHours = newHours.padStart(2, "0");
+    const formattedHours = formatTimeValue(e.target.value, 0, 24);
     setHours(formattedHours);
     onChange({ hours: formattedHours, minutes });
   };
 
   const handleMinutesChange = (e) => {
-    let newMinutes = Math.max(0, Math.min(59, Number(e.target.value)));
-    newMinutes = removeLeadingZeros(newMinutes.toString());
-
-    setMinutes(newMinutes.padStart(2, "0"));
-    onChange({ hours, minutes: newMinutes.padStart(2, "0") });
+    const formattedMinutes = formatTimeValue(e.target.value, 0, 59); 
+    setMinutes(formattedMinutes);
+    onChange({ hours, minutes: formattedMinutes });
   };
 
   return (
