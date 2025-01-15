@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Link } from "react-router-dom";
 
 export default function UserProfileMenu({ userImageUrl }) {
 
