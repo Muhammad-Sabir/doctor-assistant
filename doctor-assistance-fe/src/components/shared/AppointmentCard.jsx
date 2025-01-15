@@ -41,7 +41,12 @@ export default function AppointmentCard({ appointment }) {
         {user.role === "doctor" ? (
           <p className="mb-1 text-sm text-gray-600">with {appointment.patient_name}</p>
         ) : (
-          <p className="mb-1 text-sm text-gray-600">with {appointment.doctor_name}</p>
+          <Link 
+            to={`/patient/doctor/${appointment.doctor}`} 
+            className="mb-1 text-sm text-gray-600 hover:text-primary hover:underline"
+          >
+            with {appointment.doctor_name}
+          </Link>
         )}
       </div>
 
