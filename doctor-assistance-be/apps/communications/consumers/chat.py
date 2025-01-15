@@ -114,18 +114,43 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     
     @database_sync_to_async
     def get_approved_appointments(self, profile):
-        # Fetch appointments for the primary patient and their dependents
-        profile_filter = Q(doctor=profile) if isinstance(profile, DoctorProfile) else Q(patient=profile) | Q(patient__primary_patient=profile)
+        if isinstance(profile, DoctorProfile):
+            # First, get all approved appointments
+            base_query = Appointment.objects.filter(
+                doctor=profile,
+                status='approved'
+            ).select_related(
+                'doctor__user',
+                'patient__user',
+                'patient__primary_patient__user'
+            )
 
-        appointments = Appointment.objects.filter(
-            profile_filter, 
+            # Get appointments with primary patients (primary_patient is null)
+            primary_appointments = base_query.filter(
+                patient__primary_patient__isnull=True
+            )
+
+            # Get appointments with dependent patients, but only if no primary patient exists
+            dependent_appointments = base_query.filter(
+                patient__primary_patient__isnull=False
+            ).exclude(
+                patient__primary_patient__in=primary_appointments.values('patient')
+            )
+
+            # Combine the queries and get distinct results
+            return primary_appointments.union(dependent_appointments).order_by('-created_at')
+        
+        # For patients, only get their own appointments
+        return Appointment.objects.filter(
+            patient=profile,
             status='approved'
         ).select_related(
-            'doctor__user', 
+            'doctor__user',
             'patient__user'
-        ).distinct('doctor', 'patient', 'status')
-
-        return appointments
+        ).distinct(
+            'doctor',
+            'status'
+        )
     
     @database_sync_to_async
     def serialize_contact_list(self, appointments, user):

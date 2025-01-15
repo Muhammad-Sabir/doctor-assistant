@@ -22,11 +22,16 @@ export default function Appointments() {
   const [page, setPage] = useState(1);
   const [resultPerPage, setResultPerPage] = useState(10);
 
-  const [activeTab, setActiveTab] = useState("approved");
+  const [activeTab, setActiveTab] = useState("upcoming");
   const [filters, setFilters] = useState({ doctorName: '', mode: '' });
 
+  const statusParam =
+    activeTab === "all" ? "" :
+      activeTab === "upcoming" || activeTab === "completed" ? "approved" :
+        activeTab;
+
   const { data, isFetching, isError, error } = useFetchQuery({
-    url: `appointments/?page=${page}${activeTab !== "all" ? `&status=${activeTab}` : ''}`,
+    url: `appointments/?page=${page}${statusParam ? `&status=${statusParam}` : ''}`,
     queryKey: ['patientAppointments', page, activeTab],
     fetchFunction: fetchWithAuth,
   });
@@ -59,9 +64,10 @@ export default function Appointments() {
 
   const appointmentTabs = [
     { label: "All", key: "all" },
-    { label: "Upcoming", key: "approved" },
+    { label: "Upcoming", key: "upcoming" },
     { label: "Pending", key: "pending" },
     { label: "Rejected", key: "rejected" },
+    { label: "Completed", key: "completed" },
   ];
 
   const matchesDoctor = (appointment) =>
@@ -74,9 +80,12 @@ export default function Appointments() {
     (appointment.appointment_mode && appointment.appointment_mode === filters.mode);
 
 
-  const filteredAppointments = appointments.filter(appointment =>
-    matchesDoctor(appointment) && matchesMode(appointment)
-  );
+  const filteredAppointments = appointments.filter((appointment) => {
+    if (activeTab === "upcoming") return !appointment.completed;
+    if (activeTab === "completed") return appointment.completed;
+
+    return matchesDoctor(appointment) && matchesMode(appointment);
+  });
 
   return (
     <div className='px-2 pb-4'>

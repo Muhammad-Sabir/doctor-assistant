@@ -1,27 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 
 export default function UserProfileMenu({ userImageUrl }) {
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    window.location.href = "/login";
-  };
-
-  const menuItems = [
-    { label: "Settings", onClick: () => {} },
-    { label: "Support", onClick: () => {} },
-    { label: "Logout", onClick: handleLogout },
-  ];
 
   return (
     <div className="hidden sm:block">
