@@ -14,7 +14,7 @@ export default function ChatWindow() {
     const [searchQuery, setSearchQuery] = useState("");
     const [contacts, setContacts] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     const currentChatMessagesEndRef = useRef(null);
     const { getSocket, resetCount } = useChatNotificationStore();
     const socketRef = useRef(getSocket());
@@ -138,7 +138,7 @@ export default function ChatWindow() {
                     <h2 className="text-md text-primary font-medium mb-4">My Chats</h2>
                     <Input
                         type="text"
-                        placeholder="Search by name..."
+                        placeholder="Search by doctor name..."
                         className="mb-3 sticky top-8 bg-slate-100 z-10"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -166,7 +166,9 @@ export default function ChatWindow() {
                             </div>
                         ))
                     ) : (
-                        <p>No chats yet.</p>
+                        <div className="p-3 flex items-center justify-center h-[calc(80vh-110px)]">
+                            <p className="text-gray-500 text-sm text-center">No chats yet. Chats with doctors will only be available after you book an appointment, and the doctor approves it.</p>
+                        </div>
                     )}
                 </div>
             </div>
@@ -210,7 +212,7 @@ export default function ChatWindow() {
                 ) : (
                     <div className="h-full flex flex-col items-center gap-3 justify-center text-gray-500">
                         <PiWechatLogoDuotone size={100} />
-                        <p>Select a chat to start messaging</p>
+                        <p className='text-sm'>Select a chat to start messaging</p>
                     </div>
                 )}
             </div>

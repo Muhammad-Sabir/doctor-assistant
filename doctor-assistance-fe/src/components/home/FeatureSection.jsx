@@ -11,7 +11,7 @@ export default function FeatureSection() {
     const features = activeTab === 'doctor' ? doctorFeatures : patientFeatures;
 
     return (
-        <section className="py-8 lg:py-10 section-padding">
+        <section id="feature" className="py-8 lg:py-10 section-padding">
             
             <div className="text-center mb-14">
                 <Subtitle subtitle="Features" />

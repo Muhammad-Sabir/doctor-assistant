@@ -27,7 +27,7 @@ export default function MyReviewCard({ review }) {
             <p className="font-medium text-gray-600 text-sm mb-2">{review.comment}</p>
 
             <div className='flex justify-between items-center'>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-gray-500">
                     <span className='hidden sm:inline-block mr-1'>Reviewed on</span>
                     {new Date(review.created_at).toLocaleDateString()}
                 </p>

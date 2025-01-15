@@ -67,7 +67,7 @@ export default function AddDependent() {
     return (
         <Dialog onOpenChange={handleDialogClose}>
             <DialogTrigger asChild>
-                <div className='flex justify-end mt-3'>
+                <div className='flex justify-end'>
                     <Button type="submit" onSubmit={handleSubmit}>Add New</Button>
                 </div>
             </DialogTrigger>
@@ -85,7 +85,7 @@ export default function AddDependent() {
                             id="name"
                             name='name'
                             type="text"
-                            placeholder="Enter dependent's name..."
+                            placeholder="Enter dependent's full name..."
                             onChange={handleChange}
                             onBlur={handleBlur}
                             value={inputValues.name}

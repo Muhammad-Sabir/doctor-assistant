@@ -73,8 +73,8 @@ const validationRules = {
     },
   },
   registrationNo: {
-    test: (value) => /^[A-Z0-9]{5,}$/i.test(value),
-    message: "PMDC Registration No. must be valid",
+    test: (value) => value.trim() !== "",
+    message: "Please enter your PMDC Registration No",
   },
   picture: {
     test: (file) => {
@@ -117,8 +117,8 @@ const validationRules = {
     message: "Rating must be between 1 and 5",
   },
   comment: {
-    test: (value) => value.trim().length >= 10,
-    message: "Comment must be at least 10 characters long",
+    test: (value) => value.trim() !== "",
+    message: "Please write a comment",
   },
   relationship: {
     test: (value) => value.trim() !== "",
@@ -138,15 +138,15 @@ const validationRules = {
   },
   appointmentTimeSlot: {
     test: (value) => value > 0,
-    message: "Time Slot is required",
+    message: "Please select Time Slot",
   },
   message: {
-    test: (value) => value.trim().length >= 10,
-    message: "Message must be at least 10 characters long",
+    test: (value) => value.trim() !== "",
+    message: "Please write a message",
   },
   cancellation_reason: {
-    test: (value) => !value || value.trim().length >= 10,
-    message: "Reason must be at least 10 characters long",
+    test: (value) => value.trim() !== "",
+    message: "Please write a cancellation reason",
   },
   date_of_appointment: {
     test: (value) => {
@@ -167,16 +167,16 @@ const validationRules = {
     },
   },
   consultation_title: {
-    test: (value) => !value || value.trim().length >= 15,
-    message: "Title must be at least 15 characters long",
+    test: (value) => value.trim() !== "",
+    message: "Please write a consultation title",
   },
   medicine_name: {
     test: (value) => value.trim() !== "",
-    message: "Name is required",
+    message: "Please write medicine name",
   },
   instruction: {
     test: (value) => value.trim() !== "",
-    message: "Instruction is required",
+    message: "Please wrrite a Instruction",
   },
   overrideDate: {
     test: (value) => {
@@ -196,8 +196,8 @@ const validationRules = {
     },
   },
   overrideReason: {
-    test: (value) => value.trim().length >= 10,
-    message: "Reason must be at least 10 characters long",
+    test: (value) => value.trim() !== "",
+    message: "Please enter the reason for override",
   },
 };
 

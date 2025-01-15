@@ -10,7 +10,7 @@ import heroVideo from '@/assets/videos/heroVideo.webm';
 
 const HeroSection = () => {
     return (
-        <section className="section-padding h-full py-11 lg:py-6">
+        <section id="home" className="section-padding h-full py-11 lg:py-6">
             <div className="flex justify-between items-center flex-col lg:flex-row">
 
                 <div className="w-full lg:w-1/2 text-center lg:text-left mr-6">

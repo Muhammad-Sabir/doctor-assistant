@@ -27,7 +27,7 @@ const FaqSection = () => {
     };
 
     return (
-        <section className="py-8 lg:py-14 section-padding">
+        <section id="faq" className="py-8 lg:py-14 section-padding">
             <div className="flex flex-col justify-center items-center gap-7 gap-y-5 xl:gap-10 lg:flex-row lg:justify-between">
 
                 <div className="w-full lg:w-1/2 order-2 lg:order-none">

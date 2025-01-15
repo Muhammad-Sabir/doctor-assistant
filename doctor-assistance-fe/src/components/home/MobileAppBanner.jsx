@@ -10,7 +10,7 @@ import Subtitle from '@/components/shared/Subtitle';
 
 export default function MobileAppBanner() {
     return (
-        <section className="py-8 lg:py-14 section-padding">
+        <section id="discover" className="py-8 lg:py-14 section-padding">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-9">
 
                 <div className="inline-flex flex-col items-center justify-center w-full gap-10 lg:items-start">
@@ -22,7 +22,7 @@ export default function MobileAppBanner() {
                             Access your health records anytime, anywhere.
                             Experience hassle-free appointments and consultations right from your phone.</p>
                         <Button className="block mx-auto mt-5 lg:mx-0">
-                            <Link className="flex" to="/">
+                            <Link className="flex" to="https://drive.google.com/drive/folders/18jguCAutzK3pfUGV5pJvPum2tcF7_5-9?usp=drive_link">
                                 <MdOutlineInstallMobile className="mt-1 mr-1" /> Download App Now
                             </Link>
                         </Button>

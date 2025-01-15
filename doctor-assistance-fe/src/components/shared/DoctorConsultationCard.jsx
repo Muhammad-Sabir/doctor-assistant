@@ -35,7 +35,7 @@ export default function DoctorConsultationCard({ consultation }) {
                 <MdOutlineDateRange /> {formatDate(consultation.appointment_date)}
             </p>
             <p className="text-sm flex items-center gap-2 text-gray-600">
-                <MdAccessTime /> At {toHHMMFormat(consultation.appointment_time)} on the dot
+                <MdAccessTime /> At {toHHMMFormat(consultation.appointment_time)} scheduled
             </p>
         </Link>
     );

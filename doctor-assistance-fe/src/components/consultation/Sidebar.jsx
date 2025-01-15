@@ -13,11 +13,11 @@ import logoIcon from '@/assets/images/svg/logo-icon.svg';
 import { getAuthStatus } from '@/utils/auth';
 import PatientInfo from '@/components/consultation/PatientInfo';
 import PatientAllergies from '@/components/consultation/PatientAllergies';
-import PatientConsultations from '@/components/consultation/PatientConsultations';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
+import PatientConsultationsList from '@/components/consultation/PatientConsultationsList';
 
 export default function Sidebar() {
 
@@ -71,7 +71,11 @@ export default function Sidebar() {
                                 </h2>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <PatientInfo patientId={patientId} />
+                                <div className='sm:w-44 px-1'>
+                                    <div className="space-y-2">
+                                        <PatientInfo patientId={patientId} />
+                                    </div>
+                                </div>
                             </AccordionContent>
                         </AccordionItem>
 
@@ -102,7 +106,7 @@ export default function Sidebar() {
                             </AccordionTrigger>
                             <AccordionContent>
                                 <div className='py-1 h-96 overflow-y-scroll flex flex-col gap-3'>
-                                    <PatientConsultations patientId={patientId} truncate={true} />
+                                    <PatientConsultationsList patientId={patientId} truncate={true} />
                                 </div>
                             </AccordionContent>
                         </AccordionItem>

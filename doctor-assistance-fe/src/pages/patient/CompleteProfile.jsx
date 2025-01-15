@@ -18,16 +18,16 @@ export default function CompleteProfile() {
   const completeProfileMutation = useCreateUpdateMutation({
     url: 'patients/',
     method: 'POST',
-    headers: {'Content-Type': 'application/json'},
+    headers: { 'Content-Type': 'application/json' },
     fetchFunction: fetchWithAuth,
     onSuccessMessage: 'Profile Successfully Setup',
     onErrorMessage: 'Profile Setup Failed',
     onSuccess: () => {
-        let user = JSON.parse(localStorage.getItem('user'));
-        localStorage.setItem('user', JSON.stringify({ ...user, is_profile_completed: true }));
-        navigate(`/${user.role}`)
+      let user = JSON.parse(localStorage.getItem('user'));
+      localStorage.setItem('user', JSON.stringify({ ...user, is_profile_completed: true }));
+      navigate(`/${user.role}`)
     }
-});
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,7 +49,7 @@ export default function CompleteProfile() {
 
     console.log(inputValues);
     const { name, birthDate, gender } = inputValues;
-    completeProfileMutation.mutate(JSON.stringify({ name, date_of_birth: birthDate, gender}))
+    completeProfileMutation.mutate(JSON.stringify({ name, date_of_birth: birthDate, gender }))
   };
 
   return (
@@ -75,7 +75,10 @@ export default function CompleteProfile() {
           )}
         </div>
         <div className="grid gap-2 mb-5">
-          <Label htmlFor="birthDate">Date of Birth</Label>
+          <div className='flex items-center justify-start gap-2'>
+            <Label htmlFor="birthDate">Date of Birth</Label>
+            <span className='text-gray-700 text-sm'>(13 years or older)</span>
+          </div>
           <Input
             id="birthDate"
             name="birthDate"
@@ -95,7 +98,7 @@ export default function CompleteProfile() {
         </div>
         <div className='grid gap-2 mb-3'>
           <Label>Gender</Label>
-          <div>
+          <div className='ml-4'>
             <input
               type="radio"
               id="M"

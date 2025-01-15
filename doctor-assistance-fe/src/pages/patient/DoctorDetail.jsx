@@ -124,7 +124,7 @@ export default function DoctorDetail() {
                                                 <FaStar key={index} className="text-yellow-400 mr-1" />
                                             ))}
                                         </div>
-                                        <p className="text-xs text-gray-400">
+                                        <p className="text-xs text-gray-500">
                                             <span className='hidden sm:inline-block mr-1'>Reviewed on</span>{new Date(review.created_at).toLocaleDateString()}
                                         </p>
                                     </div>

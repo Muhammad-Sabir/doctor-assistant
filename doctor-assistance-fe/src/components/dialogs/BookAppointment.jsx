@@ -105,7 +105,7 @@ export default function BookAppointment({ doctorId, doctorName, hospitals }) {
                 <Button className='ml-3' onClick={() => setAppointmentMode('physical')}>Visit Clinic</Button>
             </DialogTrigger>
 
-            <DialogContent>
+            <DialogContent className='max-h-[97vh] overflow-y-auto'>
                 <DialogHeader>
                     <DialogTitle>Book Appointment</DialogTitle>
                     <DialogDescription>
