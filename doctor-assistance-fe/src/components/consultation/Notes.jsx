@@ -20,7 +20,7 @@ const subsectionsMapping = {
   instructions: "Instructions: ",
 };
 
-export default function Notes({ notes }) {
+export default function Notes({ notes = {} }) {
   let parsedNotes = {};
 
   try {

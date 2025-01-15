@@ -61,7 +61,7 @@ export default function Consultation() {
     consultationNotes: notes ? (
       <Notes notes={notes?.description} isCompleted={isCompleted} />
     ) : (
-      <h1 className="flex items-center justify-center w-full h-72">
+      <h1 className="flex items-center justify-center w-full h-72 text-gray-600 animate-pulse">
         Waiting for notes to be generated, please wait.
       </h1>
     ),

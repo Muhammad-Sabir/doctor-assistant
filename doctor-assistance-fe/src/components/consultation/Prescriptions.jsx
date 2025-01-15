@@ -20,7 +20,7 @@ export default function Prescriptions({ consultationId }) {
   });
 
   const { data, isFetching, isError } = useFetchQuery({
-    url: `prescriptions/${consultationId}/`,
+    url: `prescriptions/?consultation_id=${consultationId}`,
     queryKey: ["consultationPrescription", consultationId],
     fetchFunction: fetchWithAuth,
   });
