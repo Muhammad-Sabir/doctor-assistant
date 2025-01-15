@@ -2,11 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaPaperPlane, FaArrowLeft } from 'react-icons/fa';
 import { TbUserCircle } from "react-icons/tb";
 import { PiWechatLogoDuotone } from "react-icons/pi";
-
 import { Input } from '@/components/ui/input';
 import Loading from '@/components/shared/Loading';
-
-import { getChatSocket } from '@/utils/chatSocket';
+import useChatNotificationStore from '@/store/ChatNotificationStore';
 import { formatChatPreviewDate } from '@/utils/date';
 
 export default function ChatWindow() {
@@ -18,10 +16,20 @@ export default function ChatWindow() {
     const [loading, setLoading] = useState(true);
     
     const currentChatMessagesEndRef = useRef(null);
-    const socketRef = useRef(getChatSocket());
+    const { getSocket, resetCount } = useChatNotificationStore();
+    const socketRef = useRef(getSocket());
 
     useEffect(() => {
         setupInitialSocketEvents();
+        
+        // Reset notification count when chat window is opened
+        resetCount();
+        
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.removeEventListener('message', handleSocketMessage);
+            }
+        };
     }, []);
 
     useEffect(() => {
@@ -29,10 +37,11 @@ export default function ChatWindow() {
     }, [currentChatMessages]);
 
     const setupInitialSocketEvents = () => {
-        socketRef.current.onmessage = handleSocketMessage;
-
-        const messageData = { source: 'contact_list' };
-        sendMessageToSocket(messageData);
+        if (socketRef.current) {
+            socketRef.current.addEventListener('message', handleSocketMessage);
+            const messageData = { source: 'contact_list' };
+            sendMessageToSocket(messageData);
+        }
     };
 
     const handleSocketMessage = (event) => {
@@ -46,14 +55,13 @@ export default function ChatWindow() {
                 break;
             case 'contact_list':
                 setContacts(response.data.contacts);
-                setLoading(false); 
-                break;
-            default:
+                setLoading(false);
                 break;
         }
     };
 
     const updateChatMessages = (data) => {
+        console.log('updateChatMessages: ', data);
         setCurrentChatMessages((prevMessages) => [...prevMessages, data.message]);
         setContacts((prevContacts) =>
             prevContacts.map((contact) =>
@@ -102,7 +110,7 @@ export default function ChatWindow() {
 
         setCurrentChatMessages((prevMessages) => [
             ...prevMessages,
-            { id: prevMessages.length + 1, user: "You", message: newMessage },
+            { id: prevMessages.length + 1, user: "You", message: newMessage, created_at: currentDate },
         ]);
         setContacts((prevContacts) =>
             prevContacts.map((contact) =>
@@ -140,7 +148,7 @@ export default function ChatWindow() {
                 <div className="space-y-2">
                     {filteredContacts.length > 0 ? (
                         filteredContacts.map(chat => (
-                            <div key={chat.id} className={`flex items-center p-3 rounded-md cursor-pointer ${selectedChat?.id === chat.id ? 'bg-accent' : 'bg-slate-100'} hover:bg-slate-200`}
+                            <div key={`${chat.id}-${chat.timestamp}`} className={`flex items-center p-3 rounded-md cursor-pointer ${selectedChat?.id === chat.id ? 'bg-accent' : 'bg-slate-100'} hover:bg-slate-200`}
                                 onClick={() => selectChat(chat)}>
                                 <div className="flex items-center justify-between w-full">
                                     <div className="flex items-center space-x-3">
@@ -177,7 +185,7 @@ export default function ChatWindow() {
 
                         <div className="flex-1 overflow-y-auto p-2">
                             {currentChatMessages.map((msg) => (
-                                <div key={msg.id} className={`flex ${msg.user === "You" ? "justify-end" : "justify-start"} mb-4`}>
+                                <div key={`${msg.id}-${msg.created_at}`} className={`flex ${msg.user === "You" ? "justify-end" : "justify-start"} mb-4`}>
                                     <div className={`max-w-xs px-4 py-2 rounded-md shadow-md ${msg.user === "You" ? "bg-secondary text-white" : "bg-white text-gray-800"}`}>
                                         <p className='text-sm'>{msg.user}: {msg.message}</p>
                                     </div>
