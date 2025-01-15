@@ -16,7 +16,6 @@ export default function EditableTitle({ consultationId, isCompleted, isAppointme
         url: `consultations/${consultationId}/`,
         queryKey: ['consultationDetails', consultationId],
         fetchFunction: fetchWithAuth,
-        enabled: !!consultationId,
     });
 
     const updateTitleMutation = useCreateUpdateMutation({

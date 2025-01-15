@@ -17,7 +17,7 @@ export default function Sidebar() {
   useEffect(() => {
     if (items.length > 0) {
       const currentPath = location.pathname;
-      const currentActiveItem = [...items, ...accountLinks].find(item => currentPath.includes(item.url));
+      const currentActiveItem = items.concat(accountLinks).find(item => currentPath.includes(item.url));
       setActiveItem(currentActiveItem ? currentActiveItem.name : "Home");
     }
   }, [location.pathname, items]);

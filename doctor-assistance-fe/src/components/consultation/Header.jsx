@@ -1,7 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { getAuthStatus } from '@/utils/auth';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { formatDate } from '@/utils/date';
@@ -14,14 +13,11 @@ const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
 
 export default function Header() {
     const { consultationId, appointmentId } = useParams();
-    const { user } = getAuthStatus();
-    const role = user?.role;
 
     const { data: doctorData } = useFetchQuery({
         url: 'doctors/me',
         queryKey: ['doctorName'],
         fetchFunction: fetchWithAuth,
-        enabled: role === 'doctor',
     });
 
     const { data: appointmentData, isFetching } = useFetchQuery({
