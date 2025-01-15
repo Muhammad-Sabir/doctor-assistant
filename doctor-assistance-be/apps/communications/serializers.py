@@ -1,7 +1,6 @@
 from django.db.models import Q
 from rest_framework import serializers
 
-from apps.profiles.models import PatientProfile, DoctorProfile
 from apps.communications.models import ChatMessage
 from apps.appointments.models import Appointment
 
@@ -32,20 +31,19 @@ class ContactSerializer(serializers.ModelSerializer):
         return obj.patient.name if user.role == 'doctor' else obj.doctor.name
         
     def get_last_message_preview(self, obj):
+        patient = obj.patient.user if obj.patient.user else obj.patient.primary_patient.user
+        doctor = obj.doctor.user
         last_message = ChatMessage.objects.filter(
-            Q(sender=obj.patient.user, receiver=obj.doctor.user) | 
-            Q(sender=obj.doctor.user, receiver=obj.patient.user)
+            Q(sender=patient, receiver=doctor) | 
+            Q(sender=doctor, receiver=patient)
         ).order_by('-created_at').first()
+
+        self.last_message = last_message;
         
         return last_message.message if last_message else 'No messages'
 
     def get_last_message_created_at(self, obj):
-        last_message = ChatMessage.objects.filter(
-            Q(sender=obj.patient.user, receiver=obj.doctor.user) | 
-            Q(sender=obj.doctor.user, receiver=obj.patient.user)
-        ).order_by('-created_at').first()
-        
-        return last_message.created_at.isoformat() if last_message else None
+        return self.last_message.created_at.isoformat() if self.last_message else None
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):

@@ -12,7 +12,7 @@ import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 
-export default function CreateConsultation({ patientId }) {
+export default function CreateConsultation({ patientId, appointmentId}) {
 
     const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ export default function CreateConsultation({ patientId }) {
         onErrorMessage: 'Failed to Create Consultation',
         onSuccess: (responseData) => {
             setTimeout(() => {
-                navigate(`/doctor/consultation/${patientId}/${responseData.data.id}`, {
+                navigate(`/doctor/consultation/${patientId}/${responseData.data.id}/${appointmentId}`, {
                     state: { patientName: responseData.data?.patient_name},
                 });
             }, 300);
@@ -52,7 +52,7 @@ export default function CreateConsultation({ patientId }) {
             return;
         }
         const { consultation_title } = inputValues;
-        createConsultationMutation.mutate(JSON.stringify({ title: consultation_title, patient: patientId }))
+        createConsultationMutation.mutate(JSON.stringify({ title: consultation_title, appointment: appointmentId }))
     };
 
     return (

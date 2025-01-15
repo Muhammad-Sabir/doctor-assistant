@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import ProfileTabs from '@/components/shared/ProfileTabs';
 import AppoitmentCard from '@/components/shared/AppointmentCard';
@@ -15,11 +22,16 @@ export default function Appointments() {
   const [page, setPage] = useState(1);
   const [resultPerPage, setResultPerPage] = useState(10);
 
-  const [activeTab, setActiveTab] = useState("approved");
+  const [activeTab, setActiveTab] = useState("upcoming");
   const [filters, setFilters] = useState({ patientName: '', mode: '' });
 
+  const statusParam =
+    activeTab === "all" ? "" :
+      activeTab === "upcoming" || activeTab === "completed" ? "approved" :
+        activeTab;
+
   const { data, isFetching, isError, error } = useFetchQuery({
-    url: `appointments/?page=${page}${activeTab !== "all" ? `&status=${activeTab}` : ''}`,
+    url: `appointments/?page=${page}${statusParam ? `&status=${statusParam}` : ''}`,
     queryKey: ['patientAppointments', page, activeTab],
     fetchFunction: fetchWithAuth,
   });
@@ -42,15 +54,20 @@ export default function Appointments() {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleSelectChange = (value, field) => {
+    setFilters((prev) => ({ ...prev, [field]: value }));
+  };
+
   useEffect(() => {
     setPage(1);
   }, [activeTab]);
 
   const appointmentTabs = [
     { label: "All", key: "all" },
-    { label: "Upcoming", key: "approved" },
+    { label: "Upcoming", key: "upcoming" },
     { label: "Pending", key: "pending" },
     { label: "Rejected", key: "rejected" },
+    { label: "Completed", key: "completed" },
   ];
 
   const matchesPatient = (appointment) =>
@@ -59,13 +76,16 @@ export default function Appointments() {
       appointment.patient_name.toLowerCase().includes(filters.patientName.toLowerCase()));
 
   const matchesMode = (appointment) =>
-    !filters.mode ||
-    (appointment.appointment_mode &&
-      appointment.appointment_mode === filters.mode);
+    !filters.mode || filters.mode === "none" ||
+    (appointment.appointment_mode && appointment.appointment_mode === filters.mode);
 
-  const filteredAppointments = appointments.filter(appointment =>
-    matchesPatient(appointment) && matchesMode(appointment)
-  );
+
+  const filteredAppointments = appointments.filter((appointment) => {
+    if (activeTab === "upcoming") return !appointment.completed;
+    if (activeTab === "completed") return appointment.completed;
+
+    return matchesPatient(appointment) && matchesMode(appointment);
+  });
 
   return (
     <div className='px-2 pb-4'>
@@ -84,16 +104,19 @@ export default function Appointments() {
           onChange={handleChange}
           className="border p-2 mr-2 col-span-2"
         />
-        <select
-          id='mode'
-          name='mode'
-          value={filters.mode}
-          onChange={handleChange}
-          className='flex h-9 w-full text-gray-500 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'>
-          <option value="">All Modes</option>
-          <option value="physical">Physical</option>
-          <option value="online">Online</option>
-        </select>
+
+        <div className="text-gray-500">
+          <Select onValueChange={(value) => handleSelectChange(value, "mode")} >
+            <SelectTrigger id='mode' name='mode' value={filters.mode}>
+              <SelectValue placeholder="Select Mode" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">All Modes</SelectItem>
+              <SelectItem value="physical">Physical</SelectItem>
+              <SelectItem value="online">Online</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="mt-4">

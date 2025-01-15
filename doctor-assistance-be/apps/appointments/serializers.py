@@ -27,6 +27,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         if user.role == 'patient':
             fields['status'].read_only = True
             fields['cancellation_reason'].read_only = True
+            fields['completed'].read_only = True
         elif user.role == 'doctor':
             fields['patient'].read_only = True
             fields['message'].read_only = True

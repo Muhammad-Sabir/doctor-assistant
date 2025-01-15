@@ -104,6 +104,7 @@ class Appointment(TimeStampedModel):
         on_delete=models.CASCADE,
         related_name='appointments'
     )
+    completed = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ['doctor', 'date_of_appointment', 'time_slot']

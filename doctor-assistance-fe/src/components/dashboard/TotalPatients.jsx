@@ -39,7 +39,7 @@ export default function TotalPatients() {
                         {chartData[0].patients.toLocaleString()}
                       </tspan>
                       <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
-                        Patients
+                        {totalPatients?.count === 1 ? 'Patient' : 'Patients'}
                       </tspan>
                     </text>
                   )
@@ -52,7 +52,7 @@ export default function TotalPatients() {
       </CardContent>
       <CardFooter className="flex-col text-sm -mt-6">
         <div className="leading-none text-muted-foreground">
-          Showing your apporoved patients till now
+          Showing your approved patients till now
         </div>
       </CardFooter>
     </Card>

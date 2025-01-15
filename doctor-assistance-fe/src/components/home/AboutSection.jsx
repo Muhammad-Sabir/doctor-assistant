@@ -5,7 +5,7 @@ import Subtitle from '@/components/shared/Subtitle';
 
 export default function AboutSection() {
     return (
-        <section className="py-8 lg:py-14 section-padding">
+        <section id="about" className="py-8 lg:py-14 section-padding">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-9">
                 
                 <div className="order-1 lg:order-none">

@@ -55,17 +55,8 @@ export default function ResetPassword() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const passwordsMatch = formData.password === formData.confirmPassword;
-        if (!passwordsMatch) {
-            setInputErrors({
-                ...inputErrors,
-                confirmPassword: 'Passwords do not match'
-            });
-            return;
-        }
-
         if (hasNoFieldErrors(inputErrors)) {
-            resetPassword(JSON.stringify({  uid: reset_uid, token: reset_token, password: formData.password}));
+            resetPassword(JSON.stringify({ password: formData.password}));
         }
     };
 
@@ -75,8 +66,8 @@ export default function ResetPassword() {
                 <Link to={'/'}>
                     <img src={logo} alt="Logo" className="mx-auto mb-4 h-10 w-100" />
                 </Link>
-                <h1 className="text-3xl font-bold">Reset Your Password</h1>
-                <p className="text-balance text-muted-foreground">
+                <h1 className="text-xl font-bold">Reset Your Password</h1>
+                <p className="text-sm text-muted-foreground">
                     Enter your new password and confirm it below.
                 </p>
             </div>

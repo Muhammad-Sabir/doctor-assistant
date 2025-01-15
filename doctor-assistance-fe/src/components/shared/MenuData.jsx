@@ -10,6 +10,7 @@ export const menuItems = {
         { icon: <TbClock24 className="h-5 w-5" />, url: "/doctor/schedule", name: "My Schedule" },
         { icon: <Users className="h-5 w-5" />, url: "/doctor/patients", name: "My Patients" },
         {icon: <LuCalendarClock className="h-5 w-5" />, url: "/doctor/appointments", name: "Appointments" },
+        {icon: <TbReportMedical className="h-5 w-5" />, url: "/doctor/consultations", name: "Consultations" },
         { icon: <TbBrandHipchat className="h-5 w-5" />, url: "/doctor/chats", name: "Chats" },
     ],
     patient: [

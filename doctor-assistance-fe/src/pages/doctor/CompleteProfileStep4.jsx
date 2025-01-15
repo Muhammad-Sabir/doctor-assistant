@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiSolidError } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa";
@@ -14,11 +14,9 @@ import { fetchWithAuth } from '@/utils/fetchApis';
 
 export default function CompleteProfileStep4() {
     const navigate = useNavigate();
-    const [inputValues, setInputValues] = useState({
-        registrationNo: '',
-        experience: '',
-        picture: null,
-    });
+
+    const [inputValues, setInputValues] = useState({ picture: null, experience: '', gender: 'M' });
+
     const [inputErrors, setInputErrors] = useState({});
 
     const completeProfileMutation = useCreateUpdateMutation({
@@ -46,13 +44,15 @@ export default function CompleteProfileStep4() {
         }
     };
 
+
     const handleBlur = (e) => {
-        const { id, value, files } = e.target;
+        const { id, value } = e.target;
         let inputValue = value;
 
         if (id === 'picture') {
             inputValue = files[0];
         }
+
         const errors = validateField(id, inputValue, inputErrors);
         setInputErrors(errors);
     };
@@ -79,7 +79,7 @@ export default function CompleteProfileStep4() {
         const hospitalIds = getIds('hospitals', finalData);
         const diseasesIds = getIds('diseases', finalData);
         const degreesIds = getIds('degrees', finalData);
-    
+
         const formData = new FormData();
         formData.append('name', finalData.name);
         formData.append('date_of_birth', finalData.doctorBirthDate);
@@ -93,8 +93,8 @@ export default function CompleteProfileStep4() {
         diseasesIds.forEach(id => { formData.append('diseases', id); });
 
         return formData;
-      };
-    
+    };
+
     const handlePrev = () => {
         sessionStorage.setItem('currentStep', 3);
         navigate('/complete-profile/doctor/three');
@@ -104,28 +104,10 @@ export default function CompleteProfileStep4() {
         <>
             <StepIndicator />
             <form onSubmit={handleSubmit}>
-                <div className="grid gap-2 mb-5">
-                    <Label htmlFor="registrationNo">PMDC Registration No</Label>
-                    <Input
-                        id="registrationNo"
-                        name="registrationNo"
-                        type="text"
-                        placeholder="Enter your registration number..."
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={inputValues.registrationNo || ''}
-                        className={inputErrors.registrationNo ? 'border-red-500' : ''}
-                        required
-                    />
-                    {inputErrors.registrationNo && (
-                        <div aria-live="assertive" className="flex text-red-500 text-sm">
-                            <BiSolidError color='red' className="mr-1 mt-1" /> {inputErrors.registrationNo}
-                        </div>
-                    )}
-                </div>
+
                 <div className='grid gap-2 mb-5'>
                     <div className="grid w-full max-w-sm items-center gap-1.5">
-                        <Label htmlFor="picture">Upload Image</Label>
+                        <Label htmlFor="picture" className='mb-1'>Upload Image</Label>
                         <Input
                             id="picture"
                             name="picture"
@@ -142,8 +124,12 @@ export default function CompleteProfileStep4() {
                         )}
                     </div>
                 </div>
+
                 <div className="grid gap-2 mb-5">
-                    <Label htmlFor="experience">Experience</Label>
+                    <div className='flex items-center justify-start gap-2'>
+                        <Label htmlFor="doctorBirthDate">Experience </Label>
+                        <span className='text-gray-700 text-sm '>(1 year or more )</span>
+                    </div>
                     <Input
                         id="experience"
                         name="experience"
@@ -161,6 +147,33 @@ export default function CompleteProfileStep4() {
                         </div>
                     )}
                 </div>
+                <div className='grid gap-2 mb-3'>
+                    <Label>Gender</Label>
+                    <div className='ml-4'>
+                        <input
+                            type="radio"
+                            id="M"
+                            name="gender"
+                            value="M"
+                            onChange={handleChange}
+                            checked={inputValues.gender === 'M'}
+                        />
+                        <Label htmlFor="M" className='ml-2 -mt-2 font-normal'>Male</Label>
+
+                        <input
+                            type="radio"
+                            id="F"
+                            name="gender"
+                            value="F"
+                            onChange={handleChange}
+                            className='ml-3'
+                            checked={inputValues.gender === 'F'}
+                        />
+                        <Label htmlFor="F" className='ml-2 -mt-2 font-normal'>Female</Label>
+                    </div>
+                </div>
+
+
                 <div className="flex justify-end">
                     <div
                         onClick={handlePrev}

@@ -8,6 +8,7 @@ import { useFetchQuery } from '@/hooks/useFetchQuery';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { formatDate } from '@/utils/date';
 import userIcon from "@/assets/images/webp/userIcon.webp";
+import { capitalizeWords } from '@/utils/strings';
 
 const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
 
@@ -37,7 +38,7 @@ export default function Header() {
             <div className="w-full flex-1">
                 <form>
                     <div className="relative">
-                        <p className="text-md font-semibold text-primary">Hello, {userName}</p>
+                        <p className="text-md font-semibold text-primary">{capitalizeWords(role)} Dashboard - Welcome, {userName}</p>
                     </div>
                 </form>
             </div>

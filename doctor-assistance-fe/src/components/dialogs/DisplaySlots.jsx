@@ -3,7 +3,7 @@ import { FiEye } from "react-icons/fi";
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
-import { convert24HrTo12Hr } from "@/utils/time";
+import {  toHHMMFormat } from "@/utils/time";
 
 const DisplaySlots = ({ dayName, hospitalName, timings, groupedSlots }) => {
     return (
@@ -24,8 +24,8 @@ const DisplaySlots = ({ dayName, hospitalName, timings, groupedSlots }) => {
                     {groupedSlots.length > 0 ? (
                         <ul className="list-disc list-inside">
                             {groupedSlots.map((slot, index) => (
-                                <li key={index} className="mb-2 text-gray-500 text-sm">
-                                    {convert24HrTo12Hr(slot.start_time)} - {convert24HrTo12Hr(slot.end_time)}
+                                <li key={index} className="mb-2 text-sm text-gray-500">
+                                    {toHHMMFormat(slot.start_time)} - {toHHMMFormat(slot.end_time)}
                                 </li>
                             ))}
                         </ul>

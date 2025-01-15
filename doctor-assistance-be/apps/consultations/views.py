@@ -22,7 +22,7 @@ from apps.consultations.serializers import (
     ConsultationSerializer, SOAPNotesSerializer,
     PrescriptionSerializer, TranscriptionSerializer
 )
-from apps.consultations.filters import ConsultationFilter, PrescriptionFilter
+from apps.consultations.filters import ConsultationFilter, PrescriptionFilter, TranscriptionFilter, SOAPNotesFilter
 
 logging.basicConfig(level=logging.INFO)
 
@@ -32,9 +32,18 @@ MODEL_PATH = os.path.join(settings.BASE_DIR, "mlmodel", "bart-soap")
 print("Model path:", MODEL_PATH)
 
 
-tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
-model = BartForConditionalGeneration.from_pretrained(MODEL_PATH)
-model.eval()
+def load_model_and_tokenizer():
+    # Load the trained model
+    model = BartForConditionalGeneration.from_pretrained(MODEL_PATH)
+
+    # Load the tokenizer
+    tokenizer = BartTokenizer.from_pretrained('facebook/bart-base')
+
+    return model, tokenizer
+
+
+model, tokenizer = load_model_and_tokenizer()
+
 
 logging.info("SOAP Notes model loaded successfully.")
 
@@ -42,7 +51,7 @@ logging.info("SOAP Notes model loaded successfully.")
 all_subsections = {
     **{
         "cc": ["cc :", "chief complaint :", "reason for visit :", "CHIEF COMPLAINT"],
-        "hpi": ["history :", "history of present illness :", "history of present illness", "hpi :", "hpi", "hpi notes :", 
+        "hpi": ["history :", "history of present illness :", "history of present illness", "hpi :", "hpi", "hpi notes :",
                 "interval history :", "interval hx :", "subjective :", "HISTORY OF PRESENT ILLNESS"],
         "ros": ["ros :", "review of system :", "review of systems :", "REVIEW OF SYSTEMS"],
         "other_histories": ["SOCIAL HISTORY", "PAST HISTORY"]
@@ -65,7 +74,9 @@ all_subsections = {
     }
 }
 
-keyword_pattern = r"(?:" + "|".join([re.escape(keyword) for keywords in all_subsections.values() for keyword in keywords]) + ")"
+keyword_pattern = r"(?:" + "|".join([re.escape(keyword)
+                                     for keywords in all_subsections.values() for keyword in keywords]) + ")"
+
 
 def generate_soap_notes(conversation):
     inputs = tokenizer(
@@ -75,6 +86,7 @@ def generate_soap_notes(conversation):
         return_tensors="pt"
     )
 
+    model.eval()
     with torch.no_grad():
         generated_ids = model.generate(
             input_ids=inputs['input_ids'],
@@ -88,7 +100,8 @@ def generate_soap_notes(conversation):
         generated_ids[0],
         skip_special_tokens=True,
         clean_up_tokenization_spaces=False
-    ).replace("\n", " ")
+    )
+    soap_notes = soap_notes.replace("\n", " ")
 
     matches = re.split(f"({keyword_pattern})", soap_notes, flags=re.IGNORECASE)
 
@@ -100,7 +113,7 @@ def generate_soap_notes(conversation):
         is_header = False
         for key, keywords in all_subsections.items():
             if part.strip().lower() in [k.lower() for k in keywords]:
-                if current_key: 
+                if current_key:
                     soap_notes_json[current_key] = buffer.strip()
                 current_key = key
                 buffer = ""
@@ -115,6 +128,7 @@ def generate_soap_notes(conversation):
 
     return json.dumps(dict(soap_notes_json))
 
+
 class ConsultationsViewSet(ModelViewSet):
     serializer_class = ConsultationSerializer
     filter_backends = [DjangoFilterBackend]
@@ -126,62 +140,65 @@ class ConsultationsViewSet(ModelViewSet):
         return [IsDoctorOrOwner()]
 
     def get_queryset(self):
-        return self.get_consultations(self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(doctor=self.request.user.doctor)
-
-    def get_consultations(self, user):
+        user = self.request.user
         if user.role == 'patient':
             return Consultation.objects.select_related(
-                'doctor__user',
-                'patient__user',
-                'patient__primary_patient__user'
+                'appointment__doctor__user',
+                'appointment__patient__user',
+                'appointment__patient__primary_patient__user',
+                'appointment__time_slot'
             ).filter(
-                Q(patient__user=user) | Q(patient__primary_patient__user=user)
+                Q(appointment__patient__user=user) |
+                Q(appointment__patient__primary_patient__user=user),
+                appointment__completed=True
             )
+
         return Consultation.objects.select_related(
-            'doctor__user',
-            'patient__user',
-            'patient__primary_patient__user'
-        ).filter(doctor__user=user)
+            'appointment__doctor__user',
+            'appointment__patient__user',
+            'appointment__patient__primary_patient__user',
+            'appointment__time_slot'
+        ).filter(appointment__doctor__user=user)
+
+    def perform_create(self, serializer):
+        # Save the consultation instance
+        consultation = serializer.save()
+
+        # Create related instances
+        Transcription.objects.create(
+            consultation=consultation, transcription_text="")
+        Prescription.objects.create(
+            consultation=consultation, medicines=[], additional_info="")
+
 
 class SOAPNotesViewSet(ModelViewSet):
     serializer_class = SOAPNotesSerializer
     permission_classes = [IsDoctor]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = SOAPNotesFilter
 
     def get_queryset(self):
         user = self.request.user
         return SOAPNotes.objects.select_related('consultation') \
-            .only('consultation', 'subject', 'description', 'created_at', 'updated_at') \
-            .filter(consultation__doctor=user.doctor)
-
-class TranscriptionViewSet(ModelViewSet):
-    serializer_class = TranscriptionSerializer
-    permission_classes = [IsDoctor]
-
-    def get_queryset(self):
-        user = self.request.user
-        return Transcription.objects.select_related('consultation') \
-            .only('consultation', 'transcription_text', 'created_at', 'updated_at') \
-            .filter(consultation__doctor=user.doctor)
+            .only('consultation', 'description', 'created_at', 'updated_at') \
+            .filter(consultation__appointment__doctor=user.doctor)
 
     def create(self, request, *args, **kwargs):
         # Serialize and validate the input data
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # Save the transcription instance
-        transcription = serializer.save()
+        transcription = serializer.data.get('transcription_text')
+        consultation_id = serializer.data.get('consultation')
+        consultation = Consultation.objects.filter(id=consultation_id).first()
 
         # Generate SOAP notes using the transcription text
-        transcription_text = transcription.transcription_text
-        soap_notes_text = generate_soap_notes(transcription_text)
+        processed_transcription = self.process_transcripts(transcription)
+        soap_notes_text = generate_soap_notes(processed_transcription)
 
         # Save the generated SOAP notes
         soap_notes = SOAPNotes.objects.create(
-            consultation=transcription.consultation,
-            subject='Generated SOAP Notes',
+            consultation=consultation,
             description=soap_notes_text
         )
 
@@ -194,6 +211,54 @@ class TranscriptionViewSet(ModelViewSet):
         }
 
         return Response(response_data, status=status.HTTP_201_CREATED)
+
+    def process_transcripts(self, transcripts):
+        return " ".join(
+            f"[{'doctor' if entry['speaker_label'] == 'spk_0' else 'patient'}] {
+                entry['transcript']}"
+            for entry in transcripts
+        )
+
+
+class TranscriptionViewSet(ModelViewSet):
+    serializer_class = TranscriptionSerializer
+    permission_classes = [IsDoctor]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TranscriptionFilter
+
+    def get_queryset(self):
+        user = self.request.user
+        # Fetch transcriptions related to consultations for the doctor's appointments
+        return Transcription.objects.filter(consultation__appointment__doctor=user.doctor)
+
+    # def create(self, request, *args, **kwargs):
+    #     # Serialize and validate the input data
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+
+    #     # Save the transcription instance
+    #     transcription = serializer.save()
+
+    #     # Generate SOAP notes using the transcription text
+    #     processed_transcription = self.process_transcripts(transcription.transcription_text)
+    #     soap_notes_text = generate_soap_notes(processed_transcription)
+
+    #     # Save the generated SOAP notes
+    #     soap_notes = SOAPNotes.objects.create(
+    #         consultation=transcription.consultation,
+    #         description=soap_notes_text
+    #     )
+
+    #     # Optionally, you can serialize the SOAP notes if you want to include them in the response
+    #     soap_notes_serializer = SOAPNotesSerializer(soap_notes)
+
+    #     # Return the transcription data along with the generated SOAP notes
+    #     response_data = {
+    #         'soap_notes': soap_notes_serializer.data
+    #     }
+
+    #     return Response(response_data, status=status.HTTP_201_CREATED)
+
 
 class PrescriptionViewSet(ModelViewSet):
     queryset = Prescription.objects.all()
@@ -209,11 +274,8 @@ class PrescriptionViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.role == 'patient':
-            filters = Q(consultation__patient__user=user) | Q(consultation__patient__primary_patient__user=user)
+            filters = Q(consultation__appointment__patient__user=user) | Q(
+                consultation__appointment__patient__primary_patient__user=user)
         else:
-            filters = Q(consultation__doctor__user=user)
-        return Prescription.objects.select_related(
-            'consultation__patient__user',
-            'consultation__patient__primary_patient__user',
-            'consultation__doctor__user'
-        ).filter(filters)
+            filters = Q(consultation__appointment__doctor__user=user)
+        return Prescription.objects.filter(filters)

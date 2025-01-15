@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState, useRef } from "react";
 
-const RECORDING_TIMEOUT = 5000; // milliseconds
+const RECORDING_TIMEOUT = 500; // milliseconds
 
 export const useAudioTranscription = (consultationId) => {
   const [transcription, setTranscription] = useState([]);
+  const [loadingMessage, setLoadingMessage] = useState("");
   const mediaRecorderRef = useRef(null);
   const websocketRef = useRef(null);
 
@@ -11,9 +12,15 @@ export const useAudioTranscription = (consultationId) => {
     setTranscription((prev) => `${prev}${message}\n`);
   };
 
+  const changeLoadingMessage = (message) => {
+    setLoadingMessage(message);
+  };
+
   const initializeWebSocket = () => {
-    const websocket = new WebSocket(`ws://localhost:8000/ws/consultation/${consultationId}/`);
-    websocket.onopen = () => console.log('WebSocket connected.');
+    const websocket = new WebSocket(
+      `ws://localhost:8000/ws/consultation/${consultationId}/`
+    );
+    websocket.onopen = () => console.log("WebSocket connected.");
     websocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.transcription) {
@@ -22,14 +29,17 @@ export const useAudioTranscription = (consultationId) => {
       } else if (data.message) {
         appendTranscription(data.message);
       } else if (data.error) {
-        console.error('Error from server:', data.error);
+        console.error("Error from server:", data.error);
+      } else if (data.loading_message) {
+        changeLoadingMessage(data.loading_message);
       }
     };
     websocket.onclose = () => {
-      console.log('WebSocket connection closed.');
+      changeLoadingMessage("");
+      console.log("WebSocket connection closed.");
     };
     websocket.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      console.error("WebSocket error:", error);
     };
     return websocket;
   };
@@ -50,7 +60,7 @@ export const useAudioTranscription = (consultationId) => {
       mediaRecorderRef.current = mediaRecorder;
       websocketRef.current = websocket;
     } catch (error) {
-      console.error('Error accessing microphone:', error);
+      console.error("Error accessing microphone:", error);
     }
   };
 
@@ -73,17 +83,17 @@ export const useAudioTranscription = (consultationId) => {
 
     const websocket = websocketRef.current;
     if (websocket?.readyState === WebSocket.OPEN) {
-      websocket.send(JSON.stringify({ action: 'stop_recording' }));
+      websocket.send(JSON.stringify({ action: "stop_recording" }));
     }
     // Do not close the WebSocket here
   };
 
   const isRecording = () => {
-    return mediaRecorderRef.current?.state === 'recording';
+    return mediaRecorderRef.current?.state === "recording";
   };
 
   const isPaused = () => {
-    return mediaRecorderRef.current?.state === 'paused';
+    return mediaRecorderRef.current?.state === "paused";
   };
 
   return {
@@ -92,5 +102,6 @@ export const useAudioTranscription = (consultationId) => {
     resumeRecording,
     stopRecording,
     transcription,
+    loadingMessage,
   };
 };

@@ -16,13 +16,12 @@ import { fetchWithAuth } from '@/utils/fetchApis';
 import { getAuthStatus } from '@/utils/auth';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 
-import PersonalDetails from '@/components/profile/PersonalDetails';
+import BasicDetails from '@/components/profile/BasicDetails';
 import WorkDetails from '@/components/profile/WorkDetails';
-import ProfessionalDetails from '@/components/profile/ProffessionalDetails';
 import EducationDetails from '@/components/profile/EducationDetails';
+import IdentityAndExperienceDetails from '@/components/profile/IdentityAndExperienceDetails';
 import Loading from '@/components/shared/Loading';
 import ProfileTabs from '@/components/shared/ProfileTabs';
-
 
 export default function Profile() {
   const { user } = getAuthStatus();
@@ -108,17 +107,17 @@ export default function Profile() {
   };
 
   const doctorTabs = [
-    { label: "Personal Details", key: "personal" },
+    { label: "Basic Information", key: "basic" },
     { label: "Education Details", key: "education" },
     { label: "Work Details", key: "work" },
-    { label: "Professional Details", key: "professional" },
+    { label: "Identity and Experience", key: "identityandExperience" },
   ];
 
   const tabComponents = {
-    personal: <PersonalDetails inputValues={inputValues} handleChange={handleChange} handleBlur={handleBlur} inputErrors={inputErrors} />,
+    basic: <BasicDetails inputValues={inputValues} handleChange={handleChange} handleBlur={handleBlur} inputErrors={inputErrors} />,
     education: <EducationDetails inputValues={inputValues} setInputValues={setInputValues} inputErrors={inputErrors} setInputErrors={setInputErrors} />,
     work: <WorkDetails inputValues={inputValues} setInputValues={setInputValues} inputErrors={inputErrors} setInputErrors={setInputErrors} />,
-    professional: <ProfessionalDetails inputValues={inputValues} handleChange={handleChange} handleBlur={handleBlur} inputErrors={inputErrors} setInputValues={setInputValues} />,
+    identityandExperience: <IdentityAndExperienceDetails inputValues={inputValues} handleChange={handleChange} handleBlur={handleBlur} inputErrors={inputErrors} setInputValues={setInputValues} />,
   };
 
   if (isFetching) return <Loading />;

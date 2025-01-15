@@ -13,7 +13,7 @@ export default function PatientHomeCards() {
                 <div className="relative w-full md:col-span-2 h-52">
                     <div className="bg-violet-100 rounded-md flex h-full">
                         <div className="p-5 xl:p-8 flex flex-col justify-center w-full md:w-1/2">
-                            <h3 className="text-lg font-bold text-primary pb-2">
+                            <h3 className="text-lg font-bold text-primary pb-2 capitalize">
                                 Find top doctors and book appointments instantly
                             </h3>
                             <p className="text-sm text-gray-600 mb-4">Need to find a doctor? Click below to explore your options!</p>
@@ -31,7 +31,7 @@ export default function PatientHomeCards() {
 
                 <div className="relative w-full h-52 hidden lg:block">
                     <div className="bg-secondary rounded-md p-5 xl:p-8 h-full flex flex-col justify-center">
-                        <h3 className="pb-2 text-white font-bold text-lg">Manage the health of your loved ones too</h3>
+                        <h3 className="pb-2 text-white font-bold text-lg capitalize">Manage the health of your loved ones too</h3>
                         <p className="text-sm font-normal text-white mb-4">Easily add or remove dependents and book appointments in one profile.</p>
                         <Button variant='outline' className="bg-secondary hover:text-white text-white border-white block self-start">
                             <Link className="flex" to="/patient/profile">

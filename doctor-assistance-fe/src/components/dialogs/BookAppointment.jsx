@@ -11,7 +11,7 @@ import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
 import { fetchWithAuth } from '@/utils/fetchApis';
 import { validateField, hasNoFieldErrors, validateAllFields } from '@/utils/validations';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
-import { convert24HrTo12Hr } from '@/utils/time';
+import { toHHMMFormat } from '@/utils/time';
 
 export default function BookAppointment({ doctorId, doctorName, hospitals }) {
 
@@ -105,7 +105,7 @@ export default function BookAppointment({ doctorId, doctorName, hospitals }) {
                 <Button className='ml-3' onClick={() => setAppointmentMode('physical')}>Visit Clinic</Button>
             </DialogTrigger>
 
-            <DialogContent>
+            <DialogContent className='max-h-[97vh] overflow-y-auto'>
                 <DialogHeader>
                     <DialogTitle>Book Appointment</DialogTitle>
                     <DialogDescription>
@@ -206,7 +206,7 @@ export default function BookAppointment({ doctorId, doctorName, hospitals }) {
                                         <SelectItem value="none" disabled>No available slots found</SelectItem>
                                     ) : (
                                         timeSlots?.[0]?.available_slots?.map((slot) => (
-                                            <SelectItem key={slot.id} value={slot.id}>{convert24HrTo12Hr(slot.start_time)} - {convert24HrTo12Hr(slot.end_time)}</SelectItem>
+                                            <SelectItem key={slot.id} value={slot.id}>{toHHMMFormat(slot.start_time)} - {toHHMMFormat(slot.end_time)}</SelectItem>
                                         ))
                                     )}
                                 </SelectContent>

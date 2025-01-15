@@ -2,14 +2,27 @@ export const toHHMMFormat = (time) => {
     return time?.slice(0, 5);
 };
 
-export const convert24HrTo12Hr = (time) => {
-    if (!time) return null;
+export const formatTimeString = (value) => {
+    return `${value.hours}:${value.minutes}`;
+};
+
+export const formatTime = (time) => {
+    if (!time) return { hours: "", minutes: "" };
 
     const [hours, minutes] = time.split(":");
 
-    const hour24 = parseInt(hours, 10);
-    const hour12 = hour24 % 12 || 12; 
-    const period = hour24 < 12 ? "AM" : "PM";
+    return {
+        hours,
+        minutes: minutes || "",
+    };
+};
 
-    return `${hour12.toString().padStart(2, "0")}:${minutes} ${period}`;
+export const removeLeadingZeros = (str) => {
+    return str.replace(/^0+/, '');
+}
+
+export const formatTimeValue = (value, min, max) => {
+    let newValue = Math.max(min, Math.min(max, Number(value))); 
+    newValue = removeLeadingZeros(newValue.toString());
+    return newValue.padStart(2, "0");
 };
