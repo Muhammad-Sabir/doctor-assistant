@@ -42,7 +42,7 @@ export default function TotalAppointments() {
   ]
 
   const totalappointments = useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.appointments, 0)
+    return chartData.reduce((total, item) => total + item.appointments, 0)
   }, [chartData])
 
   return (

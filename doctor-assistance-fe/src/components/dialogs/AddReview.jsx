@@ -43,7 +43,6 @@ export default function AddReview({ doctorId, doctorName }) {
         });
     };
 
-
     const handleBlur = (e) => {
         const { id, value } = e.target;
         const errors = validateField(id, value, inputErrors);
