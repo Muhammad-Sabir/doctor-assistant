@@ -17,7 +17,7 @@ export const fetchApi = async (url, options = {}) => {
     const data = await response.json();
 
     if (!response.ok) {
-        const errorMessage = data?.non_field_errors?.[0] || data.message || 'An error occurred';
+        const errorMessage = data?.pmdc_no|| data?.non_field_errors?.[0] || data.error || data.message || 'An error occurred';
         const error = new Error(errorMessage);
         error.status = response.status;
         error.response = data;

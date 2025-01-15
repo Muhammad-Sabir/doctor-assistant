@@ -73,8 +73,8 @@ const validationRules = {
     },
   },
   registrationNo: {
-    test: (value) => /^[A-Z0-9]{5,}$/i.test(value),
-    message: "PMDC Registration No. must be valid",
+    test: (value) => value.trim() !== "",
+    message: "Please enter your PMDC Registration No",
   },
   picture: {
     test: (file) => {
