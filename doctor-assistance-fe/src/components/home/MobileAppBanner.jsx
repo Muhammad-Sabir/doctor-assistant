@@ -10,7 +10,7 @@ import Subtitle from '@/components/shared/Subtitle';
 
 export default function MobileAppBanner() {
     return (
-        <section className="py-8 lg:py-14 section-padding">
+        <section id="discover" className="py-8 lg:py-14 section-padding">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-9">
 
                 <div className="inline-flex flex-col items-center justify-center w-full gap-10 lg:items-start">
