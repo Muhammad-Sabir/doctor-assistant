@@ -120,7 +120,7 @@ export default function AddDependent() {
                                 <Text className="text-gray-700">Date of Birth</Text>
                                 <Pressable onPress={() => setShowDatePicker(true)}>
                                     <View className={`w-full py-3 px-4 rounded-md border ${inputErrors.dependentbirthDate ? 'border-red-500' : 'border-gray-300'}`}>
-                                        <Text className={userDetails.dob ? "text-black" : "text-gray-400"}>{userDetails.dob || `Select dependent's Date of Birth`} </Text>
+                                        <Text className={userDetails.dob ? "text-gray-700" : "text-customGrey"}>{userDetails.dob || `Select dependent's Date of Birth`} </Text>
                                     </View>
                                 </Pressable>
                                 {showDatePicker && (
@@ -173,9 +173,9 @@ export default function AddDependent() {
                                         style={{ height: 45, width: '100%', borderWidth: 1, borderColor: inputErrors.relationship ? 'red' : '#ccc' }}
                                         onValueChange={(itemValue) => handleChange('relationship', itemValue)}
                                     >
-                                        <Picker.Item style={{fontSize: 14, color: 'grey'}} label="Select dependent relation (dependent is the)" value="" />
+                                        <Picker.Item style={{fontSize: 14, color: '#a8a5a4'}} label="Select dependent relation (dependent is the)" value="" />
                                         {relationshipOptions.map((option) => (
-                                            <Picker.Item style={{fontSize: 14, color: 'grey'}} key={option.value} label={option.label} value={option.value} />
+                                            <Picker.Item style={{fontSize: 14, color: '#a8a5a4'}} key={option.value} label={option.label} value={option.value} />
                                         ))}
                                     </Picker>
                                 </View>

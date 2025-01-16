@@ -3,7 +3,6 @@ import { View, Text, TextInput, Pressable } from 'react-native';
 import { Link, useFocusEffect } from 'expo-router';
 import { Eye, EyeOff, TriangleAlert } from 'lucide-react-native';
 
-import GoogleLogo from '@/assets/images/SVG/GoogleLogo';
 import CustomKeyboardView from '@/components/ui/CustomKeyboardView';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useAuth } from '@/contexts/AuthContext';
@@ -100,7 +99,7 @@ const Register = () => {
                                         <Text className='text-sm text-red-500'>{inputErrors.password} </Text>
                                     </View>
                                 )}
-                                <Pressable onPress={() => setPasswordVisible(!passwordVisible)} className="absolute mt-2 mr-2 right-2 top-2">
+                                <Pressable onPress={() => setPasswordVisible((prev => !prev))} className="mt-2 mr-2 absolute right-2 top-2">
                                     {passwordVisible ? (
                                         <EyeOff size={17} color="gray" />
                                     ) : (
@@ -135,18 +134,6 @@ const Register = () => {
                         <Text className="font-bold text-white">SignUp</Text>
                     </Pressable>
                 </View>
-
-                {/* <View className="gap-0.5">
-                    <View className="flex-row items-center justify-center my-5">
-                        <View className="flex-1 h-px bg-gray-500"></View>
-                        <Text className="px-3 text-xs font-semibold text-gray-500">OR</Text>
-                        <View className="flex-1 h-px bg-gray-500"></View>
-                    </View>
-                    <Pressable className="flex flex-row items-center justify-center w-full p-3 border border-gray-300 rounded-md h-14">
-                        <GoogleLogo className="w-6 h-6" />
-                        <Text className="ml-4">Signup with Google</Text>
-                    </Pressable>
-                </View> */}
 
                 <View className="flex-row items-center justify-center gap-2 mt-8 mb-8">
                     <Text className="text-center text-gray-500">Already have an account?</Text>

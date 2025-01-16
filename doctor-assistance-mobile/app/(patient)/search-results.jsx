@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react-native';
 import * as Location from 'expo-location';
 
@@ -70,14 +70,16 @@ export default function DoctorSearchResults() {
         setFilters((prev) => ({ ...prev, [name]: value }));
     };
 
-    useEffect(() => {
-        setFilters({
-            name: '', average_rating_min: '', average_rating_max: '',
-            years_of_experience: '', gender: 'all', distance: ''
-        });
-        setCurrentPage(1);
-        setSearchParams(`${searchBy}=${searchQuery}`);
-    }, [searchQuery]);
+    useFocusEffect(
+        useCallback(() => {
+            setFilters({
+                name: '', average_rating_min: '', average_rating_max: '',
+                years_of_experience: '', gender: 'all', distance: ''
+            });
+            setCurrentPage(1);
+            setSearchParams(`${searchBy}=${searchQuery}`);
+        }, [searchQuery, searchBy])
+    );
 
     const createSearchParams = (filters) => {
         const updatedSearchParams = Object.entries(filters)

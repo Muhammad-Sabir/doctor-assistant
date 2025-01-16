@@ -121,7 +121,7 @@ export default function UpdateDependent({ selectedDependent }) {
                                 <Text className="text-gray-700">Date of Birth</Text>
                                 <Pressable onPress={() => setShowDatePicker(true)}>
                                     <View className={`w-full py-3 px-4 rounded-md border ${inputErrors.dependentbirthDate ? 'border-red-500' : 'border-gray-300'}`}>
-                                        <Text className={dependent.date_of_birth ? "text-black" : "text-gray-400"}>{dependent.date_of_birth || `Select dependent's Date of Birth`} </Text>
+                                        <Text className={dependent.date_of_birth ? "text-gray-700" : "text-customGrey"}>{dependent.date_of_birth || `Select dependent's Date of Birth`} </Text>
                                     </View>
                                 </Pressable>
                                 {showDatePicker && (
@@ -175,7 +175,7 @@ export default function UpdateDependent({ selectedDependent }) {
                                         onValueChange={(itemValue) => handleChange('relationship', itemValue)}
                                     >
                                         {relationshipOptions.map((option) => (
-                                            <Picker.Item style={{ fontSize: 14, color: 'black' }} key={option.value} label={option.label} value={option.value} />
+                                            <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} key={option.value} label={option.label} value={option.value} />
                                         ))}
                                     </Picker>
                                 </View>

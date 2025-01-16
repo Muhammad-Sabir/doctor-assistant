@@ -78,7 +78,7 @@ export default function DoctorDetail() {
                                         </View>
                                     </View>
 
-                                    <BookAppointment doctorId={data.id} doctorName={data.name} />
+                                    <BookAppointment doctorId={data.id} doctorName={data.name} hospitals={data.hospitals} />
                                 </View>
 
                                 <View className="border-t border-gray-200 my-4" />

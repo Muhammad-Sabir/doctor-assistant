@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Modal, Pressable, Dimensions } from 'react-native';
 import { X, TriangleAlert } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { validateField, hasNoFieldErrors } from '@/utils/validations';
 import { useCreateUpdateMutation } from '@/hooks/useCreateUpdateMutation';
-import { Picker } from '@react-native-picker/picker';
-import { useFetchQuery } from '@/hooks/useFetchQuery';
 
-export default function BookAppointment({ doctorId, doctorName }) {
+import { useFetchQuery } from '@/hooks/useFetchQuery';
+import { convert24HrTo12Hr } from '@/utils/time';
+
+export default function BookAppointment({ doctorId, doctorName, hospitals }) {
 
     const { fetchWithUserAuth } = useAuth();
     const screenWidth = Dimensions.get('window').width;
@@ -18,13 +20,11 @@ export default function BookAppointment({ doctorId, doctorName }) {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [formData, setFormData] = useState({
-        patientId: '',
-        message: '',
-        date_of_appointment: '',
-        appointment_mode: '',
+        patientId: '', message: '', date_of_appointment: '',
+        appointment_mode: '', appointmentHospital: '', appointmentTimeSlot: '',
     });
 
-    const { data: dependentsData, isFetching, isError } = useFetchQuery({
+    const { data: dependentsData, isFetching: isDependentFetching, isError: isDependentError } = useFetchQuery({
         url: 'patients/',
         queryKey: ['allRelatedPatientList'],
         fetchFunction: fetchWithUserAuth,
@@ -42,15 +42,19 @@ export default function BookAppointment({ doctorId, doctorName }) {
         onErrorMessage: 'Failed to Book Appointment'
     });
 
+    const { data: timeSlots, isFetching: isTimeSlotFetching, isError: isTimeSlotError } = useFetchQuery({
+        url: `appointments/available_slots/?doctor_id=${doctorId}&date=${formData.date_of_appointment}&hospital_id=${formData.appointmentHospital}`,
+        queryKey: ['availableTimeSlots', formData.date_of_appointment, formData.appointmentHospital],
+        enabled: () => Boolean(doctorId && formData.date_of_appointment && formData.appointmentHospital),
+        fetchFunction: fetchWithUserAuth,
+    });
+
     const setAppointmentMode = (mode) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            appointment_mode: mode,
-        }));
+        setFormData((prevData) => ({ ...prevData, appointment_mode: mode }));
     };
 
     const resetForm = () => {
-        setFormData({ appointment_mode: '', date_of_appointment: '', patientId: '', message: '' });
+        setFormData((prev) => ({ ...prev, patientId: '', message: '', date_of_appointment: '', appointmentHospital: '', appointmentTimeSlot: '' }));
         setInputErrors({});
     };
 
@@ -61,6 +65,8 @@ export default function BookAppointment({ doctorId, doctorName }) {
 
     const handleChange = (id, value) => {
         setFormData((prev) => ({ ...prev, [id]: value }));
+        const errors = validateField(id, value, inputErrors);
+        setInputErrors(errors);
     };
 
     const onDateChange = (event, selectedDate) => {
@@ -74,12 +80,13 @@ export default function BookAppointment({ doctorId, doctorName }) {
 
     const handleSubmit = () => {
         console.log(formData)
+
         if (!hasNoFieldErrors(inputErrors)) {
             return;
         }
-        const { patientId, date_of_appointment, message, appointment_mode } = formData;
+        const { patientId, date_of_appointment, message, appointment_mode, appointmentHospital, appointmentTimeSlot } = formData;
         bookAppointmentMutation.mutate(JSON.stringify({
-            doctor: doctorId, patient: patientId,
+            doctor: doctorId, patient: patientId, hospital: appointmentHospital, time_slot: appointmentTimeSlot,
             date_of_appointment, message, appointment_mode
         }));
 
@@ -89,7 +96,6 @@ export default function BookAppointment({ doctorId, doctorName }) {
 
     return (
         <View>
-
             <View className="flex flex-row items-center justify-center gap-4">
                 <TouchableOpacity className="mt-4 bg-primary text-primary justify-center items-center px-4 h-10 rounded-md p-2"
                     onPress={() => {
@@ -133,13 +139,13 @@ export default function BookAppointment({ doctorId, doctorName }) {
                             <View className='border border-gray-200 rounded-md'>
                                 <Picker selectedValue={formData.patientId} style={{ height: 45, width: '100%', borderWidth: 1, borderColor: inputErrors.relationship ? 'red' : '#ccc' }}
                                     onValueChange={(value) => handleChange('patientId', value)}>
-                                    <Picker.Item style={{ fontSize: 14, color: 'grey' }} value='' label='Select a Patient for the apppointment' />
+                                    <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} value='' label='Select a Patient for the apppointment' />
 
                                     {patient && (
-                                        <Picker.Item style={{ fontSize: 14, color: 'grey' }} key={patient.id} label={`${patient.name} (You)`} value={patient.id} />
+                                        <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} key={patient.id} label={`${patient.name} (You)`} value={patient.id} />
                                     )}
                                     {dependents && dependents.length > 0 && dependents.map(dependent => (
-                                        <Picker.Item style={{ fontSize: 14, color: 'grey' }} key={dependent.id} label={dependent.name} value={dependent.id} />
+                                        <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} key={dependent.id} label={dependent.name} value={dependent.id} />
                                     ))}
 
                                 </Picker>
@@ -151,21 +157,22 @@ export default function BookAppointment({ doctorId, doctorName }) {
                             )}
                         </View>
 
-                        <View className='mb-3'>
-                            <Text className="text-gray-700 text-base mb-2">Message</Text>
-                            <TextInput
-                                value={formData.message}
-                                onChangeText={(value) => handleChange("message", value)}
-                                onBlur={() => handleBlur("message", formData.message)}
-                                placeholder="Write your message..."
-                                className={`border p-3 rounded-md mb-2 ${inputErrors.message ? 'border-red-500' : 'border-gray-300'}`}
-                                multiline numberOfLines={4} textAlignVertical="top"
-                            />
-                            {inputErrors.message && (
-                                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
-                                    <TriangleAlert size={13} color="red" />
-                                    <Text className='text-sm text-red-500'>{inputErrors.message} </Text>
-                                </View>
+                        <View className="my-4 gap-2">
+                            <Text className='text-gray-700'>Hospital</Text>
+                            <View className='border border-gray-200 rounded-md'>
+                                <Picker selectedValue={formData.appointmentHospital} style={{ height: 45, width: '100%', borderWidth: 1, borderColor: inputErrors.appointmentHospital ? 'red' : '#ccc' }}
+                                    onValueChange={(value) => handleChange('appointmentHospital', value)}>
+                                    <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} value='' label='Select a Hospital for the apppointment' />
+
+                                    {hospitals?.map(hospital => (
+                                        <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} key={hospital.id} label={hospital.name} value={hospital.id} />
+                                    ))}
+                                </Picker>
+                            </View>
+                            {inputErrors.appointmentHospital && (
+                                <Text style={{ color: 'red', fontSize: 12 }}>
+                                    <TriangleAlert size={16} color="red" /> {inputErrors.appointmentHospital}
+                                </Text>
                             )}
                         </View>
 
@@ -173,15 +180,12 @@ export default function BookAppointment({ doctorId, doctorName }) {
                             <Text className="text-gray-700 mb-2">Date of Appointment</Text>
                             <Pressable onPress={() => setShowDatePicker(true)}>
                                 <View className={`w-full p-3 rounded-md border ${inputErrors.date_of_appointment ? 'border-red-500' : 'border-gray-300'}`}>
-                                    <Text className={formData.date_of_appointment ? "text-black" : "text-gray-400"}>{formData.date_of_appointment || 'Select Date of Appointment'} </Text>
+                                    <Text className={formData.date_of_appointment ? "text-gray-700" : "text-customGrey"}>{formData.date_of_appointment || 'Select Date of Appointment'} </Text>
                                 </View>
                             </Pressable>
                             {showDatePicker && (
-                                <DateTimePicker
-                                    value={formData.date_of_appointment ? new Date(formData.date_of_appointment) : new Date()}
-                                    mode="date"
-                                    display="default"
-                                    onChange={onDateChange}
+                                <DateTimePicker value={formData.date_of_appointment ? new Date(formData.date_of_appointment) : new Date()}
+                                    mode="date" display="default" onChange={onDateChange}
                                 />
                             )}
                             {inputErrors.date_of_appointment && (
@@ -192,13 +196,57 @@ export default function BookAppointment({ doctorId, doctorName }) {
                             )}
                         </View>
 
+                        <View className="my-4 gap-2">
+                            <Text className='text-gray-700'>TimeSlot</Text>
+                            <View className='border border-gray-200 rounded-md'>
+                                <Picker selectedValue={formData.appointmentTimeSlot} style={{ height: 45, width: '100%', borderWidth: 1, borderColor: inputErrors.appointmentTimeSlot ? 'red' : '#ccc' }}
+                                    onValueChange={(value) => handleChange('appointmentTimeSlot', value)}>
+                                    <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} value='' label='Select a Timeslot for the apppointment' />
+
+                                    {(!formData.date_of_appointment || !formData.appointmentHospital) && (
+                                        <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} value="none" disabled label='First Select Date of Appointment and Hospital to Select Time Slot' />
+                                    )}
+                                    {isTimeSlotFetching ? (
+                                        <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} value='loading' disabled label='Loading available slots...' />
+                                    ) : isTimeSlotError ? (
+                                        <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} value='error' disabled label='Error fetching available slots...' />
+                                    ) : timeSlots?.length === 0 ? (
+                                        <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} value='none' disabled label='No available slots found' />
+                                    ) : (
+                                        timeSlots?.[0]?.available_slots?.map((slot) => (
+                                            <Picker.Item style={{ fontSize: 14, color: '#a8a5a4' }} key={slot.id} label={`${convert24HrTo12Hr(slot.start_time)} - ${convert24HrTo12Hr(slot.end_time)}`} value={slot.id}
+                                            />
+                                        ))
+                                    )}
+                                </Picker>
+                            </View>
+                            {inputErrors.appointmentTimeSlot && (
+                                <Text style={{ color: 'red', fontSize: 12 }}>
+                                    <TriangleAlert size={16} color="red" /> {inputErrors.appointmentTimeSlot}
+                                </Text>
+                            )}
+                        </View>
+
+                        <View className='mb-3'>
+                            <Text className="text-gray-700 text-base mb-2">Message</Text>
+                            <TextInput value={formData.message} onChangeText={(value) => handleChange("message", value)}
+                                onBlur={() => handleBlur("message", formData.message)} multiline numberOfLines={4} textAlignVertical="top"
+                                placeholder="Write your message..." className={`border p-3 rounded-md mb-2 ${inputErrors.message ? 'border-red-500' : 'border-gray-300'}`}
+                            />
+                            {inputErrors.message && (
+                                <View className="flex flex-row items-center text-red-500 text-sm gap-2">
+                                    <TriangleAlert size={13} color="red" />
+                                    <Text className='text-sm text-red-500'>{inputErrors.message} </Text>
+                                </View>
+                            )}
+                        </View>
+
                         <View className="flex-row justify-end mt-4">
-                            <TouchableOpacity
+                            <TouchableOpacity className="mr-4 bg-gray-200 px-4 py-2 rounded-md"
                                 onPress={() => {
                                     setIsModalVisible(false);
                                     resetForm();
                                 }}
-                                className="mr-4 bg-gray-200 px-4 py-2 rounded-md"
                             >
                                 <Text className="text-gray-700">Cancel</Text>
                             </TouchableOpacity>

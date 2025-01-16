@@ -3,8 +3,11 @@ import { useRouter } from 'expo-router';
 import { View, Text, Modal, TouchableOpacity, Animated } from 'react-native';
 import { Phone, PhoneCall, PhoneOff } from 'lucide-react-native';
 
+import { useWebRTCContext } from '@/contexts/WebRTCContext';
+
 const IncomingCallModal = ({visible, onClose}) => {
 
+    const { senderName, rejectCall} = useWebRTCContext();
     const bounceValue = new Animated.Value(1);
     const router = useRouter();
 
@@ -33,13 +36,15 @@ const IncomingCallModal = ({visible, onClose}) => {
     const handleAccept = () => {
         onClose();
         console.log("Call accepted");
+        // answerCall();
         router.push('(patient)/video-call')
     };
 
     const handleCancel = () => {
         onClose();
+        rejectCall();
         console.log("Call canceled");
-        router.push('(patient)/')
+        router.push('(patient)/');
     };
 
     return (
@@ -47,7 +52,7 @@ const IncomingCallModal = ({visible, onClose}) => {
             <View className='flex-1' style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
                 <View className='flex-1' />
                 <View className="bg-white rounded-md z-10 p-11 justify-center items-center">
-                    <Text className="text-primary text-2xl font-bold">Amina Khan</Text>
+                    <Text className="text-primary text-2xl font-bold">{ senderName }</Text>
                     <Text className="text-gray-400 text-lg mb-10 mt-2">Incoming video call...</Text>
 
                     <Animated.View style={{ transform: [{ scale: bounceValue }] }} className='bg-accent p-5 rounded-full'>
